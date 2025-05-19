@@ -26,7 +26,15 @@ trait Main {
         $url = $object->config('project.dir.data') . 'Oxford' . $object->config('ds') . 'Output' . $object->config('ds') . 'Words.json';
 
         $data = $object->data_read($url);
-        dd($data);
+        $list = [];
+        if($data){
+            foreach($data->data() as $nr => $item){
+                if(property_exists('word', $item)){
+                   $list[] = $item->word;
+                }
+            }
+        }
+        dd($list);
 
 
 //        $url_data = $object->config('controller.dir.data') . 'words.txt';
