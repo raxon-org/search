@@ -36,6 +36,7 @@ trait Main {
                 }
             }
         }
+        $list = array_unique($list);
         $dir = $object->config('controller.dir.data');
         Dir::create($dir, Dir::CHMOD);
         $url = $dir . 'Oxford.txt';
