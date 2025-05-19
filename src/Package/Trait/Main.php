@@ -44,5 +44,10 @@ trait Main {
         File::write($url, implode(PHP_EOL, $list));
         File::permission($object, ['url' => $url]);
     }
+
+    public function import_page(object $flags, object $options): void
+    {
+        ddd($options);
+    }
 }
 
