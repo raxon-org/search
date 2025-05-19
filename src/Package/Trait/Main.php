@@ -22,8 +22,15 @@ trait Main {
     public function dictionary_create(object $flags, object $options): void
     {
         $object = $this->object();
-        $url = $object->config('controller.dir.data') . 'words.txt';
-        ddd($url);
+
+        $url = $object->config('project.dir.data') . 'Oxford' . $object->config('ds') . 'Output' . $object->config('ds') . 'Words.json';
+
+        $data = $object->data_read($url);
+        dd($data);
+
+
+//        $url_data = $object->config('controller.dir.data') . 'words.txt';
+//        ddd($url);
 
 
     }
