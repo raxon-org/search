@@ -14,9 +14,14 @@ trait Main {
         Core::interactive();
         $object = $this->object();
         echo 'Install ' . $object->request('package') . '...' . PHP_EOL;
+    }
 
-        dd('found');
-
+    /**
+     * @throws Exception
+     */
+    public function dictionary_create(object $flags, object $options): void
+    {
+        ddd('create dictionary');
     }
 }
 
