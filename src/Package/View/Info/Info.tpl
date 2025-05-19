@@ -1,2 +1,2 @@
-{{dd(request())}}
-{{binary()}} {{$package}} setup
+{{$request = request()}}
+{{binary()}} {{$request.package}} setup
