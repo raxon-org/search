@@ -1,0 +1,18 @@
+{
+    "name" : "raxon/search",
+    "description" : "raxon/search see https://raxon.org for detailed usage",
+    "type" : "package",
+    "keywords" : ["search", "md","raxon", "org", "library", "framework", "event", "raxon.org"],
+    "homepage": "https://raxon.org",
+    "require" : {
+        "ext-posix": "*",
+        "ext-zlib": "*",
+        "ext-iconv": "*",
+        "raxon/framework": "*"
+    },
+    "license" : "MIT",
+    "authors" : [{
+        "name" : "Remco van der Velde",
+        "email" : "development@universeorange.com"
+    }]
+}
