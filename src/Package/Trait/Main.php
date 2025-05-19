@@ -2,6 +2,7 @@
 namespace Package\Raxon\Search\Trait;
 
 use Raxon\Module\Core;
+use Raxon\Module\File;
 
 use Exception;
 trait Main {
@@ -34,6 +35,10 @@ trait Main {
                 }
             }
         }
+        $url = $object->config('controller.dir.data') . 'Oxford.txt';
+        File::write($url, implode(PHP_EOL, $list));
+
+
         dd($list);
 
 
