@@ -29,7 +29,7 @@ trait Main {
         $list = [];
         if($data){
             foreach($data->data() as $nr => $item){
-                if(property_exists('word', $item)){
+                if(property_exists($item, 'word')){
                    $list[] = $item->word;
                 }
             }
