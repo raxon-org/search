@@ -36,9 +36,14 @@ trait Main {
                 }
             }
         }
-        Dir::create($object->config('controller.dir.data'), Dir::CHMOD);
-        $url = $object->config('controller.dir.data') . 'Oxford.txt';
+        $dir = $object->config('controller.dir.data');
+        Dir::create($dir, Dir::CHMOD);
+        $url = $dir . 'Oxford.txt';
         File::write($url, implode(PHP_EOL, $list));
+        File::permission($object, [
+            'dir' => $dir,
+            'url' => $url
+        ]);
         echo $url . PHP_EOL;
 //        $url_data = $object->config('controller.dir.data') . 'words.txt';
 //        ddd($url);
