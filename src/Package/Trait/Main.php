@@ -24,32 +24,25 @@ trait Main {
     public function dictionary_create(object $flags, object $options): void
     {
         $object = $this->object();
-
-        $url = $object->config('project.dir.data') . 'Oxford' . $object->config('ds') . 'Output' . $object->config('ds') . 'Words.json';
-
-        $data = $object->data_read($url);
+        $dir = $object->config('controller.dir.data');
+        $url = $dir . 'Oxford.txt';
+        $read = File::read($url);
+        $url = $dir . 'words.txt';
+        $read .= PHP_EOL . File::read($url);
+        $explode = explode(PHP_EOL, $read);
         $list = [];
-        if($data){
-            foreach($data->data() as $nr => $item){
-                if(property_exists($item, 'word')){
-                   $list[] = $item->word;
-                }
+        foreach($explode as $nr => $word){
+            $word = trim($word);
+            if (empty($word)) {
+                continue;
             }
+            $list[$nr] = $word;
         }
         $list = array_unique($list);
-        $dir = $object->config('controller.dir.data');
-        Dir::create($dir, Dir::CHMOD);
-        $url = $dir . 'Oxford.txt';
+        sort($list, SORT_NATURAL);
+        $url = $dir . 'Dictionary.txt';
         File::write($url, implode(PHP_EOL, $list));
-        File::permission($object, [
-            'dir' => $dir,
-            'url' => $url
-        ]);
-        echo $url . PHP_EOL;
-//        $url_data = $object->config('controller.dir.data') . 'words.txt';
-//        ddd($url);
-
-
+        File::permission($object, ['url' => $url]);
     }
 }
 
