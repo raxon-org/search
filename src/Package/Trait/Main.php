@@ -21,7 +21,11 @@ trait Main {
      */
     public function dictionary_create(object $flags, object $options): void
     {
-        ddd('create dictionary');
+        $object = $this->object();
+        $url = $object->config('controller.dir.data') . 'words.txt';
+        ddd($url);
+
+
     }
 }
 
