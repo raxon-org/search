@@ -45,9 +45,18 @@ trait Main {
         File::permission($object, ['url' => $url]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function import_page(object $flags, object $options): void
     {
+        if(!property_exists($options, 'url')){
+            throw new Exception('Option URL not set');
+        }
+
         ddd($options);
+
+
     }
 }
 
