@@ -63,7 +63,7 @@ trait Main {
 
         $client = new GuzzleHttp\Client();
         $res = $client->request('GET', $options->url, [
-
+        'verify' => false,  // Disable SSL certificate verification (localhost)
         ]);
         $html = $res->getBody();
 
