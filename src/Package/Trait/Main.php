@@ -1,6 +1,8 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
+use GuzzleHttp;
+use GuzzleHttp\Exception\GuzzleException;
 use Raxon\Module\Core;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
@@ -47,6 +49,7 @@ trait Main {
 
     /**
      * @throws Exception
+     * @throws GuzzleException
      */
     public function import_page(object $flags, object $options): void
     {
@@ -55,6 +58,17 @@ trait Main {
         }
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('GET', $options->url, [
+
+        ]);
+        echo $res->getStatusCode();
+// "200"
+        echo $res->getHeader('content-type')[0];
+// 'application/json; charset=utf8'
+        echo $res->getBody();
+
         d($source);
         ddd($options);
 
