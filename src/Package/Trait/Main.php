@@ -103,6 +103,12 @@ trait Main {
             $paragraph[$paragraph_nr][] = $line;
         }
         $paragraph = array_values($paragraph);
+        foreach($paragraph as $nr => $lines){
+            foreach($lines as $line){
+                $words_line = explode(' ', $line);
+                ddd($words_line);
+            }
+        }
         ddd($paragraph);
 
 
