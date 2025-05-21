@@ -53,7 +53,9 @@ trait Main {
         if(!property_exists($options, 'url')){
             throw new Exception('Option URL not set');
         }
-
+        $object = $this->object();
+        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        d($source);
         ddd($options);
 
 
