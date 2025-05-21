@@ -74,10 +74,35 @@ trait Main {
 
         // Get plain text content
         $body = $doc->getElementsByTagName('body')->item(0);
-        $plainText = $body->textContent;
-
-        breakpoint($plainText);
-
+        $plain_text = $body->textContent;
+        $plain_text = str_replace(
+            [
+                "\r\n",
+                "\n\r",
+                "\r",
+            ],
+            [
+                "\n",
+                "\n",
+                "\n",
+            ],
+            $plain_text
+        );
+        $list = explode(PHP_EOL, $plain_text);
+        $paragraph_nr = 0;
+        $paragraph = [];
+        foreach($list as $nr => $line){
+            $line = trim($line);
+            if (empty($line)) {
+                $paragraph_nr++;
+                continue;
+            }
+            if(!array_key_exists($paragraph_nr, $paragraph)){
+                $paragraph[$paragraph_nr] = [];
+            }
+            $paragraph[$paragraph_nr][] = $line;
+        }
+        ddd($paragraph);
 
 
         d($source);
