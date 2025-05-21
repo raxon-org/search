@@ -103,7 +103,11 @@ trait Main {
             $paragraph[$paragraph_nr][] = $line;
         }
         $paragraph = array_values($paragraph);
-        $word_list = $data->get('word') ?? [];
+        if($data){
+            $word_list = $data->get('word') ?? [];
+        } else {
+            $word_list = [];
+        }
         $id = 1;
         if(!empty($word_list)){
             foreach($word_list as $nr => $word){
