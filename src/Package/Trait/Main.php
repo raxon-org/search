@@ -123,7 +123,14 @@ trait Main {
             foreach($lines as $line){
                 $word_line = explode(' ', $line);
                 foreach($word_line as $nr => $word){
-                    if(!in_array($word_list)){
+                    $found = false;
+                    foreach($word_list as $word_list_nr => $word_list_item){
+                        if($word_list_item->word === $word){
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if(!$found){
                         $word_list[] = (object) [
                             'id' => $id,
                             'word' => $word
