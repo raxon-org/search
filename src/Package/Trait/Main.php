@@ -1,6 +1,8 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
+use DOMDocument;
+use DOMXPath;
 use GuzzleHttp;
 use GuzzleHttp\Exception\GuzzleException;
 use Raxon\Module\Core;
@@ -63,11 +65,20 @@ trait Main {
         $res = $client->request('GET', $options->url, [
 
         ]);
-        echo $res->getStatusCode();
-// "200"
-        echo $res->getHeader('content-type')[0];
-// 'application/json; charset=utf8'
-        echo $res->getBody();
+        $html = $res->getBody();
+
+        $doc = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $doc->loadHTML($html);
+        libxml_clear_errors();
+
+        // Get plain text content
+        $body = $doc->getElementsByTagName('body')->item(0);
+        $plainText = $body->textContent;
+
+        breakpoint($plainText);
+
+
 
         d($source);
         ddd($options);
