@@ -60,7 +60,7 @@ trait Main {
         }
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
-
+        $data = $object->data_read($source);
         $client = new GuzzleHttp\Client();
         $res = $client->request('GET', $options->url, [
         'verify' => false,  // Disable SSL certificate verification (localhost)
@@ -103,12 +103,33 @@ trait Main {
             $paragraph[$paragraph_nr][] = $line;
         }
         $paragraph = array_values($paragraph);
-        foreach($paragraph as $nr => $lines){
-            foreach($lines as $line){
-                $words_line = explode(' ', $line);
-                ddd($words_line);
+        $word_list = $data->get('word') ?? [];
+        $id = 1;
+        if(!empty($word_list)){
+            foreach($word_list as $nr => $word){
+                if(
+                    property_exists('id', $word) &&
+                    $word->id > $id
+                ){
+                    $id = $word->id;
+                }
             }
         }
+        foreach($paragraph as $nr => $lines){
+            foreach($lines as $line){
+                $word_line = explode(' ', $line);
+                foreach($word_line as $nr => $word){
+                    if(!in_array($word_list)){
+                        $word_list[] = (object) [
+                            'id' => $id,
+                            'word' => $word
+                        ];
+                        $id++;
+                    }
+                }
+            }
+        }
+        d($word_list);
         ddd($paragraph);
 
 
