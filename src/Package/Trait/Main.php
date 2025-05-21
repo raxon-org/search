@@ -102,6 +102,7 @@ trait Main {
             }
             $paragraph[$paragraph_nr][] = $line;
         }
+        $paragraph = array_values($paragraph);
         ddd($paragraph);
 
 
