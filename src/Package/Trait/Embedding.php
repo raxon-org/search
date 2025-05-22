@@ -56,7 +56,6 @@ trait Embedding {
             return;
         }
         foreach($sentences as $sentence){
-            ddd($sentence);
             if(!property_exists($sentence, 'word')){
                 continue;
             }
