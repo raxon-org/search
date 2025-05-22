@@ -22,48 +22,39 @@ trait Find {
         }
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        if(!$data){
+            return;
+        }
         switch($options->type){
             case 'document':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
+                $children = $data->get('document');
                 break;
             case 'paragraph':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
+                $children = $data->get('paragraph');
                 break;
             case 'sentence':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
+                $children = $data->get('sentence');
                 break;
             case 'word':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
+                $children = $data->get('word');
                 break;
             default:
                 throw new Exception('Type not set; available types: (document, paragraph, sentence, word)');
         }
-        $data = $object->data_read($source);
-        $list = [];
-        switch($options->type){
-            case 'document':
-                $children = $data->get('document');
-                break;
-            case 'paragraph':
-                $children = $data->get('paragraph');
-                break;
-            case 'sentence':
-                $children = $data->get('sentence');
-                break;
-            case 'words':
-                $children = $data->get('word');
-                break;
-        }
         if(!$children){
             return;
         }
+        $list = [];
         foreach($children as $child){
             $list[$child->embedding] = $child;
         }
         $data_embedding = $object->data_read($source_embedding);
-        if(!$data){
-            return;
-        }
+
         if(!$data_embedding){
             $data_embedding = new Data();
         }
@@ -76,7 +67,7 @@ trait Find {
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
-                    'word' => $word_list[$embedding->id]->word ?? '',
+                    'word' => $list[$embedding->id]->word ?? '',
                     'word_embedding' => $embedding->word ?? '',
                     'similarity' => $similarity,
                 ];
