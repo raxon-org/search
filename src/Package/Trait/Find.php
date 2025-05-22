@@ -97,8 +97,8 @@ trait Find {
                                     if(is_int($id_word)){
                                         if($id_word === $embedding->id){
                                             foreach($sentence_data->word as $word_nr => $word_id){
-                                                if(is_int($word_id) && array_key_exists($word_id, $words)){
-                                                    $sentence_data->word[$word_nr] = $words[$word_id] ?? null;
+                                                if(is_int($word_id) && array_key_exists($word_id, $list)){
+                                                    $sentence_data->word[$word_nr] = $list[$word_id] ?? null;
                                                 }
                                             }
                                             $sentence[] = $sentence_data;
