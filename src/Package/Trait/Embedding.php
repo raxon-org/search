@@ -40,7 +40,7 @@ trait Embedding {
         if(!is_object($word)){
             return $word;
         }
-        if(!property_exists('word', $word)){
+        if(!property_exists($word ,'word')){
             return $word;
         }
         $text = $word->word;
