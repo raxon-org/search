@@ -168,7 +168,7 @@ trait Embedding {
             foreach($paragraph->sentence as $sentence_id){
                 $sentence = $sentence_list[$sentence_id];
                 $text = [];
-                foreach($sentence->word as $word{
+                foreach($sentence->word as $word){
                     $text[] = $word_list[$word]->word ?? null;
                 }
                 $paragraph_text[] = implode(' ', $text);
