@@ -90,6 +90,7 @@ trait Find {
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
                 $sentence = [];
+                $paragraph = [];
                 if(
                     array_key_exists($embedding->id, $list) &&
                     property_exists($list[$embedding->id], 'word') &&
@@ -153,8 +154,17 @@ trait Find {
                                 $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
                             }
                         }
-                        foreach($paragraphs as $paragraph){
-                            breakpoint($paragraph);
+                        foreach($paragraphs as $paragraph_value){
+                            if(property_exists('sentence', $paragraph_value)){
+                                foreach($paragraph_value->sentence as $sentence_id){
+                                    if($sentence_id === $sentence[$sentence_nr]->id){
+                                        if(!in_array($paragraph_value->id, $paragraph, true)){
+                                            $paragraph[] = $paragraph_value;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -163,6 +173,7 @@ trait Find {
                     'word' => $list[$embedding->id]->word ?? '',
                     'word_embedding' => $embedding->word ?? '',
                     'sentence' => $sentence,
+                    'paragraph' => $paragraph,
                     'tokens' => $embedding->tokens ?? 0,
                     'similarity' => $similarity,
                 ];
