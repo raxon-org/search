@@ -132,9 +132,14 @@ trait Embedding {
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
         $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
+        $source_sentence_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
+        $data_sentence_embedding = $object->data_read($source_sentence_embedding);
         if(!$data){
+            return;
+        }
+        if(!$data_sentence_embedding){
             return;
         }
         if(!$data_embedding){
@@ -164,14 +169,11 @@ trait Embedding {
             return;
         }
         foreach($paragraphs as $paragraph){
-            $paragraph_text = [];
+            $paragraph_embedding = [];
             foreach($paragraph->sentence as $sentence_id){
                 $sentence = $sentence_list[$sentence_id];
-                $text = [];
-                foreach($sentence->word as $word){
-                    $text[] = $word_list[$word]->word ?? null;
-                }
-                $paragraph_text[] = implode(' ', $text);
+
+                ddd($sentence);
             }
             $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
