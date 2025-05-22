@@ -35,7 +35,7 @@ trait Embedding {
         foreach($words as $word){
             $hash = hash('sha256', $word->word);
             if(!property_exists($embeddings, $hash)){
-                $get_embedding = $this->get_embedding($word->word);
+                $get_embedding = $this->get_embedding($word->word, $options);
                 $embedding = (object) [
                     'id' => $id_embedding,
                     'embedding' => $get_embedding->get('embeddings.0'),
@@ -101,7 +101,7 @@ trait Embedding {
             $text = implode(' ', $text);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
-                $get_embedding = $this->get_embedding($text);
+                $get_embedding = $this->get_embedding($text, $options);
                 $embedding = (object) [
                     'id' => $id_embedding,
                     'embedding' => $get_embedding->get('embeddings.0'),
