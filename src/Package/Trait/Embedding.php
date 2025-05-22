@@ -61,6 +61,7 @@ trait Embedding {
             }
             $text = [];
             foreach($sentence->word as $word){
+                d($word_list[$word] ?? null);
                 $text[] = $word_list[$word]->text ?? null;
             }
             ddd($text);
