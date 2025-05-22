@@ -87,13 +87,16 @@ trait Find {
                 if(
                     array_key_exists($embedding->id, $list) &&
                     property_exists($list[$embedding->id], 'word') &&
-                    is_array($list[$embedding->id]->word)){
+                    is_array($list[$embedding->id]->word)
+                ){
                     foreach($list[$embedding->id]->word as $word_nr => $id_word){
                         $list[$embedding->id]->word[$word_nr] = $words[$id_word] ?? null;
                     }
                 }
-                ddd($list);
-                if(array_key_exists($embedding->id, $list)){
+                elseif(array_key_exists($embedding->id, $list) &&
+                    property_exists($list[$embedding->id], 'word') &&
+                    is_string($list[$embedding->id]->word)
+                ){
                     $sentence = $list[$embedding->id]->sentence ?? [];
                     if(empty($sentence)){
 //                        $word = $list[$embedding->id] ?? [];
@@ -102,35 +105,31 @@ trait Find {
                                 if (
                                     is_int($word_id) &&
                                     array_key_exists($word_id, $words) &&
-                                    property_exists($words[$word_id], 'word')
+                                    property_exists($words[$word_id], 'word') &&
+                                    $list[$embedding->id]->id === $word_id &&
+                                    !in_array(
+                                        $sentence_value->id,
+                                        $sentence,
+                                        true
+                                    )
                                 ) {
-                                    if(
-                                        !in_array(
-                                            $sentence->value->id,
-                                            $sentence,
-                                            true
-                                        )
-                                    ){
-                                        $sentence[] = $sentence->value->id;
-                                        break;
-                                    }
+                                    $sentence[] = $sentence_value->id;
+                                    break;
                                 }
                                 elseif(
                                     is_object($word_id) &&
                                     property_exists($word_id, 'id') &&
                                     array_key_exists($word_id->id, $words) &&
-                                    property_exists($words[$word_id->id], 'word')
+                                    property_exists($words[$word_id->id], 'word') &&
+                                    $list[$embedding->id]->id === $word_id->id &&
+                                    !in_array(
+                                        $sentence_value->id,
+                                        $sentence,
+                                        true
+                                    )
                                 ) {
-                                    if(
-                                        !in_array(
-                                            $sentence->value->id,
-                                            $sentence,
-                                            true
-                                        )
-                                    ){
-                                        $sentence[] = $sentence->value->id;
-                                        break;
-                                    }
+                                    $sentence[] = $sentence->value->id;
+                                    break;
                                 }
                             }
                         }
