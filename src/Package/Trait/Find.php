@@ -80,7 +80,6 @@ trait Find {
         $input = $this->get_embedding($options->input, $options);
         $result = [];
         foreach($embeddings as $embedding_id => $embedding){
-            ddd($embedding);
             $vector = $input->get('embeddings.0');
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
