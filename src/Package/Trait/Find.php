@@ -90,7 +90,6 @@ trait Find {
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
                 $sentence = [];
-                $paragraph = [];
                 if(
                     array_key_exists($embedding->id, $list) &&
                     property_exists($list[$embedding->id], 'word') &&
@@ -156,6 +155,7 @@ trait Find {
                         }
                     }
                 }
+                $paragraph = [];
                 foreach($sentence as $sentence_nr => $sentence_value){
                     foreach($paragraphs as $paragraph_value){
                         if(property_exists($paragraph_value, 'sentence')){
