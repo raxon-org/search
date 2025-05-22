@@ -247,6 +247,9 @@ trait Embedding {
         if(!$paragraphs){
             return;
         }
+        $embeddings = $data_embedding->get('embedding') ?? (object) [];
+        $id_embedding = $data->get('id.embedding.document') ?? 0;
+        $id_embedding++;
         $paragraph_embeddings = $data_paragraph_embedding->get('embedding') ?? (object) [];
         $paragraph_embeddings_list = [];
         foreach($paragraph_embeddings as $paragraph_embedding){
@@ -273,8 +276,24 @@ trait Embedding {
             foreach($set as $nr => $list){
                 $set[$nr] = $this->array_average($list);
             }
-            d($tokens);
-            ddd($set);
+            $text = implode(PHP_EOL, $set);
+            $hash = hash('sha256', $text);
+            if(!property_exists($embeddings, $hash)){
+                $embedding = (object) [
+                    'id' => $id_embedding,
+                    'embedding' => $set,
+                    'model' => 'average-paragraph',
+                    'tokens' => $tokens,
+                ];
+                $embeddings->{$hash} = $embedding;
+                $data->set('id.embedding.document', $id_embedding);
+                $id_embedding++;
+            } else {
+                $embedding = $embeddings->{$hash};
+            }
+            $document->embedding = $embedding->id;
+            $document->tokens = $tokens;
+           ddd($documents);
         }
 
 
