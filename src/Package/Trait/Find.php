@@ -55,6 +55,8 @@ trait Find {
         $input = $this->get_embedding($options->input);
         $result = [];
         foreach($embeddings as $embedding){
+            breakpoint($input);
+            breakpoint($embedding);
             $similarity = $this->cosine_similarity($input->get('embedding'), $embedding->embedding);
             ddd($similarity);
         }
