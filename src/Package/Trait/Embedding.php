@@ -255,7 +255,7 @@ trait Embedding {
         foreach($paragraph_embeddings as $paragraph_embedding){
             $paragraph_embeddings_list[$paragraph_embedding->id] = $paragraph_embedding;
         };
-        ddd($paragraph_embeddings_list);
+        breakpoint($paragraph_embeddings_list);
         $documents = $data->get('document');
         if(!$documents){
             return;
