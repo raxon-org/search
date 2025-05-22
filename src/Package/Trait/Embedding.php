@@ -177,7 +177,7 @@ trait Embedding {
             $paragraph_embedding = [];
             foreach($paragraph->sentence as $sentence_id){
                 $sentence = $sentence_list[$sentence_id];
-                if(property_exists('embedding', $sentence)){
+                if(property_exists($sentence, 'embedding')){
                     $paragraph_embedding[] = $sentence_embeddings_list[$sentence->id];
                 }
                 ddd($paragraph_embedding);
