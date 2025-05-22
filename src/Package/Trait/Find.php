@@ -103,7 +103,7 @@ trait Find {
                                     property_exists($list[$embedding->id], 'word')
                                 ) {
                                     if ($word_id === $embedding->id) {
-                                        $sentence[] = $word_id;
+                                        $sentence[] = $sentence_value->id ?? null;
                                         break;
                                     }
                                 }
