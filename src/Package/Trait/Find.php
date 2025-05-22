@@ -40,7 +40,7 @@ trait Find {
         }
         $data = $object->data_read($source);
         $list = [];
-        switch($type){
+        switch($options->type){
             case 'document':
                 $children = $data->get('document');
                 break;
