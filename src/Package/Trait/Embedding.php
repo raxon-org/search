@@ -257,11 +257,20 @@ trait Embedding {
             return;
         }
         foreach($documents as $document){
-            $document_embedding = [];
+            $document_embeddings = [];
+            $tokens = 0;
             foreach($document->paragraph as $paragraph_id){
                 $paragraph = $paragraph_embeddings_list[$paragraph_id];
-                ddd($paragraph);
+                $document_embeddings[] = $paragraph->embedding;
+                $tokens += $paragraph->tokens;
             }
+            $set = [];
+            foreach($document_embeddings as $document_embedding){
+                foreach($document_embedding as $nr => $float){
+                    $set[$nr][] = $float;
+                }
+            }
+            ddd($set);
         }
 
 
