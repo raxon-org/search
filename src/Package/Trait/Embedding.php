@@ -33,25 +33,28 @@ trait Embedding {
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
         foreach($words as $word){
-            $hash = hash('sha256', $word->word);
-            if(!property_exists($embeddings, $hash)){
-                $get_embedding = $this->get_embedding($word->word, $options);
-                $embedding = (object) [
-                    'id' => $id_embedding,
-                    'embedding' => $get_embedding->get('embeddings.0'),
-                    'model' => $get_embedding->get('model'),
-                    'tokens' => $get_embedding->get('prompt_eval_count'),
-                    'word' => $word->word,
+            if(property_exists($word, 'word')){
+                $hash = hash('sha256', $word->word);
+                if(!property_exists($embeddings, $hash)){
+                    $get_embedding = $this->get_embedding($word->word, $options);
+                    $embedding = (object) [
+                        'id' => $id_embedding,
+                        'embedding' => $get_embedding->get('embeddings.0'),
+                        'model' => $get_embedding->get('model'),
+                        'tokens' => $get_embedding->get('prompt_eval_count'),
+                        'word' => $word->word,
 
-                ];
-                $embeddings->{$hash} = $embedding;
-                $data->set('id.embedding.word', $id_embedding);
-                $id_embedding++;
-            } else {
-                $embedding = $embeddings->{$hash};
+                    ];
+                    $embeddings->{$hash} = $embedding;
+                    $data->set('id.embedding.word', $id_embedding);
+                    $id_embedding++;
+                } else {
+                    $embedding = $embeddings->{$hash};
+
+                }
+                $word->embedding = $embedding->id;
+                $word->tokens = $embedding->tokens;
             }
-            $word->embedding = $embedding->id;
-            $word->tokens = $embedding->tokens;
         }
         $data_embedding->set('embedding', $embeddings);
 

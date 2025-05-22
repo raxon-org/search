@@ -52,7 +52,7 @@ trait Find {
         }
         $word_list = [];
         foreach($words as $word){
-            $word_list[$word->id] = $word;
+            $word_list[$word->embedding] = $word;
         }
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
 
