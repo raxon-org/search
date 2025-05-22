@@ -50,6 +50,10 @@ trait Find {
         if(!$words){
             return;
         }
+        $word_list = [];
+        foreach($words as $word){
+            $word_list[$word->id] = $word;
+        }
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
 
         $input = $this->get_embedding($options->input);
@@ -60,7 +64,7 @@ trait Find {
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
                 $result[$similarity] = [
                     'id' => $embedding->id,
-                    'word' => $embedding->word,
+                    'word' => $word_list[$embedding->id]->word ?? '',
                     'similarity' => $similarity,
                 ];
             }
