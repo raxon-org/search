@@ -59,9 +59,11 @@ trait Embedding {
             if(!property_exists($sentence, 'word')){
                 continue;
             }
+            $text = [];
             foreach($sentence->word as $word){
-                d($word);
+                $text[] = $word_list[$word]->text ?? null;
             }
+            ddd($text);
         }
 //        $data->write($source);
     }
