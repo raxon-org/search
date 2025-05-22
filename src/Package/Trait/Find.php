@@ -111,7 +111,6 @@ trait Find {
                         }
 //                        ddd($word);
                     }
-                    ddd($sentence);
                 }
                 foreach($sentence as $sentence_nr => $sentence_id){
                     if(is_int($sentence_id)){
