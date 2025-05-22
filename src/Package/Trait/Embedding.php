@@ -221,6 +221,100 @@ trait Embedding {
         $data_embedding->write($source_embedding);
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function document(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
+        $source_paragraph_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        $data_embedding = $object->data_read($source_embedding);
+        $data_paragraph_embedding = $object->data_read($source_paragraph_embedding);
+        if(!$data){
+            return;
+        }
+        if(!$data_paragraph_embedding){
+            return;
+        }
+        if(!$data_embedding){
+            $data_embedding = new Data();
+        }
+        $paragraphs = $data->get('paragraph');
+        if(!$paragraphs){
+            return;
+        }
+        $paragraph_embeddings = $data_paragraph_embedding->get('embedding') ?? (object) [];
+        $paragraph_embeddings_list = [];
+        foreach($paragraph_embeddings_list as $paragraph_embedding){
+            $paragraph_embeddings_list[$paragraph_embedding->id] = $paragraph_embedding;
+        }
+        $documents = $data->get('document');
+        if(!$documents){
+            return;
+        }
+        foreach($documents as $document){
+            $document_embedding = [];
+            foreach($document->paragraph as $paragraph_id){
+                $paragraph = $paragraph_embeddings_list[$paragraph_id];
+                ddd($paragraph);
+            }
+        }
+
+
+        /*
+        foreach($paragraphs as $paragraph){
+            $paragraph_embeddings = [];
+            foreach($paragraph->sentence as $sentence_id){
+                $sentence = $sentence_list[$sentence_id];
+                if(property_exists($sentence, 'embedding')){
+                    $paragraph_embeddings[] = $sentence_embeddings_list[$sentence->id] ?? (object) [];
+                }
+            }
+            $set = [];
+            $tokens = 0;
+            foreach($paragraph_embeddings as $paragraph_embedding){
+                if(
+                    property_exists($paragraph_embedding, 'embedding') &&
+                    is_array($paragraph_embedding->embedding)
+                ){
+                    foreach($paragraph_embedding->embedding as $nr => $float){
+                        $set[$nr][] = $float;
+                    }
+                    $tokens += $paragraph_embedding->tokens;
+                }
+            }
+            foreach($set as $nr => $list){
+                $set[$nr] = $this->array_average($list);
+            }
+            $text = implode(PHP_EOL, $set);
+            $hash = hash('sha256', $text);
+            if(!property_exists($embeddings, $hash)){
+                $embedding = (object) [
+                    'id' => $id_embedding,
+                    'embedding' => $set,
+                    'model' => 'average-sentence',
+                    'tokens' => $tokens,
+                ];
+                $embeddings->{$hash} = $embedding;
+                $data->set('id.embedding.paragraph', $id_embedding);
+                $id_embedding++;
+            } else {
+                $embedding = $embeddings->{$hash};
+            }
+            $paragraph->embedding = $embedding->id;
+            $paragraph->tokens = $tokens;
+        }
+        $data_embedding->set('embedding', $embeddings);
+        $data->set('paragraph', $paragraphs);
+        $data->write($source);
+        $data_embedding->write($source_embedding);
+        */
+    }
+
     public function get_embedding($text): Data
     {
         $command = 'curl http://localhost:11434/api/embed -d \'{
