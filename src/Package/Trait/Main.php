@@ -104,44 +104,73 @@ trait Main {
         }
         $paragraph = array_values($paragraph);
         if($data){
+            $paragraph_list = $data->get('paragraph') ?? [];
+            $id_paragraph = $data->get('id.paragraph') ?? 0;
+            $id_paragraph++;
             $word_list = $data->get('word') ?? [];
+            $id_word = $data->get('id.word') ?? 0;
+            $id_word++;
+            $sentence_list = $data->get('sentence') ?? [];
+            $id_sentence = $data->get('id.sentence') ?? 0;
+            $id_sentence++;
         } else {
+            $paragraph_list = [];
+            $id_paragraph = 1;
             $word_list = [];
-        }
-        $id = 1;
-        if(!empty($word_list)){
-            foreach($word_list as $nr => $word){
-                if(
-                    property_exists('id', $word) &&
-                    $word->id > $id
-                ){
-                    $id = $word->id;
-                }
-            }
+            $id_word = 1;
+            $sentence_list = [];
+            $id_sentence = 1;
         }
         foreach($paragraph as $nr => $lines){
+            $sentence_paragraph_list = [];
             foreach($lines as $line){
                 $word_line = explode(' ', $line);
-                foreach($word_line as $nr => $word){
+                $sentence = (object) [
+                    'id' => $id_sentence,
+                    'word' => [],
+                    'text' => ''
+                ];
+                foreach($word_line as $word_line_nr => $word){
                     $found = false;
                     foreach($word_list as $word_list_nr => $word_list_item){
                         if($word_list_item->word === $word){
                             $found = true;
+                            $sentence->word[] = $word_list_item->id;
                             break;
                         }
                     }
                     if(!$found){
                         $word_list[] = (object) [
-                            'id' => $id,
+                            'id' => $id_word,
                             'word' => $word
                         ];
-                        $id++;
+                        $sentence->word[] = $id_word;
+                        $sentence->text .= $word . ' ';
+                        $id_word++;
                     }
                 }
+                $found = false;
+                foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
+                    if($sentence_list_item->text === $sentence->text){
+                        $found = true;
+                        $sentence->id = $sentence_list_item->id;
+                        break;
+                    }
+                }
+                if(!$found){
+                    $sentence_list[] = $sentence;
+                    $id_sentence++;
+                }
+                $sentence_paragraph_list[] = $sentence;
             }
+            $paragraph_list[] = (object) [
+                'id' => $id_paragraph,
+                'sentence' => $sentence_paragraph_list
+            ];
         }
         d($word_list);
-        ddd($paragraph);
+        d($sentence_list);
+        ddd($paragraph_list);
 
 
         d($source);
