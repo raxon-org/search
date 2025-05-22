@@ -71,7 +71,7 @@ trait Find {
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
                 $sentence = [];
-                if(is_arary($list[$embedding->id]->word)){
+                if(is_array($list[$embedding->id]->word)){
                     foreach($list[$embedding->id]->word as $nr => $id_word){
                         $sentence[] = $words[$id_word]->word ?? '';
                     }
