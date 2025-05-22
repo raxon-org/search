@@ -1,6 +1,7 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
+use Composer\Advisory\PartialSecurityAdvisory;
 use Exception;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
@@ -170,6 +171,8 @@ trait Find {
                                     break;
                                 }
                             }
+                        } else {
+                            ddd($paragraph_value);
                         }
                     }
                 }
