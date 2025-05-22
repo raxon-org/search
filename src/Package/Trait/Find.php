@@ -102,6 +102,7 @@ trait Find {
                                     array_key_exists($embedding->id, $list) &&
                                     property_exists($list[$embedding->id], 'word')
                                 ){
+                                    breakpoint($list[$embeddings->id]);
                                     foreach($list[$embedding->id]->word as $word_nr => $id_word){
                                         if($word_id == $id_word){
                                             $sentence[] = $word_id;
