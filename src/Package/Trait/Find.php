@@ -86,6 +86,7 @@ trait Find {
                         $sentence[] = $words[$id_word]->word ?? '';
                     }
                 }
+                d($sentence);
                 if(array_key_exists($embedding->id, $list)){
                     $sentence = $list[$embedding->id]->sentence ?? [];
                 }
