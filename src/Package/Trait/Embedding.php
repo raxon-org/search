@@ -148,6 +148,14 @@ trait Embedding {
         foreach($words as $word){
             $word_list[$word->id] = $word;
         }
+        $sentences = $data->get('sentence');
+        if(!$sentences){
+            return;
+        }
+        $sentence_list = [];
+        foreach($sentences as $sentence){
+            $sentence_list[$sentence->id] = $sentence;
+        }
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.paragraph') ?? 0;
         $id_embedding++;
@@ -156,6 +164,10 @@ trait Embedding {
             return;
         }
         foreach($paragraphs as $paragraph){
+            foreach($paragraph->sentence as $sentence_id){
+                $sentence = $sentence_list[$sentence_id];
+                ddd($sentence);
+            }
             ddd($paragraph);
             /*
             if(!property_exists($sentence, 'word')){
