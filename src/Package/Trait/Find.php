@@ -65,6 +65,7 @@ trait Find {
             $vector = $input->get('embeddings.0');
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
+                ddd($embedding);
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
