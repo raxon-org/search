@@ -56,7 +56,7 @@ trait Find {
         }
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
 
-        $input = $this->get_embedding($options->input);
+        $input = $this->get_embedding($options->input, $options);
         $result = [];
         foreach($embeddings as $embedding){
             $vector = $input->get('embeddings.0');
@@ -77,10 +77,11 @@ trait Find {
      * @throws ObjectException
      * @throws Exception
      */
-    public function get_embedding($text): Data
+    public function get_embedding($text, $options): Data
     {
+        $model = $options->model ?? 'nomic-embed-text';
         $command = 'curl http://localhost:11434/api/embed -d \'{
-            "model": "nomic-embed-text",
+            "model": "' . $model . '",
             "input": "' . str_replace("\n", '\\n', $text) . '"
         }\'';
         $output = shell_exec($command);
