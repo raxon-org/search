@@ -26,6 +26,8 @@ trait Find {
         if(!$data){
             return;
         }
+        $words = [];
+        $word_list = [];
         switch($options->type){
             case 'document':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
@@ -38,6 +40,7 @@ trait Find {
             case 'sentence':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
                 $children = $data->get('sentence');
+                $word_list = $data->get('word');
                 break;
             case 'word':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
@@ -53,8 +56,10 @@ trait Find {
         foreach($children as $child){
             $list[$child->embedding] = $child;
         }
+        foreach($word_list as $child){
+            $words[$child->id] = $child;
+        }
         $data_embedding = $object->data_read($source_embedding);
-
         if(!$data_embedding){
             $data_embedding = new Data();
         }
@@ -65,10 +70,17 @@ trait Find {
             $vector = $input->get('embeddings.0');
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
+                $sentence = [];
+                if(is_arary($list[$embedding->id]->word)){
+                    foreach($list[$embedding->id]->word as $nr => $id_word){
+                        $sentence[] = $words[$id_word]->word ?? '';
+                    }
+                }
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
                     'word_embedding' => $embedding->word ?? '',
+                    'sentence' => $sentence,
                     'tokens' => $embedding->tokens ?? 0,
                     'similarity' => $similarity,
                 ];
