@@ -16,26 +16,31 @@ trait Embedding {
     {
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding' . $object->config('extension.json');
         $data = $object->data_read($source);
+        $data_embedding = $object->data_read($source_embedding);
         if(!$data){
             return;
+        }
+        if(!$data_embedding){
+            $data_embedding = new Data();
         }
         $words = $data->get('word');
         if(!$words){
             return;
         }
-        $embeddings = $data->get('embedding') ?? [];
+        $embeddings = $data_embedding->get('embedding') ?? [];
         $id_embedding = $data->get('id.embedding') ?? 0;
         $id_embedding++;
         foreach($words as $word){
             $hash = hash('sha256', $word->word);
             if(!array_key_exists($hash, $embeddings)){
-                $data_embedding = $this->get_embedding($word->word);
+                $get_embedding = $this->get_embedding($word->word);
                 $embedding = (object) [
                     'id' => $id_embedding,
-                    'embedding' => $data_embedding->get('embeddings.0'),
-                    'model' => $data_embedding->get('model'),
-                    'tokens' => $data_embedding->get('prompt_eval_count'),
+                    'embedding' => $get_embedding->get('embeddings.0'),
+                    'model' => $get_embedding->get('model'),
+                    'tokens' => $get_embedding->get('prompt_eval_count'),
                 ];
                 $embeddings[$hash] = $embedding;
                 $id_embedding++;
@@ -45,10 +50,11 @@ trait Embedding {
             $word->embedding = $embedding->id;
             $word->tokens = $embedding->tokens;
         }
-        $data->set('embedding', $embeddings);
+        $data_embedding->set('embedding', $embeddings);
         $data->set('id.embedding', $id_embedding);
         $data->set('word', $words);
         $data->write($source);
+        $data_embedding->write($source);
     }
 
     /**
