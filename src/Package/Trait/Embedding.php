@@ -180,8 +180,9 @@ trait Embedding {
                 if(property_exists($sentence, 'embedding')){
                     $paragraph_embedding[] = $sentence_embeddings_list[$sentence->id];
                 }
-                ddd($paragraph_embedding);
+                d(count($paragraph_embedding));
             }
+            breakpoint('had it');
             $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
