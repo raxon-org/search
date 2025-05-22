@@ -164,12 +164,12 @@ trait Find {
                                     $sentence_id === $sentence_value->id &&
                                     !in_array($paragraph_value, $paragraph, true)
                                 ){
-                                    foreach($paragraph_value->sentence as $id_sentence){
+                                    foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
                                         if(
                                             is_int($id_sentence) &&
                                             array_key_exists($id_sentence, $sentences)
                                         ){
-                                            $paragraph_value->sentence[$id_sentence] = $sentences[$id_sentence];
+                                            $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
                                         }
                                     }
                                     $paragraph[] = $paragraph_value;
