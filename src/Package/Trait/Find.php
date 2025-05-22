@@ -173,9 +173,9 @@ trait Find {
                         }
                     }
                 }
-                /*
+
                 foreach($paragraph as $paragraph_nr => $paragraph_value){
-                    foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
+                    foreach($paragraph_value->sentence as $nr_paragraph_sentence => &$id_sentence){
                         if(
                             is_int($id_sentence) &&
                             array_key_exists($id_sentence, $sentences)
@@ -190,7 +190,7 @@ trait Find {
                         }
                     }
                 }
-                */
+
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
