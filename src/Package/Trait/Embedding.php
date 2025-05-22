@@ -201,9 +201,9 @@ trait Embedding {
                 }
                 $embedding = (object) [
                     'id' => $id_embedding,
-                    'embedding' => $get_embedding->get('embeddings.0'),
-                    'model' => $get_embedding->get('model'),
-                    'tokens' => $get_embedding->get('prompt_eval_count'),
+                    'embedding' => $set,
+                    'model' => 'average-sentence',
+                    'tokens' => $tokens,
                 ];
                 $embeddings->{$hash} = $embedding;
                 $data->set('id.embedding.paragraph', $id_embedding);
