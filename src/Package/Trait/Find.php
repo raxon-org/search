@@ -49,6 +49,7 @@ trait Find {
             case 'word':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
                 $children = $data->get('word');
+                $sentence_list = $data->get('sentence');
                 break;
             default:
                 throw new Exception('Type not set; available types: (document, paragraph, sentence, word)');
@@ -87,6 +88,8 @@ trait Find {
                     }
                 }
                 if(array_key_exists($embedding->id, $list)){
+                    breakpoint($sentences);
+                    ddd($list[$embedding->id]);
                     $sentence = $list[$embedding->id]->sentence ?? [];
                 }
 
