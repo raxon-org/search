@@ -55,12 +55,15 @@ trait Find {
         $input = $this->get_embedding($options->input);
         $result = [];
         foreach($embeddings as $embedding){
-            $similarity = $this->cosine_similarity($input->get('embeddings.0'), $embedding->embedding);
-            $result["{$similarity}"] = [
-                'id' => $embedding->id,
-                'word' => $words,
-                'similarity' => $similarity,
-            ];
+            $vector = $input->get('embeddings.0');
+            if(is_array($vector) && is_array($embedding->embedding)){
+                $similarity = $this->cosine_similarity($vector, $embedding->embedding);
+                $result["{$similarity}"] = [
+                    'id' => $embedding->id,
+                    'word' => $words,
+                    'similarity' => $similarity,
+                ];
+            }
         }
         krsort($result, SORT_NATURAL);
         ddd($result);
@@ -93,7 +96,7 @@ trait Find {
         return $sum / $count;
     }
 
-    public function cosine_similarity($vector1, $vector2): float|int
+    public function cosine_similarity(array $vector1, array $vector2): float|int
     {
         // Compute dot product
         $dot_product = $this->dot_product($vector1, $vector2);
@@ -112,7 +115,7 @@ trait Find {
         return $similarity;
     }
 
-    public function magnitude($vector): float|int
+    public function magnitude(array $vector): float|int
     {
         // Compute magnitude of vector
         $magnitude = 0;
@@ -122,14 +125,10 @@ trait Find {
         return sqrt($magnitude);
     }
 
-    public function dot_product($vector1, $vector2): float|int
+    public function dot_product(array $vector1, array $vector2): float|int
     {
         $dot_product = 0;
         foreach ($vector1 as $key => $value) {
-            if(is_array($value)){
-                breakpoint($key);
-                ddd($vector1);
-            }
             if(array_key_exists($key, $vector2)){
                 $dot_product += $value * $vector2[$key];
             }
