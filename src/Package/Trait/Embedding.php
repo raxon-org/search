@@ -192,7 +192,7 @@ trait Embedding {
             foreach($set as $nr => $list){
                 $set[$nr] = $this->array_average($list);
             }
-            breakpont($tokens);
+            breakpoint($tokens);
             breakpoint($set);
             $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
