@@ -39,6 +39,27 @@ trait Find {
                 throw new Exception('Type not set; available types: (document, paragraph, sentence, word)');
         }
         $data = $object->data_read($source);
+        $list = [];
+        switch($type){
+            case 'document':
+                $children = $data->get('document');
+                break;
+            case 'paragraph':
+                $children = $data->get('paragraph');
+                break;
+            case 'sentence':
+                $children = $data->get('sentence');
+                break;
+            case 'words':
+                $children = $data->get('word');
+                break;
+        }
+        if(!$children){
+            return;
+        }
+        foreach($children as $child){
+            $list[$child->embedding] = $child;
+        }
         $data_embedding = $object->data_read($source_embedding);
         if(!$data){
             return;
@@ -46,16 +67,7 @@ trait Find {
         if(!$data_embedding){
             $data_embedding = new Data();
         }
-        $words = $data->get('word');
-        if(!$words){
-            return;
-        }
-        $word_list = [];
-        foreach($words as $word){
-            $word_list[$word->embedding] = $word;
-        }
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
-
         $input = $this->get_embedding($options->input, $options);
         $result = [];
         foreach($embeddings as $embedding){
