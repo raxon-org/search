@@ -184,6 +184,8 @@ trait Find {
                             foreach($paragraph_value->sentence[$nr_paragraph_sentence]->word as $word_nr => $id_word){
                                 if(is_int($id_word) && array_key_exists($id_word, $words)){
                                     $paragraph_value->sentence[$nr_paragraph_sentence]->word[$word_nr] = $words[$id_word];
+                                } else {
+                                    breakpoint($id_word);
                                 }
                             }
                         } elseif(
