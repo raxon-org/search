@@ -41,6 +41,8 @@ trait Embedding {
                     'embedding' => $get_embedding->get('embeddings.0'),
                     'model' => $get_embedding->get('model'),
                     'tokens' => $get_embedding->get('prompt_eval_count'),
+                    'word' => $word->word,
+
                 ];
                 $embeddings->{$hash} = $embedding;
                 $data->set('id.embedding.word', $id_embedding);
