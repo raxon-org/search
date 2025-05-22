@@ -270,6 +270,9 @@ trait Embedding {
                     $set[$nr][] = $float;
                 }
             }
+            foreach($set as $nr => $list){
+                $set[$nr] = $this->array_average($list);
+            }
             d($tokens);
             ddd($set);
         }
