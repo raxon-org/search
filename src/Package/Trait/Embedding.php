@@ -173,7 +173,7 @@ trait Embedding {
                 }
                 $paragraph_text[] = implode(' ', $text);
             }
-            $text = implode(PHP_EOL, $paragraph_text);
+            $text = implode(' ', $paragraph_text);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($text);
