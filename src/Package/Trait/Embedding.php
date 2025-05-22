@@ -1,13 +1,16 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
+use Exception;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
+use Raxon\Module\Data;
 
 trait Embedding {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public function word(object $flags, object $options): void
     {
@@ -30,8 +33,10 @@ trait Embedding {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
-    public function get_embedding($word){
+    public function get_embedding(object $word): object
+    {
         if(!is_object($word)){
             return $word;
         }
@@ -47,9 +52,11 @@ trait Embedding {
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
         }
-
-
-        ddd($output);
+        $data = new Data($output);
+        $word->embedding = $data->get('embedding');
+        $word->model = $data->get('model');
+        $word->tokens = $data->get('prompt_eval_count');
+        return $word;
     }
 }
 
