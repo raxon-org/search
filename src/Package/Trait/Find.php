@@ -163,6 +163,7 @@ trait Find {
                                 if(
                                     $sentence_id === $sentence_value->id
                                 ){
+                                    breakpoint('found');
                                     foreach($paragraph_value->sentence as $sentence_nr => $id_sentence){
                                         if(
                                             is_int($id_sentence)  && array_key_exists($id_sentence, $sentences)){
