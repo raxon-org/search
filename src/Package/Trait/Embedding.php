@@ -190,8 +190,8 @@ trait Embedding {
                 ){
                     foreach($paragraph_embedding->embedding as $nr => $float){
                         $set[$nr][] = $float;
-                        $tokens += $paragraph_embedding->tokens;
                     }
+                    $tokens += $paragraph_embedding->tokens;
                 }
             }
             foreach($set as $nr => $list){
