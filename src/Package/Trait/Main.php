@@ -153,7 +153,7 @@ trait Main {
                 foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
                     if($sentence_list_item->text === $sentence->text){
                         $found = true;
-                        $sentence->id = $sentence_list_item->id;
+                        $sentence = $sentence_list_item;
                         break;
                     }
                 }
