@@ -144,8 +144,9 @@ trait Main {
             }
             $document = (object) [
                 'id' => $id_document,
-                'url' => $options->url,
-                'paragraph' => []
+                'url' => $url,
+                'paragraph' => [],
+                'date' => date('Y-m-d H:i:s'),
             ];
             foreach($paragraph as $paragraph_nr => $lines){
                 $sentence_paragraph_list = [];
