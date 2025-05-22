@@ -164,6 +164,14 @@ trait Find {
                                     $sentence_id === $sentence_value->id &&
                                     !in_array($paragraph_value, $paragraph, true)
                                 ){
+                                    foreach($paragraph_value->sentence as $sentence_id){
+                                        if(
+                                            is_int($sentence_id) &&
+                                            array_key_exists($sentence_id, $sentences)
+                                        ){
+                                            $paragraph_value->sentence[$sentence_id] = $sentences[$sentence_id];
+                                        }
+                                    }
                                     $paragraph[] = $paragraph_value;
                                     break;
                                 }
