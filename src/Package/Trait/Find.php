@@ -168,6 +168,8 @@ trait Find {
                                         if(
                                             is_int($id_sentence)  && array_key_exists($id_sentence, $sentences)){
                                             $paragraph_value->sentence[$sentence_nr] = $sentences[$id_sentence];
+                                        } else {
+                                            ddd('not found');
                                         }
                                     }
                                     $paragraph[] = $paragraph_value;
