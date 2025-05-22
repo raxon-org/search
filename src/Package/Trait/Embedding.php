@@ -182,14 +182,17 @@ trait Embedding {
                 }
             }
             $set = [];
+            $token = 0;
             foreach($paragraph_embeddings as $paragraph_embedding){
                 foreach($paragraph_embedding->embedding as $nr => $float){
                     $set[$nr][] = $float;
+                    $token += $paragraph_embedding->tokens;
                 }
             }
             foreach($set as $nr => $list){
                 $set[$nr] = $this->array_average($list);
             }
+            breakpont($tokens);
             breakpoint($set);
             $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
