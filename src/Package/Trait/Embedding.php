@@ -294,58 +294,11 @@ trait Embedding {
             }
             $document->embedding = $embedding->id;
             $document->tokens = $tokens;
-           ddd($documents);
-        }
-
-
-        /*
-        foreach($paragraphs as $paragraph){
-            $paragraph_embeddings = [];
-            foreach($paragraph->sentence as $sentence_id){
-                $sentence = $sentence_list[$sentence_id];
-                if(property_exists($sentence, 'embedding')){
-                    $paragraph_embeddings[] = $sentence_embeddings_list[$sentence->id] ?? (object) [];
-                }
-            }
-            $set = [];
-            $tokens = 0;
-            foreach($paragraph_embeddings as $paragraph_embedding){
-                if(
-                    property_exists($paragraph_embedding, 'embedding') &&
-                    is_array($paragraph_embedding->embedding)
-                ){
-                    foreach($paragraph_embedding->embedding as $nr => $float){
-                        $set[$nr][] = $float;
-                    }
-                    $tokens += $paragraph_embedding->tokens;
-                }
-            }
-            foreach($set as $nr => $list){
-                $set[$nr] = $this->array_average($list);
-            }
-            $text = implode(PHP_EOL, $set);
-            $hash = hash('sha256', $text);
-            if(!property_exists($embeddings, $hash)){
-                $embedding = (object) [
-                    'id' => $id_embedding,
-                    'embedding' => $set,
-                    'model' => 'average-sentence',
-                    'tokens' => $tokens,
-                ];
-                $embeddings->{$hash} = $embedding;
-                $data->set('id.embedding.paragraph', $id_embedding);
-                $id_embedding++;
-            } else {
-                $embedding = $embeddings->{$hash};
-            }
-            $paragraph->embedding = $embedding->id;
-            $paragraph->tokens = $tokens;
         }
         $data_embedding->set('embedding', $embeddings);
-        $data->set('paragraph', $paragraphs);
+        $data->set('document', $documents);
         $data->write($source);
         $data_embedding->write($source_embedding);
-        */
     }
 
     /**
