@@ -157,7 +157,7 @@ trait Main {
                     $sentence = (object) [
                         'id' => $id_sentence,
                         'word' => [],
-                        'text' => ''
+//                        'text' => ''
                     ];
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
@@ -166,7 +166,7 @@ trait Main {
                             if($word_list_item->word === $word){
                                 $found = true;
                                 $sentence->word[] = $word_list_item->id;
-                                $sentence->text .= $word_list_item->word . ' ';
+//                                $sentence->text .= $word_list_item->word . ' ';
                                 break;
                             }
                         }
@@ -176,17 +176,17 @@ trait Main {
                                 'word' => $word
                             ];
                             $sentence->word[] = $id_word;
-                            $sentence->text .= $word . ' ';
+//                            $sentence->text .= $word . ' ';
                             $id_word++;
                         }
                     }
                     if(!$found){
-                        $sentence->text = substr($sentence->text, 0, -1);
+//                        $sentence->text = substr($sentence->text, 0, -1);
                     }
-                    $sentence->text = rtrim($sentence->text);
+//                    $sentence->text = rtrim($sentence->text);
                     $found = false;
                     foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
-                        if($sentence_list_item->text === $sentence->text){
+                        if($sentence_list_item->word === $sentence->word){
                             $found = true;
                             $sentence = $sentence_list_item;
                             break;
