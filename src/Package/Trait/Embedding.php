@@ -232,7 +232,8 @@ trait Embedding {
         return new Data($output);
     }
 
-    public function array_average(array $list=[]){
+    public function array_average(array $list=[]): float
+    {
         ddd($list);
     }
 }
