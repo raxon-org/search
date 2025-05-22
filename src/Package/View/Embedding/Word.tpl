@@ -1,0 +1,1 @@
+{{Package.Raxon.Search:Embedding:word(flags(), options())}}
