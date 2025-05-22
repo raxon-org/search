@@ -134,10 +134,12 @@ trait Main {
                 $data = new Data();
             }
             $document_list_nr = null;
+            $is_put = false;
             if($document_list){
                 foreach($document_list as $document_list_nr => $document_list_item){
                     if($document_list_item->url === $options->url){
                         $id_document = $document_list_item->id;
+                        $is_put = $document_list_nr;
                         break;
                     }
                 }
@@ -215,19 +217,19 @@ trait Main {
                     $document->paragraph[] = $paragraph->id;
                 }
             }
-            if($document_list_nr !== null){
-                $document_list[$document_list_nr] = $document;
+            if($is_put !== false){
+                $document_list[$is_put] = $document;
             } else {
                 $document_list[] = $document;
             }
-            $data->set('document', $document_list);
-            $data->set('id.document', $id_document);
             $data->set('paragraph', $paragraph_list);
             $data->set('id.paragraph', $id_paragraph);
             $data->set('sentence', $sentence_list);
             $data->set('id.sentence', $id_sentence);
             $data->set('word', $word_list);
             $data->set('id.word', $id_word);
+            $data->set('document', $document_list);
+            $data->set('id.document', $id_document);
         }
         d($data);
         d($source);
