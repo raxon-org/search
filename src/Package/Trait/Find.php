@@ -65,6 +65,7 @@ trait Find {
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $word_list[$embedding->id]->word ?? '',
+                    'word_embedding' => $embedding->word ?? '',
                     'similarity' => $similarity,
                 ];
             }
