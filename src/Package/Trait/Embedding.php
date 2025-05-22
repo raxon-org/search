@@ -63,10 +63,10 @@ trait Embedding {
             foreach($sentence->word as $word){
                 $text[] = $word_list[$word]->word ?? null;
             }
-            $data = $this->get_embedding(implode(' ', $text));
-            $sentence->embedding = $data->get('embeddings.0');
-            $sentence->model = $data->get('model');
-            $sentence->tokens = $data->get('prompt_eval_count');
+            $embedding = $this->get_embedding(implode(' ', $text));
+            $sentence->embedding = $embedding->get('embeddings.0');
+            $sentence->model = $embedding->get('model');
+            $sentence->tokens = $embedding->get('prompt_eval_count');
         }
         $data->set('sentence', $sentences);
         $data->write($source);
