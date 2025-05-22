@@ -186,20 +186,17 @@ trait Find {
                                     $paragraph_value->sentence[$nr_paragraph_sentence]->word[$word_nr] = $words[$id_word];
                                 }
                             }
-                            d($paragraph_value);
                         } elseif(
                             is_object($id_sentence) &&
                             property_exists($id_sentence, 'id') &&
                             array_key_exists($id_sentence->id, $sentences)
                         ) {
                             $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence->id];
-                            d($paragraph_value);
                         } else {
                             breakpoint($id_sentence);
                         }
                     }
                 }
-
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
