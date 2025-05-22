@@ -90,8 +90,8 @@ trait Find {
                 }
                 foreach($sentence as $sentence_nr => $sentence_id){
                     $sentence[$sentence_nr] = $sentences[$sentence_id] ?? null;
-                    foreach($sentence[$sentence_nr]['word'] as $word_nr => $word_id){
-                        $sentence[$sentence_nr]['word'][$word_nr] = $words[$word_id] ?? null;
+                    foreach($sentence[$sentence_nr]->word as $word_nr => $word_id){
+                        $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
                     }
                 }
                 $result["{$similarity}"] = [
