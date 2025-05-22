@@ -58,12 +58,14 @@ trait Find {
             breakpoint($input);
             breakpoint($embedding);
             $similarity = $this->cosine_similarity($input->get('embeddings.0'), $embedding->embedding);
-            ddd($similarity);
+            $result["{$similarity}"] = [
+                'id' => $embedding->id,
+                'word' => $words,
+                'similarity' => $similarity,
+            ];
         }
-
-
-        d($input);
-        dd($embeddings);
+        krsort($result, SORT_NATURAL);
+        ddd($result);
     }
 
     /**
