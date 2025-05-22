@@ -84,7 +84,6 @@ trait Find {
             $embeddings[$child->id] = $child;
         }
         $input = $this->get_embedding($options->input, $options);
-        ddd($input);
         $result = [];
         foreach($embeddings as $embedding_id => $embedding){
             $vector = $input->get('embeddings.0');
