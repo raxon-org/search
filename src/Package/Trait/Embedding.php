@@ -54,7 +54,7 @@ trait Embedding {
         $data->set('id.embedding', $id_embedding);
         $data->set('word', $words);
         $data->write($source);
-        $data_embedding->write($source);
+        $data_embedding->write($source_embedding);
     }
 
     /**
