@@ -38,7 +38,7 @@ trait Find {
             case 'paragraph':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
                 $children = $data->get('paragraph');
-                $sentence_list = $data->get('word');
+                $sentence_list = $data->get('sentence');
                 break;
             case 'sentence':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
