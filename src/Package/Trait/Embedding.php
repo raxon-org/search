@@ -53,7 +53,7 @@ trait Embedding {
             $output = Core::object($output);
         }
         $data = new Data($output);
-        $word->embedding = $data->get('embeddings');
+        $word->embedding = $data->get('embeddings.0');
         $word->model = $data->get('model');
         $word->tokens = $data->get('prompt_eval_count');
         return $word;
