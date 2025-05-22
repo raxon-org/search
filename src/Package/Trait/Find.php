@@ -159,17 +159,17 @@ trait Find {
                 foreach($sentence as $sentence_nr => $sentence_value){
                     foreach($paragraphs as $paragraph_value){
                         if(property_exists($paragraph_value, 'sentence')){
-                            foreach($paragraph_value->sentence as $sentence_id){
+                            foreach($paragraph_value->sentence as $paragraph_sentence_nr => $sentence_id){
                                 if(
                                     $sentence_id === $sentence_value->id &&
                                     !in_array($paragraph_value, $paragraph, true)
                                 ){
-                                    foreach($paragraph_value->sentence as $sentence_id){
+                                    foreach($paragraph_value->sentence as $id_sentence){
                                         if(
-                                            is_int($sentence_id) &&
-                                            array_key_exists($sentence_id, $sentences)
+                                            is_int($id_sentence) &&
+                                            array_key_exists($id_sentence, $sentences)
                                         ){
-                                            $paragraph_value->sentence[$sentence_id] = $sentences[$sentence_id];
+                                            $paragraph_value->sentence[$id_sentence] = $sentences[$id_sentence];
                                         }
                                     }
                                     $paragraph[] = $paragraph_value;
