@@ -99,6 +99,7 @@ trait Find {
                         foreach($sentences as $sentence_id => $sentence_value){
                             foreach($sentence_value->word as $word_id){
                                 if (
+                                    is_int($word_id) &&
                                     array_key_exists($word_id, $words) &&
                                     property_exists($words[$word_id], 'word')
                                 ) {
@@ -108,6 +109,8 @@ trait Find {
                                         }
                                         break;
                                     }
+                                } else {
+                                    ddd($word_id);
                                 }
                             }
                         }
