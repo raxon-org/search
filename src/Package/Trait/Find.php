@@ -154,20 +154,22 @@ trait Find {
                                 $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
                             }
                         }
-                        foreach($paragraphs as $paragraph_value){
-                            if(property_exists($paragraph_value, 'sentence')){
-                                foreach($paragraph_value->sentence as $sentence_id){
-                                    if($sentence_id === $sentence[$sentence_nr]->id){
-                                        if(!in_array($paragraph_value->id, $paragraph, true)){
-                                            foreach($paragraph_value->sentence as $sentence_nr => $sentence_id){
-                                                if($sentence_id === $sentence[$sentence_nr]->id){
-                                                    $paragraph_value->sentence[$sentence_nr] = $sentence[$sentence_nr];
-                                                }
+                    }
+                }
+                foreach($sentence as $sentence_nr => $sentence_value){
+                    foreach($paragraphs as $paragraph_value){
+                        if(property_exists($paragraph_value, 'sentence')){
+                            foreach($paragraph_value->sentence as $sentence_id){
+                                if($sentence_id === $sentence_value->id){
+                                    if(!in_array($paragraph_value->id, $paragraph, true)){
+                                        foreach($paragraph_value->sentence as $sentence_nr => $id_sentence){
+                                            if($id_sentence === $sentence[$sentence_nr]->id){
+                                                $paragraph_value->sentence[$sentence_nr] = $sentence[$sentence_nr];
                                             }
-                                            $paragraph[] = $paragraph_value;
                                         }
-                                        break;
+                                        $paragraph[] = $paragraph_value;
                                     }
+                                    break;
                                 }
                             }
                         }
