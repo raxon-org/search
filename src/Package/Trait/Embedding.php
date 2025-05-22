@@ -123,6 +123,74 @@ trait Embedding {
         $data_embedding->write($source_embedding);
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function paragraph(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        $data_embedding = $object->data_read($source_embedding);
+        if(!$data){
+            return;
+        }
+        if(!$data_embedding){
+            $data_embedding = new Data();
+        }
+        $words = $data->get('word');
+        if(!$words){
+            return;
+        }
+        $word_list = [];
+        foreach($words as $word){
+            $word_list[$word->id] = $word;
+        }
+        $embeddings = $data_embedding->get('embedding') ?? (object) [];
+        $id_embedding = $data->get('id.embedding.paragraph') ?? 0;
+        $id_embedding++;
+        $paragraphs = $data->get('paragraph');
+        if(!$paragraphs){
+            return;
+        }
+        foreach($paragraphs as $paragraph){
+            ddd($paragraph);
+            /*
+            if(!property_exists($sentence, 'word')){
+                continue;
+            }
+            $text = [];
+            foreach($sentence->word as $word){
+                $text[] = $word_list[$word]->word ?? null;
+            }
+            $text = implode(' ', $text);
+            $hash = hash('sha256', $text);
+            if(!property_exists($embeddings, $hash)){
+                $get_embedding = $this->get_embedding($text);
+                $embedding = (object) [
+                    'id' => $id_embedding,
+                    'embedding' => $get_embedding->get('embeddings.0'),
+                    'model' => $get_embedding->get('model'),
+                    'tokens' => $get_embedding->get('prompt_eval_count'),
+                ];
+                $embeddings->{$hash} = $embedding;
+                $data->set('id.embedding.sentence', $id_embedding);
+                $id_embedding++;
+            } else {
+                $embedding = $embeddings->{$hash};
+            }
+            $sentence->embedding = $embedding->id;
+            $sentence->tokens = $embedding->tokens;
+            */
+        }
+//        $data_embedding->set('embedding', $embeddings);
+//        $data->set('paragraph', $paragraphs);
+//        $data->write($source);
+//        $data_embedding->write($source_embedding);
+    }
+
     public function get_embedding($text): Data
     {
         $command = 'curl http://localhost:11434/api/embed -d \'{
