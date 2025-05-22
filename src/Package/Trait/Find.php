@@ -30,6 +30,8 @@ trait Find {
         $word_list = [];
         $sentences = [];
         $sentence_list = [];
+        $paragraphs = [];
+        $paragraph_list = [];
         switch($options->type){
             case 'document':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
@@ -49,6 +51,7 @@ trait Find {
             case 'word':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
                 $children = $data->get('word');
+                $paragraph_list = $data->get('paragraph');
                 $sentence_list = $data->get('sentence');
                 $word_list = $data->get('word');
                 break;
@@ -61,6 +64,9 @@ trait Find {
         $list = [];
         foreach($children as $child){
             $list[$child->embedding] = $child;
+        }
+        foreach($paragraph_list as $child){
+            $paragraphs[$child->id] = $child;
         }
         foreach($sentence_list as $child){
             $sentences[$child->id] = $child;
@@ -146,6 +152,9 @@ trait Find {
                             if(is_int($word_id) && array_key_exists($word_id, $words)){
                                 $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
                             }
+                        }
+                        foreach($paragraphs as $paragraph){
+                            breakpoint($paragraph);
                         }
                     }
                 }
