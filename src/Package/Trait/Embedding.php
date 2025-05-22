@@ -164,11 +164,16 @@ trait Embedding {
             return;
         }
         foreach($paragraphs as $paragraph){
+            $paragraph_text = [];
             foreach($paragraph->sentence as $sentence_id){
                 $sentence = $sentence_list[$sentence_id];
-                ddd($sentence);
+                $text = [];
+                foreach($sentence->word as $word_id){
+                    $text[] = $word_list[$word]->word ?? null;
+                }
+                $paragraph_text[] = implode(' ', $text);
             }
-            ddd($paragraph);
+            ddd($paragraph_text);
             /*
             if(!property_exists($sentence, 'word')){
                 continue;
