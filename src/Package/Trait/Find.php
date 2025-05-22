@@ -94,7 +94,7 @@ trait Find {
                 }
                 if(array_key_exists($embedding->id, $list)){
                     $sentence = $list[$embedding->id]->sentence ?? [];
-                    ddd($sentence);
+                    ddd($list[$embedding->id]);
                     if(empty($sentence)){
                         foreach($sentences as $sentence_id => $sentence_data){
                             if(is_array($sentence_data->word)){
