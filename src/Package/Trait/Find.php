@@ -98,9 +98,14 @@ trait Find {
 //                        $word = $list[$embedding->id] ?? [];
                         foreach($sentences as $sentence_id => $sentence_value){
                             foreach($sentence_value->word as $word_id){
-                                foreach($list[$embedding->id]->word as $word_nr => $id_word){
-                                    if($word_id == $id_word){
-                                        $sentence[] = $word_id;
+                                if (
+                                    array_key_exists($embedding->id, $list) &&
+                                    property_exists($list[$embedding->id], 'word')
+                                ){
+                                    foreach($list[$embedding->id]->word as $word_nr => $id_word){
+                                        if($word_id == $id_word){
+                                            $sentence[] = $word_id;
+                                        }
                                     }
                                 }
                             }
