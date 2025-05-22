@@ -72,10 +72,14 @@ trait Find {
         if(!$data_embedding){
             $data_embedding = new Data();
         }
-        $embeddings = $data_embedding->get('embedding') ?? (object) [];
+        $embeddings = [];
+        $embeddings_list = $data_embedding->get('embedding') ?? (object) [];
+        foreach($embeddings_list as $child){
+            $embeddings[$child->id] = $child;
+        }
         $input = $this->get_embedding($options->input, $options);
         $result = [];
-        foreach($embeddings as $embedding){
+        foreach($embeddings as $embedding_id => $embedding){
             $vector = $input->get('embeddings.0');
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
@@ -90,6 +94,7 @@ trait Find {
                 }
                 if(array_key_exists($embedding->id, $list)){
                     $sentence = $list[$embedding->id]->sentence ?? [];
+                    ddd($sentence);
                     if(empty($sentence)){
                         foreach($sentences as $sentence_id => $sentence_data){
                             if(is_array($sentence_data->word)){
