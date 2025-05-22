@@ -109,8 +109,19 @@ trait Find {
                                         }
                                         break;
                                     }
-                                } else {
-                                    ddd($word_id);
+                                }
+                                elseif(
+                                    is_object($word_id) &&
+                                    property_exists($word_id, 'id') &&
+                                    array_key_exists($word_id->id, $words) &&
+                                    property_exists($words[$word_id->id], 'word')
+                                ) {
+                                    if ($word_id->id === $list[$embedding->id]->id) {
+                                        foreach($sentence_value->word as $word_id){
+                                            $sentence[] = $word_id->id;
+                                        }
+                                        break;
+                                    }
                                 }
                             }
                         }
