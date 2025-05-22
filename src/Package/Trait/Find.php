@@ -99,7 +99,7 @@ trait Find {
                             if(is_array($sentence_data->word)){
                                 foreach($sentence_data->word as $word_nr => $id_word){
                                     if(is_int($id_word)){
-                                        ddd($id_word);
+                                        ddd($words[$id_word] ?? null);
                                     }
                                     elseif(
                                         is_object($id_word) &&
