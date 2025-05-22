@@ -99,7 +99,6 @@ trait Find {
                         $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
                     }
                 }
-                ddd($sentence);
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
