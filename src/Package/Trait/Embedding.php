@@ -207,7 +207,6 @@ trait Embedding {
             "model": "nomic-embed-text",
             "input": "' . str_replace("\n", '\\n', $text) . '"
         }\'';
-        ddd($command);
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
