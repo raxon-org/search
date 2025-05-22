@@ -192,9 +192,7 @@ trait Embedding {
             foreach($set as $nr => $list){
                 $set[$nr] = $this->array_average($list);
             }
-            breakpoint($tokens);
-            breakpoint($set);
-            $text = implode(PHP_EOL, $paragraph_text);
+            $text = implode(PHP_EOL, $set);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($text);
@@ -214,7 +212,7 @@ trait Embedding {
                 $embedding = $embeddings->{$hash};
             }
             $paragraph->embedding = $embedding->id;
-            $paragraph->tokens = $embedding->tokens;
+            $paragraph->tokens = $tokens;
         }
         $data_embedding->set('embedding', $embeddings);
         $data->set('paragraph', $paragraphs);
