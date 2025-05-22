@@ -162,11 +162,20 @@ trait Find {
                         if(property_exists($paragraph_value, 'sentence')){
                             foreach($paragraph_value->sentence as $paragraph_sentence_nr => $sentence_id){
                                 if(
+                                    is_int($sentence_id) &&
                                     $sentence_id === $sentence_value->id
                                 ){
                                     /*
 
                                     */
+                                    $paragraph[] = $paragraph_value;
+                                    break;
+                                }
+                                elseif(
+                                    is_object($sentence_id) &&
+                                    property_exists($sentence_id, 'id') &&
+                                    $sentence_id->id === $sentence_value->id
+                                ){
                                     $paragraph[] = $paragraph_value;
                                     break;
                                 }
