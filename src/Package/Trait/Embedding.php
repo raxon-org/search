@@ -184,7 +184,10 @@ trait Embedding {
             $set = [];
             $tokens = 0;
             foreach($paragraph_embeddings as $paragraph_embedding){
-                if(is_array($paragraph_embedding->embedding)){
+                if(
+                    property_exists($paragraph_embedding, 'embedding') &&
+                    is_array($paragraph_embedding->embedding)
+                ){
                     foreach($paragraph_embedding->embedding as $nr => $float){
                         $set[$nr][] = $float;
                         $tokens += $paragraph_embedding->tokens;
