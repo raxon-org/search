@@ -1,21 +1,13 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
-use DOMDocument;
-use DOMXPath;
-use GuzzleHttp;
-use GuzzleHttp\Exception\GuzzleException;
+use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
-use Raxon\Module\Data;
-use Raxon\Module\Dir;
-use Raxon\Module\File;
 
-use Exception;
 trait Embedding {
 
     /**
-     * @throws Exception
-     * @throws GuzzleException
+     * @throws ObjectException
      */
     public function word(object $flags, object $options): void
     {
@@ -36,6 +28,9 @@ trait Embedding {
 
     }
 
+    /**
+     * @throws ObjectException
+     */
     public function get_embedding($word){
         if(!is_object($word)){
             return $word;
@@ -44,18 +39,16 @@ trait Embedding {
             return $word;
         }
         $text = $word->word;
-        /*
-        curl http://localhost:11434/api/embed -d '{
-            "model": "all-minilm",
-            "input": "Why is the sky blue?"
-
-        }'
-        */
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "nomic-embed-text",
             "input": "' . $text . '"
         }\'';
         $output = shell_exec($command);
+        if(substr($output, 0, 1) === '{'){
+            $output = Core::object($output);
+        }
+
+
         ddd($output);
     }
 }
