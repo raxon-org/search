@@ -94,7 +94,7 @@ trait Find {
                             if(is_array($sentence_data->word)){
                                 foreach($sentence_data->word as $word_nr => $id_word){
                                     if($id_word == $embedding->id){
-                                        $sentence[$sentence_id] = $sentence_data;
+                                        $sentence[] = $sentence_id;
                                         break;
                                     }
                                 }
