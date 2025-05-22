@@ -103,13 +103,15 @@ trait Find {
                     }
                 }
                 foreach($sentence as $sentence_nr => $sentence_id){
-                    $sentence[$sentence_nr] = $sentences[$sentence_id] ?? null;
-                    if($sentence[$sentence_nr] === null){
-                        continue;
-                    }
-                    foreach($sentence[$sentence_nr]->word as $word_nr => $word_id){
-                        if(is_int($word_id) && array_key_exists($word_id, $words)){
-                            $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
+                    if(is_int($sentence_id)){
+                        $sentence[$sentence_nr] = $sentences[$sentence_id] ?? null;
+                        if($sentence[$sentence_nr] === null){
+                            continue;
+                        }
+                        foreach($sentence[$sentence_nr]->word as $word_nr => $word_id){
+                            if(is_int($word_id) && array_key_exists($word_id, $words)){
+                                $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
+                            }
                         }
                     }
                 }
