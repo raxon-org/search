@@ -28,6 +28,8 @@ trait Find {
         }
         $words = [];
         $word_list = [];
+        $sentences = [];
+        $sentence_list = [];
         switch($options->type){
             case 'document':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
@@ -36,6 +38,7 @@ trait Find {
             case 'paragraph':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
                 $children = $data->get('paragraph');
+                $sentence_list = $data->get('word');
                 break;
             case 'sentence':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
@@ -55,6 +58,9 @@ trait Find {
         $list = [];
         foreach($children as $child){
             $list[$child->embedding] = $child;
+        }
+        foreach($sentence_list as $child){
+            $sentences[$child->id] = $child;
         }
         foreach($word_list as $child){
             $words[$child->id] = $child;
@@ -78,6 +84,12 @@ trait Find {
                     foreach($list[$embedding->id]->word as $nr => $id_word){
                         $sentence[] = $words[$id_word]->word ?? '';
                     }
+                }
+                if(array_key_exists($embedding->id, $list)){
+                    $sentence = $list[$embedding->id]->sentence ?? [];
+                }
+                foreach($sentence as $sentence_nr => $sentence_id){
+                    $sentence[$sentence_nr] = $sentences[$sentence_id] ?? null;
                 }
                 breakpoint($list[$embedding->id]);
                 $result["{$similarity}"] = [
