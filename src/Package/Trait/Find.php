@@ -112,6 +112,8 @@ trait Find {
                                     ) {
                                         $sentence[] = $sentence_data;
                                         break;
+                                    } else {
+                                        ddd($id_word);
                                     }
                                 }
                             }
