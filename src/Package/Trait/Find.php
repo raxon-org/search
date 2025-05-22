@@ -79,6 +79,7 @@ trait Find {
                         $sentence[] = $words[$id_word]->word ?? '';
                     }
                 }
+                d($embedding);
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
