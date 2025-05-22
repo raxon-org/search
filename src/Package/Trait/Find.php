@@ -54,6 +54,7 @@ trait Find {
 
         $input = $this->get_embedding($options->input);
         d($input);
+        dd($embeddings);
     }
 
     /**
