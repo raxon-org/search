@@ -173,16 +173,7 @@ trait Embedding {
                 }
                 $paragraph_text[] = implode(' ', $text);
             }
-            ddd($paragraph_text);
-            /*
-            if(!property_exists($sentence, 'word')){
-                continue;
-            }
-            $text = [];
-            foreach($sentence->word as $word){
-                $text[] = $word_list[$word]->word ?? null;
-            }
-            $text = implode(' ', $text);
+            $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($text);
@@ -193,19 +184,18 @@ trait Embedding {
                     'tokens' => $get_embedding->get('prompt_eval_count'),
                 ];
                 $embeddings->{$hash} = $embedding;
-                $data->set('id.embedding.sentence', $id_embedding);
+                $data->set('id.embedding.paragraph', $id_embedding);
                 $id_embedding++;
             } else {
                 $embedding = $embeddings->{$hash};
             }
-            $sentence->embedding = $embedding->id;
-            $sentence->tokens = $embedding->tokens;
-            */
+            $paragraph->embedding = $embedding->id;
+            $paragraph->tokens = $embedding->tokens;
         }
-//        $data_embedding->set('embedding', $embeddings);
-//        $data->set('paragraph', $paragraphs);
-//        $data->write($source);
-//        $data_embedding->write($source_embedding);
+        $data_embedding->set('embedding', $embeddings);
+        $data->set('paragraph', $paragraphs);
+        $data->write($source);
+        $data_embedding->write($source_embedding);
     }
 
     public function get_embedding($text): Data
