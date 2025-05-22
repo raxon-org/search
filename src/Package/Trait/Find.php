@@ -105,10 +105,13 @@ trait Find {
                                             break;
                                         }
                                     }
-                                    elseif($id_word->id === $embedding->id) {
+                                    elseif(
+                                        is_object($id_word) &&
+                                        property_exists($id_word, 'id') &&
+                                        $id_word->id === $embedding->id
+                                    ) {
                                         $sentence[] = $sentence_data;
                                         break;
-
                                     }
                                 }
                             }
