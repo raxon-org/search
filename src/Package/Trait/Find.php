@@ -83,10 +83,9 @@ trait Find {
                     property_exists($list[$embedding->id], 'word') &&
                     is_array($list[$embedding->id]->word)){
                     foreach($list[$embedding->id]->word as $word_nr => $id_word){
-                        $sentence[] = $words[$id_word]->word ?? '';
+                        $list[$embedding->id]->word[$word_nr] = $words[$id_word] ?? null;
                     }
                 }
-                d($sentence);
                 if(array_key_exists($embedding->id, $list)){
                     $sentence = $list[$embedding->id]->sentence ?? [];
                 }
