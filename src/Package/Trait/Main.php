@@ -196,7 +196,7 @@ trait Main {
                         $sentence_list[] = $sentence;
                         $id_sentence++;
                     }
-                    $sentence_paragraph_list[] = $sentence;
+                    $sentence_paragraph_list[] = $sentence->id;
                 }
                 $found = false;
                 foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
