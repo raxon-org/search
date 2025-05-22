@@ -174,13 +174,15 @@ trait Embedding {
             $sentence_embeddings_list[$sentence_embedding->id] = $sentence_embedding;
         }
         foreach($paragraphs as $paragraph){
-            $paragraph_embedding = [];
+            $paragraph_embeddings = [];
             foreach($paragraph->sentence as $sentence_id){
                 $sentence = $sentence_list[$sentence_id];
                 if(property_exists($sentence, 'embedding')){
-                    $paragraph_embedding[] = $sentence_embeddings_list[$sentence->id];
+                    $paragraph_embeddings[] = $sentence_embeddings_list[$sentence->id];
                 }
-                d(count($paragraph_embedding));
+            }
+            foreach($paragraph_embeddings as $paragraph_embedding){
+                d($paragraph_embedding);
             }
             breakpoint('had it');
             $text = implode(PHP_EOL, $paragraph_text);
