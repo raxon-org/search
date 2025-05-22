@@ -195,10 +195,6 @@ trait Embedding {
             $text = implode(PHP_EOL, $set);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
-                $get_embedding = $this->get_embedding($text);
-                if($get_embedding->get('model') === null){
-                    breakpoint($text);
-                }
                 $embedding = (object) [
                     'id' => $id_embedding,
                     'embedding' => $set,
