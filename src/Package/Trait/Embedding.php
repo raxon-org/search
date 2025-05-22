@@ -325,6 +325,10 @@ trait Embedding {
         */
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     public function get_embedding($text): Data
     {
         $command = 'curl http://localhost:11434/api/embed -d \'{
@@ -338,7 +342,7 @@ trait Embedding {
         return new Data($output);
     }
 
-    public function array_average(array $list=[]): float
+    public function array_average(array $list=[]): float|int
     {
         if(empty($list)){
             return 0;
@@ -346,6 +350,47 @@ trait Embedding {
         $sum = array_sum($list);
         $count = count($list);
         return $sum / $count;
+    }
+
+    public function cosine_similarity($vector1, $vector2): float|int
+    {
+        // Compute dot product
+        $dot_product = $this->dot_product($vector1, $vector2);
+
+        // Compute magnitude of vector 1
+        $magnitude1 = $this->magnitude($vector1);
+
+        // Compute magnitude of vector 2
+        $magnitude2 = $this->magnitude($vector2);
+        // Compute cosine similarity
+        if ($magnitude1 != 0 && $magnitude2 != 0) {
+            $similarity = $dot_product / ($magnitude1 * $magnitude2);
+        } else {
+            $similarity = 0;
+        }
+        return $similarity;
+    }
+
+    public function magnitude($vector): float|int
+    {
+        // Compute magnitude of vector
+        $magnitude = 0;
+        foreach ($vector as $value) {
+            $magnitude += $value * $value;
+        }
+        return sqrt($magnitude);
+    }
+
+    public function dot_product($vector1, $vector2): float|int
+    {
+        $dot_product = 0;
+        foreach ($vector1 as $key => $value) {
+            if(array_key_exists($key, $vector2)){
+                $dot_product += $value * $vector2[$key];
+            }
+        }
+        // Return the dot product
+        return $dot_product;
     }
 }
 
