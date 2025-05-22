@@ -157,6 +157,7 @@ trait Find {
                     }
                 }
                 $paragraph = [];
+                $paragraph_ids = [];
                 foreach($sentence as $sentence_nr => $sentence_value){
                     foreach($paragraphs as $paragraph_value){
                         if(property_exists($paragraph_value, 'sentence')){
@@ -165,10 +166,10 @@ trait Find {
                                     is_int($sentence_id) &&
                                     $sentence_id === $sentence_value->id
                                 ){
-                                    /*
-
-                                    */
-                                    $paragraph[] = $paragraph_value;
+                                    if(!in_array($paragraph_value->id, $paragraph_ids, true)){
+                                        $paragraph_ids[] = $paragraph_value->id;
+                                        $paragraph[] = $paragraph_value;
+                                    }
                                     break;
                                 }
                                 elseif(
@@ -176,7 +177,10 @@ trait Find {
                                     property_exists($sentence_id, 'id') &&
                                     $sentence_id->id === $sentence_value->id
                                 ){
-                                    $paragraph[] = $paragraph_value;
+                                    if(!in_array($paragraph_value->id, $paragraph_ids, true)){
+                                        $paragraph_ids[] = $paragraph_value->id;
+                                        $paragraph[] = $paragraph_value;
+                                    }
                                     break;
                                 }
                             }
