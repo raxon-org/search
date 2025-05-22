@@ -174,19 +174,19 @@ trait Find {
                     }
                 }
 
-                foreach($paragraph as $paragraph_nr => $paragraph_value){
+                foreach($paragraph as $paragraph_nr => &$paragraph_value){
                     foreach($paragraph_value->sentence as $nr_paragraph_sentence => &$id_sentence){
                         if(
                             is_int($id_sentence) &&
                             array_key_exists($id_sentence, $sentences)
                         ){
-                            $paragraph[$paragraph_nr]->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
+                            $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
                         } elseif(
                             is_object($id_sentence) &&
                             property_exists($id_sentence, 'id') &&
                             array_key_exists($id_sentence->id, $sentences)
                         ) {
-                            $paragraph[$paragraph_nr]->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence->id];
+                            $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence->id];
                         } else {
                             breakpoint($id_sentence);
                         }
