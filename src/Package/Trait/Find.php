@@ -173,6 +173,7 @@ trait Find {
                         }
                     }
                 }
+                /*
                 foreach($paragraph as $paragraph_nr => $paragraph_value){
                     foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
                         if(
@@ -189,6 +190,7 @@ trait Find {
                         }
                     }
                 }
+                */
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
