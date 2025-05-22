@@ -161,8 +161,7 @@ trait Find {
                         if(property_exists($paragraph_value, 'sentence')){
                             foreach($paragraph_value->sentence as $paragraph_sentence_nr => $sentence_id){
                                 if(
-                                    $sentence_id === $sentence_value->id &&
-                                    !in_array($paragraph_value, $paragraph, true)
+                                    $sentence_id === $sentence_value->id
                                 ){
                                     foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
                                         if(
