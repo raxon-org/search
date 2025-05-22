@@ -205,7 +205,7 @@ trait Embedding {
     {
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "nomic-embed-text",
-            "input": "' . $text . '"
+            "input": "' . str_replace("\n", '\\n', $text) . '"
         }\'';
         ddd($command);
         $output = shell_exec($command);
