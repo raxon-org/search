@@ -35,6 +35,43 @@ trait Embedding {
      * @throws ObjectException
      * @throws Exception
      */
+    public function sentence(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        if(!$data){
+            return;
+        }
+        $words = $data->get('word');
+        if(!$words){
+            return;
+        }
+        $word_list = [];
+        foreach($words as $word){
+            $word_list[$word->id] = $word;
+        }
+        $sentences = $data->get('sentence');
+        if(!$sentences){
+            return;
+        }
+        foreach($sentences as $sentence){
+            if(!property_exists($sentence, 'word')){
+                continue;
+            }
+            foreach($sentence->word as $word){
+                d($word);
+            }
+        }
+//        $data->write($source);
+    }
+
+
+
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     public function get_embedding(object $word): object
     {
         if(!is_object($word)){
