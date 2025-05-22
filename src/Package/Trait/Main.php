@@ -144,6 +144,7 @@ trait Main {
                     }
                 }
             }
+            d($is_put);
             $document = (object) [
                 'id' => $id_document,
                 'url' => $url,
