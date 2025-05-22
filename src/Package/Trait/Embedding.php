@@ -187,6 +187,9 @@ trait Embedding {
                     $set[$nr][] = $float;
                 }
             }
+            foreach($set as $nr => $list){
+                $set[$nr] = $this->array_average($list);
+            }
             breakpoint($set);
             $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
@@ -227,6 +230,10 @@ trait Embedding {
             $output = Core::object($output);
         }
         return new Data($output);
+    }
+
+    public function array_average(array $list=[]){
+        ddd($list);
     }
 }
 
