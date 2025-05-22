@@ -97,10 +97,13 @@ trait Find {
                     if(empty($sentence)){
 //                        $word = $list[$embedding->id] ?? [];
                         foreach($sentences as $sentence_id => $sentence_value){
-                            foreach($sentence_value->word as $word_nr => $word_id){
-                                $sentence[$word_nr] = $word_id ?? null;
+                            foreach($sentence_value->word as $word_id){
+                                foreach($list[$embedding->id]->word as $word_nr => $id_word){
+                                    if($word_id == $id_word){
+                                        $sentence[] = $word_id;
+                                    }
+                                }
                             }
-
                         }
 //                        ddd($word);
                     }
