@@ -164,21 +164,24 @@ trait Find {
                                     $sentence_id === $sentence_value->id
                                 ){
                                     /*
-                                    foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
-                                        if(
-                                            is_int($id_sentence) &&
-                                            array_key_exists($id_sentence, $sentences)
-                                        ){
-                                            $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
-                                        } else {
-                                            ddd($id_sentence);
-                                        }
-                                    }
+
                                     */
                                     $paragraph[] = $paragraph_value;
                                     break;
                                 }
                             }
+                        }
+                    }
+                }
+                foreach($paragraph as $paragraph_value){
+                    foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
+                        if(
+                            is_int($id_sentence) &&
+                            array_key_exists($id_sentence, $sentences)
+                        ){
+                            $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
+                        } else {
+                            ddd($id_sentence);
                         }
                     }
                 }
