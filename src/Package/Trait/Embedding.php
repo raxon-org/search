@@ -255,7 +255,6 @@ trait Embedding {
         foreach($paragraph_embeddings as $paragraph_embedding){
             $paragraph_embeddings_list[$paragraph_embedding->id] = $paragraph_embedding;
         };
-        breakpoint($paragraph_embeddings_list);
         $documents = $data->get('document');
         if(!$documents){
             return;
@@ -263,11 +262,12 @@ trait Embedding {
         foreach($documents as $document){
             $document_embeddings = [];
             $tokens = 0;
-            breakpoint($document);
             foreach($document->paragraph as $paragraph_id){
-                $paragraph = $paragraph_embeddings_list[$paragraph_id];
-                $document_embeddings[] = $paragraph->embedding;
-                $tokens += $paragraph->tokens;
+                if(array_key_exists($paragraph_id, $paragraph_embeddings_list)){
+                    $paragraph = $paragraph_embeddings_list[$paragraph_id];
+                    $document_embeddings[] = $paragraph->embedding;
+                    $tokens += $paragraph->tokens;
+                }
             }
             $set = [];
             foreach($document_embeddings as $document_embedding){
