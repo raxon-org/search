@@ -96,7 +96,9 @@ trait Find {
                         continue;
                     }
                     foreach($sentence[$sentence_nr]->word as $word_nr => $word_id){
-                        $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
+                        if(is_int($word_id) && array_key_exists($word_id, $words)){
+                            $sentence[$sentence_nr]->word[$word_nr] = $words[$word_id] ?? null;
+                        }
                     }
                 }
                 $result["{$similarity}"] = [
