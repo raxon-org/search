@@ -137,7 +137,7 @@ trait Main {
             $is_put = false;
             if($document_list){
                 foreach($document_list as $document_list_nr => $document_list_item){
-                    if($document_list_item->url === $options->url){
+                    if($document_list_item->url === $url){
                         $id_document = $document_list_item->id;
                         $is_put = $document_list_nr;
                         break;
