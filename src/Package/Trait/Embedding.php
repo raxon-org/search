@@ -263,7 +263,7 @@ trait Embedding {
         foreach($documents as $document){
             $document_embeddings = [];
             $tokens = 0;
-            d($document);
+            breakpoint($document);
             foreach($document->paragraph as $paragraph_id){
                 $paragraph = $paragraph_embeddings_list[$paragraph_id];
                 $document_embeddings[] = $paragraph->embedding;
