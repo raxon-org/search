@@ -93,6 +93,7 @@ trait Find {
                         $list[$embedding->id]->word[$word_nr] = $words[$id_word] ?? null;
                     }
                 }
+                ddd($list);
                 if(array_key_exists($embedding->id, $list)){
                     $sentence = $list[$embedding->id]->sentence ?? [];
                     if(empty($sentence)){
