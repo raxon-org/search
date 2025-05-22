@@ -168,11 +168,15 @@ trait Embedding {
         if(!$paragraphs){
             return;
         }
+        $sentence_embeddings = $data_sentence_embedding->get('embedding') ?? (object) [];
+        ddd($sentence_embeddings);
         foreach($paragraphs as $paragraph){
             $paragraph_embedding = [];
             foreach($paragraph->sentence as $sentence_id){
                 $sentence = $sentence_list[$sentence_id];
-
+                if(property_exists('embedding', $sentence)){
+//                    $paragraph_embedding[] = $sentence_embeddings
+                }
                 ddd($sentence);
             }
             $text = implode(PHP_EOL, $paragraph_text);
