@@ -163,6 +163,7 @@ trait Find {
                                 if(
                                     $sentence_id === $sentence_value->id
                                 ){
+                                    /*
                                     foreach($paragraph_value->sentence as $nr_paragraph_sentence => $id_sentence){
                                         if(
                                             is_int($id_sentence) &&
@@ -173,6 +174,7 @@ trait Find {
                                             ddd($id_sentence);
                                         }
                                     }
+                                    */
                                     $paragraph[] = $paragraph_value;
                                     break;
                                 }
