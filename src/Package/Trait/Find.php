@@ -128,7 +128,7 @@ trait Find {
                                         true
                                     )
                                 ) {
-                                    $sentence[] = $sentence->value->id;
+                                    $sentence[] = $sentence_value->id;
                                     break;
                                 }
                             }
