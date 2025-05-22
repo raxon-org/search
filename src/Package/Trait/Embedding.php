@@ -306,10 +306,12 @@ trait Embedding {
      * @throws ObjectException
      * @throws Exception
      */
-    public function get_embedding($text): Data
+    public function get_embedding($text, $options): Data
     {
+        $model = $options->model ?? 'nomic-embed-text';
+
         $command = 'curl http://localhost:11434/api/embed -d \'{
-            "model": "nomic-embed-text",
+            "model": "' . $model .'",
             "input": "' . str_replace("\n", '\\n', $text) . '"
         }\'';
         $output = shell_exec($command);
