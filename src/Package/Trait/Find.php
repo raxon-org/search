@@ -99,20 +99,14 @@ trait Find {
                             if(is_array($sentence_data->word)){
                                 foreach($sentence_data->word as $word_nr => $id_word){
                                     if(is_int($id_word)){
-                                        ddd($words[$id_word] ?? null);
+                                        $sentence_data->word[$word_nr] = $words[$id_word] ?? null;
                                     }
-                                    elseif(
-                                        is_object($id_word) &&
-                                        property_exists($id_word, 'id') &&
-                                        $id_word->id === $embedding->id
-                                    ) {
-                                        $sentence[] = $sentence_data;
-                                        break;
-                                    }
+                                    $sentence[] = $sentence_data;
                                 }
                             }
                         }
                     }
+                    ddd($sentence);
                 }
                 foreach($sentence as $sentence_nr => $sentence_id){
                     if(is_int($sentence_id)){
