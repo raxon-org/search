@@ -16,7 +16,7 @@ trait Embedding {
     {
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
-        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding' . $object->config('extension.json');
+        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
         if(!$data){
@@ -30,7 +30,7 @@ trait Embedding {
             return;
         }
         $embeddings = $data_embedding->get('embedding') ?? [];
-        $id_embedding = $data->get('id.embedding') ?? 0;
+        $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
         foreach($words as $word){
             $hash = hash('sha256', $word->word);
@@ -43,6 +43,7 @@ trait Embedding {
                     'tokens' => $get_embedding->get('prompt_eval_count'),
                 ];
                 $embeddings[$hash] = $embedding;
+                $data->set('id.embedding.word', $id_embedding);
                 $id_embedding++;
             } else {
                 $embedding = $embeddings[$hash];
@@ -51,7 +52,7 @@ trait Embedding {
             $word->tokens = $embedding->tokens;
         }
         $data_embedding->set('embedding', $embeddings);
-        $data->set('id.embedding', $id_embedding);
+
         $data->set('word', $words);
         $data->write($source);
         $data_embedding->write($source_embedding);
@@ -65,9 +66,14 @@ trait Embedding {
     {
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
         $data = $object->data_read($source);
+        $data_embedding = $object->data_read($source_embedding);
         if(!$data){
             return;
+        }
+        if(!$data_embedding){
+            $data_embedding = new Data();
         }
         $words = $data->get('word');
         if(!$words){
@@ -77,6 +83,9 @@ trait Embedding {
         foreach($words as $word){
             $word_list[$word->id] = $word;
         }
+        $embeddings = $data_embedding->get('embedding') ?? [];
+        $id_embedding = $data->get('id.embedding.sentence') ?? 0;
+        $id_embedding++;
         $sentences = $data->get('sentence');
         if(!$sentences){
             return;
@@ -89,13 +98,29 @@ trait Embedding {
             foreach($sentence->word as $word){
                 $text[] = $word_list[$word]->word ?? null;
             }
-            $embedding = $this->get_embedding(implode(' ', $text));
-            $sentence->embedding = $embedding->get('embeddings.0');
-            $sentence->model = $embedding->get('model');
-            $sentence->tokens = $embedding->get('prompt_eval_count');
+            $text = implode(' ', $text);
+            $hash = hash('sha256', implode($text));
+            if(!array_key_exists($hash, $embeddings)){
+                $get_embedding = $this->get_embedding($text);
+                $embedding = (object) [
+                    'id' => $id_embedding,
+                    'embedding' => $get_embedding->get('embeddings.0'),
+                    'model' => $get_embedding->get('model'),
+                    'tokens' => $get_embedding->get('prompt_eval_count'),
+                ];
+                $embeddings[$hash] = $embedding;
+                $data->set('id.embedding.sentence', $id_embedding);
+                $id_embedding++;
+            } else {
+                $embedding = $embeddings[$hash];
+            }
+            $sentence->embedding = $embedding->id;
+            $sentence->tokens = $embedding->tokens;
         }
+        $data_embedding->set('embedding', $embeddings);
         $data->set('sentence', $sentences);
         $data->write($source);
+        $data_embedding->write($source_embedding);
     }
 
     public function get_embedding($text): Data
