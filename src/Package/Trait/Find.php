@@ -88,11 +88,20 @@ trait Find {
                     }
                 }
                 if(array_key_exists($embedding->id, $list)){
-                    breakpoint($sentences);
-                    ddd($list[$embedding->id]);
                     $sentence = $list[$embedding->id]->sentence ?? [];
+                    if(empty($sentence)){
+                        foreach($sentences as $sentence_id => $sentence_data){
+                            if(is_array($sentence_data->word)){
+                                foreach($sentence_data->word as $word_nr => $id_word){
+                                    if($id_word == $embedding->id){
+                                        $sentence[$sentence_id] = $sentence_data;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-
                 foreach($sentence as $sentence_nr => $sentence_id){
                     $sentence[$sentence_nr] = $sentences[$sentence_id] ?? null;
                     if($sentence[$sentence_nr] === null){
