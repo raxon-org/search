@@ -276,7 +276,6 @@ trait Embedding {
             foreach($set as $nr => $list){
                 $set[$nr] = $this->array_average($list);
             }
-            ddd($set);
             $text = implode(PHP_EOL, $set);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
