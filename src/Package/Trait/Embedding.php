@@ -234,7 +234,12 @@ trait Embedding {
 
     public function array_average(array $list=[]): float
     {
-        ddd($list);
+        if(empty($list)){
+            return 0;
+        }
+        $sum = array_sum($list);
+        $count = count($list);
+        return $sum / $count;
     }
 }
 
