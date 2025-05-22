@@ -24,9 +24,29 @@ trait Embedding {
         if(!$words){
             return;
         }
+        $embeddings = $data->get('embedding') ?? [];
+        $id_embedding = $data->get('id.embedding') ?? 0;
+        $id_embedding++;
         foreach($words as $word){
-            $word = $this->get_word_embedding($word);
+            $hash = hash('sha256', $word->word);
+            if(!array_key_exists($hash, $embeddings)){
+                $data_embedding = $this->get_embedding($word->word);
+                $embedding = (object) [
+                    'id' => $id_embedding,
+                    'embedding' => $data_embedding->get('embeddings.0'),
+                    'model' => $data_embedding->get('model'),
+                    'tokens' => $data_embedding->get('prompt_eval_count'),
+                ];
+                $embeddings[$hash] = $embedding;
+                $id_embedding++;
+            } else {
+                $embedding = $embeddings[$hash];
+            }
+            $word->embedding = $embedding->id;
+            $word->tokens = $embedding->tokens;
         }
+        $data->set('embedding', $embeddings);
+        $data->set('id.embedding', $id_embedding);
         $data->set('word', $words);
         $data->write($source);
     }
@@ -70,36 +90,6 @@ trait Embedding {
         }
         $data->set('sentence', $sentences);
         $data->write($source);
-    }
-
-
-
-    /**
-     * @throws ObjectException
-     * @throws Exception
-     */
-    public function get_word_embedding(object $word): object
-    {
-        if(!is_object($word)){
-            return $word;
-        }
-        if(!property_exists($word ,'word')){
-            return $word;
-        }
-        $text = $word->word;
-        $command = 'curl http://localhost:11434/api/embed -d \'{
-            "model": "nomic-embed-text",
-            "input": "' . $text . '"
-        }\'';
-        $output = shell_exec($command);
-        if(substr($output, 0, 1) === '{'){
-            $output = Core::object($output);
-        }
-        $data = new Data($output);
-        $word->embedding = $data->get('embeddings.0');
-        $word->model = $data->get('model');
-        $word->tokens = $data->get('prompt_eval_count');
-        return $word;
     }
 
     public function get_embedding($text): Data
