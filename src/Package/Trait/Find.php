@@ -17,9 +17,27 @@ trait Find {
         if(!property_exists($options, 'input')){
             throw new Exception('Option input not set');
         }
+        if(!property_exists($options, 'type')){
+            $options->type = 'word';
+        }
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
-        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
+        switch($options->type){
+            case 'document':
+                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
+                break;
+            case 'paragraph':
+                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
+                break;
+            case 'sentence':
+                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
+                break;
+            case 'word':
+                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
+                break;
+            default:
+                throw new Exception('Type not set; available types: (document, paragraph, sentence, word)');
+        }
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
         if(!$data){
