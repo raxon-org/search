@@ -25,7 +25,7 @@ trait Embedding {
             return;
         }
         foreach($words as $word){
-            $word = $this->get_embedding($word);
+            $word = $this->get_word_embedding($word);
         }
         $data->set('word', $words);
         $data->write($source);
@@ -63,7 +63,8 @@ trait Embedding {
             foreach($sentence->word as $word){
                 $text[] = $word_list[$word]->word ?? null;
             }
-            d($text);
+            $data = $this->get_embedding(implode(' ', $text));
+            ddd($data);
         }
 //        $data->write($source);
     }
@@ -74,7 +75,7 @@ trait Embedding {
      * @throws ObjectException
      * @throws Exception
      */
-    public function get_embedding(object $word): object
+    public function get_word_embedding(object $word): object
     {
         if(!is_object($word)){
             return $word;
@@ -96,6 +97,19 @@ trait Embedding {
         $word->model = $data->get('model');
         $word->tokens = $data->get('prompt_eval_count');
         return $word;
+    }
+
+    public function get_embedding($text): Data
+    {
+        $command = 'curl http://localhost:11434/api/embed -d \'{
+            "model": "nomic-embed-text",
+            "input": "' . $text . '"
+        }\'';
+        $output = shell_exec($command);
+        if(substr($output, 0, 1) === '{'){
+            $output = Core::object($output);
+        }
+        return new Data($output);
     }
 }
 
