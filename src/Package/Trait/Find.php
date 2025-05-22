@@ -58,9 +58,9 @@ trait Find {
             $vector = $input->get('embeddings.0');
             if(is_array($vector) && is_array($embedding->embedding)){
                 $similarity = $this->cosine_similarity($vector, $embedding->embedding);
-                $result["{$similarity}"] = [
+                $result[$similarity] = [
                     'id' => $embedding->id,
-                    'word' => $words,
+                    'word' => $embedding->word,
                     'similarity' => $similarity,
                 ];
             }
