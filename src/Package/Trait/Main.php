@@ -231,9 +231,8 @@ trait Main {
             $data->set('document', $document_list);
             $data->set('id.document', $id_document);
         }
-        d($data);
-        d($source);
-        ddd($options);
+        $data->write($source);
+        echo 'File written: ' . $source . PHP_EOL;
     }
 }
 
