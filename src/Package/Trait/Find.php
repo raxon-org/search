@@ -14,6 +14,9 @@ trait Find {
      */
     public function input(object $flags, object $options): void
     {
+        if(!property_exists($options, 'input')){
+            throw new Exception('Option input not set');
+        }
         $object = $this->object();
         $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
         $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
@@ -30,10 +33,9 @@ trait Find {
             return;
         }
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
-        d($options->input ?? null);
-        ddd($words);
 
-
+        $input = $this->get_embedding($options->input);
+        d($input);
     }
 
     /**
