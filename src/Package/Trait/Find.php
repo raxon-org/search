@@ -126,6 +126,10 @@ trait Find {
     {
         $dot_product = 0;
         foreach ($vector1 as $key => $value) {
+            if(is_array($value)){
+                breakpoint($key);
+                ddd($vector1);
+            }
             if(array_key_exists($key, $vector2)){
                 $dot_product += $value * $vector2[$key];
             }
