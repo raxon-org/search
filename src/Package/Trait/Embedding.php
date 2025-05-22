@@ -29,12 +29,12 @@ trait Embedding {
         if(!$words){
             return;
         }
-        $embeddings = $data_embedding->get('embedding') ?? [];
+        $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
         foreach($words as $word){
             $hash = hash('sha256', $word->word);
-            if(!array_key_exists($hash, $embeddings)){
+            if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($word->word);
                 $embedding = (object) [
                     'id' => $id_embedding,
@@ -42,11 +42,11 @@ trait Embedding {
                     'model' => $get_embedding->get('model'),
                     'tokens' => $get_embedding->get('prompt_eval_count'),
                 ];
-                $embeddings[$hash] = $embedding;
+                $embeddings->{$hash} = $embedding;
                 $data->set('id.embedding.word', $id_embedding);
                 $id_embedding++;
             } else {
-                $embedding = $embeddings[$hash];
+                $embedding = $embeddings->{$hash};
             }
             $word->embedding = $embedding->id;
             $word->tokens = $embedding->tokens;
@@ -83,7 +83,7 @@ trait Embedding {
         foreach($words as $word){
             $word_list[$word->id] = $word;
         }
-        $embeddings = $data_embedding->get('embedding') ?? [];
+        $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.sentence') ?? 0;
         $id_embedding++;
         $sentences = $data->get('sentence');
@@ -100,7 +100,7 @@ trait Embedding {
             }
             $text = implode(' ', $text);
             $hash = hash('sha256', $text);
-            if(!array_key_exists($hash, $embeddings)){
+            if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($text);
                 $embedding = (object) [
                     'id' => $id_embedding,
@@ -108,11 +108,11 @@ trait Embedding {
                     'model' => $get_embedding->get('model'),
                     'tokens' => $get_embedding->get('prompt_eval_count'),
                 ];
-                $embeddings[$hash] = $embedding;
+                $embeddings->{$hash} = $embedding;
                 $data->set('id.embedding.sentence', $id_embedding);
                 $id_embedding++;
             } else {
-                $embedding = $embeddings[$hash];
+                $embedding = $embeddings->{$hash};
             }
             $sentence->embedding = $embedding->id;
             $sentence->tokens = $embedding->tokens;
