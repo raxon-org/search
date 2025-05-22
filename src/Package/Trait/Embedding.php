@@ -270,6 +270,7 @@ trait Embedding {
                     $set[$nr][] = $float;
                 }
             }
+            d($tokens);
             ddd($set);
         }
 
