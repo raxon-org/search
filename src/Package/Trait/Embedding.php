@@ -184,10 +184,11 @@ trait Embedding {
             $set = [];
             $tokens = 0;
             foreach($paragraph_embeddings as $paragraph_embedding){
-                breakpoint($paragraph_embedding);
-                foreach($paragraph_embedding->embedding as $nr => $float){
-                    $set[$nr][] = $float;
-                    $tokens += $paragraph_embedding->tokens;
+                if(is_array($paragraph_embedding->embedding)){
+                    foreach($paragraph_embedding->embedding as $nr => $float){
+                        $set[$nr][] = $float;
+                        $tokens += $paragraph_embedding->tokens;
+                    }
                 }
             }
             foreach($set as $nr => $list){
