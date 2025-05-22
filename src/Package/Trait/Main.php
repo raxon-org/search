@@ -104,6 +104,9 @@ trait Main {
         }
         $paragraph = array_values($paragraph);
         if($data){
+            $document_list = $data->get('document') ?? [];
+            $id_document = $data->get('id.document') ?? 0;
+            $id_document++;
             $paragraph_list = $data->get('paragraph') ?? [];
             $id_paragraph = $data->get('id.paragraph') ?? 0;
             $id_paragraph++;
@@ -114,6 +117,8 @@ trait Main {
             $id_sentence = $data->get('id.sentence') ?? 0;
             $id_sentence++;
         } else {
+            $document_list = [];
+            $id_document = 1;
             $paragraph_list = [];
             $id_paragraph = 1;
             $word_list = [];
@@ -121,6 +126,11 @@ trait Main {
             $sentence_list = [];
             $id_sentence = 1;
         }
+        $document = (object) [
+            'id' => $id_document,
+            'url' => $options->url,
+            'paragraph' => []
+        ];
         foreach($paragraph as $nr => $lines){
             $sentence_paragraph_list = [];
             foreach($lines as $line){
@@ -169,11 +179,26 @@ trait Main {
                 }
                 $sentence_paragraph_list[] = $sentence;
             }
-            $paragraph_list[] = (object) [
-                'id' => $id_paragraph,
-                'sentence' => $sentence_paragraph_list
-            ];
+            $found = false;
+            foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
+                if($paragraph_list_item->sentence === $sentence_paragraph_list){
+                    $found = true;
+                    $paragraph = $paragraph_list_item;
+                    break;
+                }
+            }
+            if(!$found){
+                $paragraph_list[] = (object) [
+                    'id' => $id_paragraph,
+                    'sentence' => $sentence_paragraph_list
+                ];
+                $document->paragraph[] = $id_paragraph;
+                $id_paragraph++;
+            } else {
+                $document->paragraph[] = $paragraph->id;
+            }
         }
+        ddd($document);
         d($word_list);
         d($sentence_list);
         ddd($paragraph_list);
