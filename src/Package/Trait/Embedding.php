@@ -177,6 +177,9 @@ trait Embedding {
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($text);
+                if($get_embedding->get('model') === null){
+                    breakpoint($text);
+                }
                 $embedding = (object) [
                     'id' => $id_embedding,
                     'embedding' => $get_embedding->get('embeddings.0'),
