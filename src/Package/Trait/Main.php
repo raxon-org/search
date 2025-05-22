@@ -6,6 +6,7 @@ use DOMXPath;
 use GuzzleHttp;
 use GuzzleHttp\Exception\GuzzleException;
 use Raxon\Module\Core;
+use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
 
@@ -125,6 +126,7 @@ trait Main {
             $id_word = 1;
             $sentence_list = [];
             $id_sentence = 1;
+            $data = new Data();
         }
         $document_list_nr = null;
         if($document_list){
