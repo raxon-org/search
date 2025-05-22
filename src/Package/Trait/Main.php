@@ -126,12 +126,21 @@ trait Main {
             $sentence_list = [];
             $id_sentence = 1;
         }
+        $document_list_nr = null;
+        if($document_list){
+            foreach($document_list as $document_list_nr => $document_list_item){
+                if($document_list_item->url === $options->url){
+                    $id_document = $document_list_item->id;
+                    break;
+                }
+            }
+        }
         $document = (object) [
             'id' => $id_document,
             'url' => $options->url,
             'paragraph' => []
         ];
-        foreach($paragraph as $nr => $lines){
+        foreach($paragraph as $paragraph_nr => $lines){
             $sentence_paragraph_list = [];
             foreach($lines as $line){
                 $word_line = explode(' ', $line);
@@ -198,12 +207,20 @@ trait Main {
                 $document->paragraph[] = $paragraph->id;
             }
         }
-        ddd($document);
-        d($word_list);
-        d($sentence_list);
-        ddd($paragraph_list);
-
-
+        if($document_list_nr !== null){
+            $document_list[$document_list_nr] = $document;
+        } else {
+            $document_list[] = $document;
+        }
+        $data->set('document', $document_list);
+        $data->set('id.document', $id_document);
+        $data->set('paragraph', $paragraph_list);
+        $data->set('id.paragraph', $id_paragraph);
+        $data->set('sentence', $sentence_list);
+        $data->set('id.sentence', $id_sentence);
+        $data->set('word', $word_list);
+        $data->set('id.word', $id_word);
+        d($data);
         d($source);
         ddd($options);
 
