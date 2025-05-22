@@ -50,6 +50,7 @@ trait Find {
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
                 $children = $data->get('word');
                 $sentence_list = $data->get('sentence');
+                $word_list = $data->get('word');
                 break;
             default:
                 throw new Exception('Type not set; available types: (document, paragraph, sentence, word)');
@@ -94,7 +95,12 @@ trait Find {
                             if(is_array($sentence_data->word)){
                                 foreach($sentence_data->word as $word_nr => $id_word){
                                     if($id_word == $embedding->id){
-                                        $sentence[] = $sentence_id;
+                                        foreach($sentence_data->word as $word_nr => $word_id){
+                                            if(is_int($word_id) && array_key_exists($word_id, $words)){
+                                                $sentence_data->word[$word_nr] = $words[$word_id] ?? null;
+                                            }
+                                        }
+                                        $sentence[] = $sentence_data;
                                         break;
                                     }
                                 }
