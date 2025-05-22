@@ -247,6 +247,7 @@ trait Embedding {
         if(!$paragraphs){
             return;
         }
+        ddd($data_paragraph_embedding);
         $paragraph_embeddings = $data_paragraph_embedding->get('embedding') ?? (object) [];
         $paragraph_embeddings_list = [];
         foreach($paragraph_embeddings_list as $paragraph_embedding){
