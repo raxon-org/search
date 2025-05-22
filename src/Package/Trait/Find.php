@@ -79,7 +79,7 @@ trait Find {
                         $sentence[] = $words[$id_word]->word ?? '';
                     }
                 }
-                breakpoint($embedding);
+                breakpoint($list[$embedding->id]);
                 $result["{$similarity}"] = [
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
