@@ -26,9 +26,9 @@ trait Embedding {
         }
         foreach($words as $word){
             $word = $this->get_embedding($word);
-            ddd($words);
         }
-
+        $data->set('word', $words);
+        $data->write($source);
     }
 
     /**
