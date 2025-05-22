@@ -180,8 +180,12 @@ trait Find {
                             array_key_exists($id_sentence, $sentences)
                         ){
                             $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
-                        } else {
-                            ddd($id_sentence);
+                        } elseif(
+                            is_object($id_sentence) &&
+                            property_exists($id_sentence, 'id') &&
+                            array_key_exists($id_sentence->id, $sentences)
+                        ) {
+                            $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence->id];
                         }
                     }
                 }
