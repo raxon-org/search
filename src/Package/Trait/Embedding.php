@@ -181,10 +181,13 @@ trait Embedding {
                     $paragraph_embeddings[] = $sentence_embeddings_list[$sentence->id];
                 }
             }
+            $set = [];
             foreach($paragraph_embeddings as $paragraph_embedding){
-                d($paragraph_embedding);
+                foreach($paragraph_embedding->embedding as $nr => $float){
+                    $set[$nr][] = $float;
+                }
             }
-            breakpoint('had it');
+            breakpoint($set);
             $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
