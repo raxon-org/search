@@ -181,6 +181,11 @@ trait Find {
                             array_key_exists($id_sentence, $sentences)
                         ){
                             $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
+                            foreach($paragraph_value->sentence[$nr_paragraph_sentence]->word as $word_nr => $id_word){
+                                if(is_int($id_word) && array_key_exists($id_word, $words)){
+                                    $paragraph_value->sentence[$nr_paragraph_sentence]->word[$word_nr] = $words[$id_word];
+                                }
+                            }
                             d($paragraph_value);
                         } elseif(
                             is_object($id_sentence) &&
@@ -199,7 +204,7 @@ trait Find {
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
                     'word_embedding' => $embedding->word ?? '',
-                    'sentence' => $sentence,
+//                    'sentence' => $sentence,
                     'paragraph' => $paragraph,
                     'tokens' => $embedding->tokens ?? 0,
                     'similarity' => $similarity,
