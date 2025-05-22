@@ -67,9 +67,9 @@ trait Embedding {
             $sentence->embedding = $data->get('embeddings.0');
             $sentence->model = $data->get('model');
             $sentence->tokens = $data->get('prompt_eval_count');
-            ddd($sentences);
         }
-//        $data->write($source);
+        $data->set('sentence', $sentences);
+        $data->write($source);
     }
 
 
