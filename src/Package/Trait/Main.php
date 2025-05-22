@@ -130,12 +130,14 @@ trait Main {
                     'word' => [],
                     'text' => ''
                 ];
+                $found = false;
                 foreach($word_line as $word_line_nr => $word){
                     $found = false;
                     foreach($word_list as $word_list_nr => $word_list_item){
                         if($word_list_item->word === $word){
                             $found = true;
                             $sentence->word[] = $word_list_item->id;
+                            $sentence->text .= $word_list_item->word . ' ';
                             break;
                         }
                     }
@@ -149,6 +151,10 @@ trait Main {
                         $id_word++;
                     }
                 }
+                if(!$found){
+                    $sentence->text = substr($sentence->text, 0, -1);
+                }
+                $sentence->text = rtrim($sentence->text);
                 $found = false;
                 foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
                     if($sentence_list_item->text === $sentence->text){
