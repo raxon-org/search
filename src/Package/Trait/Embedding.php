@@ -173,7 +173,7 @@ trait Embedding {
                 }
                 $paragraph_text[] = implode(' ', $text);
             }
-            $text = implode(' ', $paragraph_text);
+            $text = implode(PHP_EOL, $paragraph_text);
             $hash = hash('sha256', $text);
             if(!property_exists($embeddings, $hash)){
                 $get_embedding = $this->get_embedding($text);
@@ -207,6 +207,7 @@ trait Embedding {
             "model": "nomic-embed-text",
             "input": "' . $text . '"
         }\'';
+        ddd($command);
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
