@@ -187,6 +187,13 @@ trait Find {
                             foreach($paragraph_value->sentence[$nr_paragraph_sentence]->word as $word_nr => $id_word){
                                 if(is_int($id_word) && array_key_exists($id_word, $words)){
                                     $paragraph_value->sentence[$nr_paragraph_sentence]->word[$word_nr] = $words[$id_word];
+                                }
+                                elseif(
+                                    is_object($id_word) &&
+                                    property_exists($id_word, 'id') &&
+                                    array_key_exists($id_word->id, $words)
+                                ) {
+                                    $paragraph_value->sentence[$nr_paragraph_sentence]->word[$word_nr] = $words[$id_word->id] ?? null;
                                 } else {
                                     breakpoint($id_word);
                                 }
