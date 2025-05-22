@@ -53,6 +53,13 @@ trait Find {
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
 
         $input = $this->get_embedding($options->input);
+        $result = [];
+        foreach($embeddings as $embedding){
+            $similarity = $this->cosine_similarity($input->get('embedding'), $embedding->embedding);
+            ddd($similarity);
+        }
+
+
         d($input);
         dd($embeddings);
     }
