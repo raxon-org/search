@@ -103,7 +103,13 @@ trait Find {
                                     array_key_exists($word_id, $words) &&
                                     property_exists($words[$word_id], 'word')
                                 ) {
-                                    if(in_array($word_id, $words)){
+                                    if(
+                                        in_array(
+                                            $word_id,
+                                            $words,
+                                            true
+                                        )
+                                    ){
                                         $sentence[] = $sentence->value->id;
                                         break;
                                     }
