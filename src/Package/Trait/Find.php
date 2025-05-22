@@ -181,12 +181,14 @@ trait Find {
                             array_key_exists($id_sentence, $sentences)
                         ){
                             $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence];
+                            d($paragraph_value);
                         } elseif(
                             is_object($id_sentence) &&
                             property_exists($id_sentence, 'id') &&
                             array_key_exists($id_sentence->id, $sentences)
                         ) {
                             $paragraph_value->sentence[$nr_paragraph_sentence] = $sentences[$id_sentence->id];
+                            d($paragraph_value);
                         } else {
                             breakpoint($id_sentence);
                         }
