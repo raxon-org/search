@@ -99,10 +99,10 @@ trait Find {
                         foreach($sentences as $sentence_id => $sentence_value){
                             foreach($sentence_value->word as $word_id){
                                 if (
-                                    array_key_exists($embedding->id, $list) &&
-                                    property_exists($list[$embedding->id], 'word')
+                                    array_key_exists($word_id, $words) &&
+                                    property_exists($words[$word_id], 'word')
                                 ) {
-                                    if ($word_id === $embedding->id) {
+                                    if ($word_id === $list[$embedding->id]->id) {
                                         foreach($sentence_value->word as $word_id){
                                             $sentence[] = $word_id;
                                         }
