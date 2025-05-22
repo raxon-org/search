@@ -95,15 +95,13 @@ trait Find {
                 if(array_key_exists($embedding->id, $list)){
                     $sentence = $list[$embedding->id]->sentence ?? [];
                     if(empty($sentence)){
-                        $word = $list[$embedding->id] ?? [];
+//                        $word = $list[$embedding->id] ?? [];
                         foreach($sentences as $sentence_id => $sentence_value){
-                            ddd($sentence_value);
                             if($sentence_value->id === $list[$embedding->id]){
-                                $sentence = $sentence->word ?? [];
-                                break;
+                                $sentence[] = $sentence_value ?? null;
                             }
                         }
-                        ddd($word);
+//                        ddd($word);
                     }
                     ddd($sentence);
                 }
