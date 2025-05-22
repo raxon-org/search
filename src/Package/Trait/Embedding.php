@@ -99,7 +99,7 @@ trait Embedding {
                 $text[] = $word_list[$word]->word ?? null;
             }
             $text = implode(' ', $text);
-            $hash = hash('sha256', implode($text));
+            $hash = hash('sha256', $text);
             if(!array_key_exists($hash, $embeddings)){
                 $get_embedding = $this->get_embedding($text);
                 $embedding = (object) [
