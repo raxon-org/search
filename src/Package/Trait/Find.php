@@ -34,20 +34,40 @@ trait Find {
         $paragraphs = [];
         $paragraph_list = [];
         switch($options->type){
-            case 'document':
-                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Document' . $object->config('extension.json');
-                $children = $data->get('document');
-                break;
-            case 'paragraph':
-                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Paragraph' . $object->config('extension.json');
-                $children = $data->get('paragraph');
-                $sentence_list = $data->get('sentence');
-                $word_list = $data->get('word');
-                break;
             case 'sentence':
-                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Sentence' . $object->config('extension.json');
+                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
+                $document_list = $data->get('document');
+                $paragraph_list = $data->get('paragraph');
                 $children = $data->get('sentence');
                 $word_list = $data->get('word');
+
+                $list = [];
+                foreach($children as $child){
+                    ddd($child);
+                    $list[$child->embedding] = $child;
+                }
+                foreach($paragraph_list as $child){
+                    $paragraphs[$child->id] = $child;
+                }
+                foreach($sentence_list as $child){
+                    $sentences[$child->id] = $child;
+                }
+                foreach($word_list as $child){
+                    $words[$child->id] = $child;
+                }
+                $data_embedding = $object->data_read($source_embedding);
+                if(!$data_embedding){
+                    $data_embedding = new Data();
+                }
+                $embeddings = [];
+                $embeddings_list = $data_embedding->get('embedding') ?? (object) [];
+                foreach($embeddings_list as $child){
+                    $embeddings[$child->id] = $child;
+                }
+                $input = $this->get_embedding($options->input, $options);
+
+
+
                 break;
             case 'word':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
