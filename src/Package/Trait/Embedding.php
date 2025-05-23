@@ -5,8 +5,12 @@ use Exception;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
+use Raxon\Module\Dir;
+use Raxon\Module\File;
 
 trait Embedding {
+
+    const VERSION = '1.0.0';
 
     /**
      * @throws ObjectException
@@ -15,8 +19,18 @@ trait Embedding {
     public function word(object $flags, object $options): void
     {
         $object = $this->object();
-        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
-        $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
+
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+
+        Dir::create($dir_version, Dir::CHMOD);
+
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
         if(!$data){
@@ -57,10 +71,16 @@ trait Embedding {
             }
         }
         $data_embedding->set('embedding', $embeddings);
-
         $data->set('word', $words);
         $data->write($source);
         $data_embedding->write($source_embedding);
+        File::permission($object ,[
+            'dir_data' => $dir_data,
+            'dir_search' => $dir_search,
+            'dir_version' => $dir_version,
+            'source' => $source,
+            'source_embedding' => $source_embedding
+        ]);
     }
 
     /**
