@@ -167,6 +167,9 @@ trait Main {
                     ];
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
+                        if($word === ''){
+                            continue;
+                        }
                         $found = false;
                         foreach($word_list as $word_list_nr => $word_list_item){
                             if($word_list_item->word === $word){
