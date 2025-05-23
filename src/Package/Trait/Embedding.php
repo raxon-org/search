@@ -128,7 +128,6 @@ trait Embedding {
         $data_embedding->set('embedding', $embeddings);
 
         $float_list = Sort::list($float_list)->with(['count' => 'desc']);
-        ddd($float_list);
         $data_float->set('float', $float_list);
         $data->set('word', $words);
         $data->write($source);
