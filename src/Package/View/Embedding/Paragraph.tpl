@@ -1,4 +1,4 @@
 {{Package.Raxon.Search:Embedding:paragraph(flags(), options())}}
 /**
-- paragraph moet word count, strlen (bytes) & token count
+- paragraph needs to have word count, strlen (bytes) & token count
 */
