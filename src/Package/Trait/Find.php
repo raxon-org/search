@@ -68,7 +68,12 @@ trait Find {
                 if(!$data_float){
                     return;
                 }
-                ddd($data_embedding);
+                $floats = [];
+                $float_list = $data_float->get('float') ?? [];
+                foreach($float_list as $child){
+                    ddd($child);
+                    $floats[$child->id] = $child;
+                }
                 $embeddings = [];
                 $embeddings_list = $data_embedding->get('embedding') ?? [];
                 foreach($embeddings_list as $child){
