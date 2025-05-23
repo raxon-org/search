@@ -381,7 +381,7 @@ trait Embedding {
 
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "' . $model .'",
-            "input": "' . str_replace(["\n", '\''], ['\\n', '\\\''], $text) . '"
+            "input": "' . str_replace(["\n", '\''], ['\\n', '&apos;'], $text) . '"
         }\'';
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
