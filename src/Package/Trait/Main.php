@@ -168,7 +168,6 @@ trait Main {
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
                         if($word === ''){
-                            breakpoint($word_line_nr);
                             continue;
                         }
                         $found = false;
