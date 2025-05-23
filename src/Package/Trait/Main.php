@@ -12,6 +12,7 @@ use Raxon\Module\File;
 
 use Exception;
 trait Main {
+    const VERSION = '1.0.0';
 
     /**
      * @throws Exception
@@ -59,10 +60,16 @@ trait Main {
         if(!property_exists($options, 'url')){
             throw new Exception('Option URL not set');
         }
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
         $object = $this->object();
-        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        Dir::create($dir_version, Dir::CHMOD);
+        $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
-
         if(!is_array($options->url)){
             $options->url = [$options->url];
         }
@@ -144,7 +151,6 @@ trait Main {
                     }
                 }
             }
-            d($is_put);
             $document = (object) [
                 'id' => $id_document,
                 'url' => $url,
@@ -233,6 +239,12 @@ trait Main {
             $data->set('id.document', $id_document);
         }
         $data->write($source);
+        File::permission($object, [
+            'dir_data' => $dir_data,
+            'dir_version' => $dir_version,
+            'dir_search' => $dir_search,
+            'source' => $source
+        ]);
         echo 'File written: ' . $source . PHP_EOL;
     }
 }
