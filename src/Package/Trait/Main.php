@@ -180,8 +180,7 @@ trait Main {
                         }
                         if(!$found){
 
-                            if($id_word === 224){
-                                breakpoint('happening');
+                            if($id_word === 223){
                                 ddd($word);
                             }
                             $word_list[] = (object) [
