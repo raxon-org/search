@@ -164,7 +164,6 @@ trait Main {
                     $sentence = (object) [
                         'id' => $id_sentence,
                         'word' => [],
-//                        'text' => ''
                     ];
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
@@ -173,7 +172,6 @@ trait Main {
                             if($word_list_item->word === $word){
                                 $found = true;
                                 $sentence->word[] = $word_list_item->id;
-//                                $sentence->text .= $word_list_item->word . ' ';
                                 break;
                             }
                         }
@@ -183,14 +181,10 @@ trait Main {
                                 'word' => $word
                             ];
                             $sentence->word[] = $id_word;
-//                            $sentence->text .= $word . ' ';
+                            $data->set('id.word', $id_word);
                             $id_word++;
                         }
                     }
-                    if(!$found){
-//                        $sentence->text = substr($sentence->text, 0, -1);
-                    }
-//                    $sentence->text = rtrim($sentence->text);
                     $found = false;
                     foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
                         if($sentence_list_item->word === $sentence->word){
@@ -201,6 +195,7 @@ trait Main {
                     }
                     if(!$found){
                         $sentence_list[] = $sentence;
+                        $data->set('id.sentence', $id_sentence);
                         $id_sentence++;
                     }
                     $sentence_paragraph_list[] = $sentence->id;
@@ -219,6 +214,7 @@ trait Main {
                         'sentence' => $sentence_paragraph_list
                     ];
                     $document->paragraph[] = $id_paragraph;
+                    $data->set('id.paragraph', $id_paragraph);
                     $id_paragraph++;
                 } else {
                     $document->paragraph[] = $paragraph->id;
@@ -230,13 +226,10 @@ trait Main {
                 $document_list[] = $document;
             }
             $data->set('paragraph', $paragraph_list);
-            $data->set('id.paragraph', $id_paragraph-1);
             $data->set('sentence', $sentence_list);
-            $data->set('id.sentence', $id_sentence-1);
             $data->set('word', $word_list);
-            $data->set('id.word', $id_word-1);
             $data->set('document', $document_list);
-            $data->set('id.document', $id_document-1);
+            $data->set('id.document', $id_document);
         }
         $data->write($source);
         File::permission($object, [
