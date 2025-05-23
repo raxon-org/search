@@ -230,13 +230,13 @@ trait Main {
                 $document_list[] = $document;
             }
             $data->set('paragraph', $paragraph_list);
-            $data->set('id.paragraph', $id_paragraph);
+            $data->set('id.paragraph', $id_paragraph-1);
             $data->set('sentence', $sentence_list);
-            $data->set('id.sentence', $id_sentence);
+            $data->set('id.sentence', $id_sentence-1);
             $data->set('word', $word_list);
-            $data->set('id.word', $id_word);
+            $data->set('id.word', $id_word-1);
             $data->set('document', $document_list);
-            $data->set('id.document', $id_document);
+            $data->set('id.document', $id_document-1);
         }
         $data->write($source);
         File::permission($object, [
