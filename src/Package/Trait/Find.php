@@ -86,10 +86,10 @@ trait Find {
                     $embedding = [];
                     if(property_exists($child, 'word') && is_array($child->word)){
                         foreach($child->word as $word_nr => $word_id){
-                            $embedding[] = $embeddings[$word_id];
+                            $embedding[] = $embeddings[$word_id]->embedding;
                         }
                     }
-                    ddd($embedding);
+                    d($embedding);
                 }
                 breakpoint($list);
                 $vector = $input->get('embeddings.0');
