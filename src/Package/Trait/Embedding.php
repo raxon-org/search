@@ -31,8 +31,10 @@ trait Embedding {
 
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
+        $data_float = $object->data_read($source_embedding);
         if(!$data){
             return;
         }
@@ -43,6 +45,15 @@ trait Embedding {
         if(!$words){
             return;
         }
+        $floats = $data_embedding->get('float') ?? (object) [];
+        $float_list = [];
+        if($floats){
+            foreach($floats as $float){
+                $float_list[$float->id] = $float;
+            }
+        }
+        $id_float = $data->get('id.float') ?? 0;
+        $id_float++;
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
@@ -59,6 +70,10 @@ trait Embedding {
                         'word' => $word->word,
 
                     ];
+
+                    foreach($embedding->embedding as $nr => $value){
+                        ddd($value);
+                    }
                     $embeddings->{$hash} = $embedding;
                     $data->set('id.embedding.word', $id_embedding);
                     $id_embedding++;
