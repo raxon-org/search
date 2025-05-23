@@ -229,7 +229,7 @@ trait Find {
                     'id' => $embedding->id,
                     'word' => $list[$embedding->id]->word ?? '',
                     'word_embedding' => $embedding->word ?? '',
-//                    'sentence' => $sentence,
+                    'sentence' => $sentence,
                     'paragraph' => $paragraph,
                     'tokens' => $embedding->tokens ?? 0,
                     'similarity' => $similarity,
