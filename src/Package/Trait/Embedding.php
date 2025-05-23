@@ -7,6 +7,7 @@ use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
+use Raxon\Module\Sort;
 
 trait Embedding {
 
@@ -95,7 +96,8 @@ trait Embedding {
                         ){
                             $float_list[$id_float] = (object) [
                                 'id' => $id_float,
-                                'value' => $value
+                                'value' => $value,
+                                'count' => 1,
                             ];
                             $float_value_list["{$value}"] = $id_float;
                             $float_available[] = $value;
@@ -104,6 +106,7 @@ trait Embedding {
                             $id_float++;
                         } else {
                             $embedding->embedding[$nr] = $float_value_list["{$value}"];
+                            $float_list[$id_float]->count++;
                         }
                     }
                     $embeddings->{$hash} = $embedding;
@@ -118,6 +121,9 @@ trait Embedding {
             }
         }
         $data_embedding->set('embedding', $embeddings);
+
+        $float_list = Sort::list($float_list)->with(['count' => 'desc']);
+        ddd($float_list);
         $data_float->set('float', $float_list);
         $data->set('word', $words);
         $data->write($source);
