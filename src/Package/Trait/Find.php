@@ -82,6 +82,15 @@ trait Find {
                     $embeddings[$child->id] = $child;
                 }
                 $input = $this->get_embedding($options->input, $options);
+                foreach($list as $child_id => $child){
+                    $embedding = [];
+                    if(property_exists($child, 'word') && is_array($child->word)){
+                        foreach($child->word as $word_nr => $word_id){
+                            $embedding[] = $embeddings[$word_id];
+                        }
+                    }
+                    ddd($embedding);
+                }
                 breakpoint($list);
                 $vector = $input->get('embeddings.0');
                 foreach($embeddings as $embedding_id => $embedding){
