@@ -164,7 +164,7 @@ trait Find {
                             foreach($paragraph_value->sentence as $paragraph_sentence_nr => $sentence_id){
                                 if(
                                     is_int($sentence_id) &&
-                                    $sentence_id === $sentence_value->id
+                                    $sentence_id === $sentence_value->embedding
                                 ){
                                     if(!in_array($paragraph_value->id, $paragraph_ids, true)){
                                         $paragraph_ids[] = $paragraph_value->id;
@@ -175,7 +175,7 @@ trait Find {
                                 elseif(
                                     is_object($sentence_id) &&
                                     property_exists($sentence_id, 'id') &&
-                                    $sentence_id->id === $sentence_value->id
+                                    $sentence_id->id === $sentence_value->embedding
                                 ){
                                     if(!in_array($paragraph_value->id, $paragraph_ids, true)){
                                         $paragraph_ids[] = $paragraph_value->id;
