@@ -44,6 +44,7 @@ trait Find {
         switch($options->type){
             case 'sentence':
                 $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+                $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
                 $document_list = $data->get('document');
                 $paragraph_list = $data->get('paragraph');
                 $children = $data->get('sentence');
@@ -63,10 +64,15 @@ trait Find {
                 if(!$data_embedding){
                     $data_embedding = new Data();
                 }
+                $data_float = $object->data_read($source_float);
+                if(!$data_float){
+                    return;
+                }
                 ddd($data_embedding);
                 $embeddings = [];
-                $embeddings_list = $data_embedding->get('embedding') ?? (object) [];
+                $embeddings_list = $data_embedding->get('embedding') ?? [];
                 foreach($embeddings_list as $child){
+                    ddd($child);
                     $embeddings[$child->id] = $child;
                 }
                 $input = $this->get_embedding($options->input, $options);
