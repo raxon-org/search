@@ -6,8 +6,10 @@ use Exception;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
+use Raxon\Module\Dir;
 
 trait Find {
+    const VERSION = '1.0.0';
 
     /**
      * @throws ObjectException
@@ -22,7 +24,13 @@ trait Find {
             $options->type = 'word';
         }
         $object = $this->object();
-        $source = $object->config('controller.dir.data') . 'Search' . $object->config('extension.json');
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json')
         $data = $object->data_read($source);
         if(!$data){
             return;
@@ -65,9 +73,7 @@ trait Find {
                     $embeddings[$child->id] = $child;
                 }
                 $input = $this->get_embedding($options->input, $options);
-
-
-
+                ddd($input);
                 break;
             case 'word':
                 $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
