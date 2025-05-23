@@ -76,6 +76,9 @@ trait Find {
                 $embeddings = [];
                 $embeddings_list = $data_embedding->get('embedding') ?? [];
                 foreach($embeddings_list as $child){
+                    foreach($child->embedding as $embedding_nr => $float_id){
+                        $child->embedding[$embedding_nr] = $floats[$float_id]->value;
+                    }
                     ddd($child);
                     $embeddings[$child->id] = $child;
                 }
