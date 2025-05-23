@@ -79,10 +79,20 @@ trait Find {
                     foreach($child->embedding as $embedding_nr => $float_id){
                         $child->embedding[$embedding_nr] = $floats[$float_id]->value;
                     }
-                    ddd($child);
                     $embeddings[$child->id] = $child;
                 }
                 $input = $this->get_embedding($options->input, $options);
+                breakpoint($list);
+                $vector = $input->get('embeddings.0');
+                foreach($embeddings as $embedding_id => $embedding){
+
+                }
+                /*
+                    if(is_array($vector) && is_array($embedding->embedding)){
+                        $similarity = $this->cosine_similarity($vector, $embedding->embedding);
+                        $sentence = [];
+                    }
+                */
                 ddd($input);
                 break;
             case 'word':
