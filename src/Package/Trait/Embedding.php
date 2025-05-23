@@ -50,7 +50,6 @@ trait Embedding {
             return;
         }
         $floats = $data_embedding->get('float') ?? (object) [];
-        ddd($floats);
         $float_list = [];
         $float_value_list = [];
         $float_available = [];
@@ -106,6 +105,8 @@ trait Embedding {
                             $data->set('id.float', $id_float);
                             $id_float++;
                         } else {
+                            d($value);
+                            breakpoint($float_available);
                             $embedding->embedding[$nr] = $float_value_list["{$value}"];
                             if(!property_exists($float_list[$id_float], 'count')){
                                 $float_list[$id_float]->count = 1;
