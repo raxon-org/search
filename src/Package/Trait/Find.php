@@ -190,7 +190,7 @@ trait Find {
                     }
                 }
                 if(empty($paragraph)){
-                    d($sentence_id);
+                    d($sentence_id ?? null);
                     breakpoint($sentence);
                 }
                 foreach($paragraph as $paragraph_nr => &$paragraph_value){
