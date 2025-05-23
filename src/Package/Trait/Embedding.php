@@ -106,7 +106,11 @@ trait Embedding {
                             $id_float++;
                         } else {
                             $embedding->embedding[$nr] = $float_value_list["{$value}"];
-                            $float_list[$id_float]->count++;
+                            if(!property_exists($float_list[$id_float], 'count')){
+                                $float_list[$id_float]->count = 1;
+                            } else {
+                                $float_list[$id_float]->count++;
+                            }
                         }
                     }
                     $embeddings->{$hash} = $embedding;
