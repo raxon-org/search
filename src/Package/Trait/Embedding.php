@@ -50,6 +50,7 @@ trait Embedding {
             return;
         }
         $floats = $data_embedding->get('float') ?? (object) [];
+        ddd($floats);
         $float_list = [];
         $float_value_list = [];
         $float_available = [];
