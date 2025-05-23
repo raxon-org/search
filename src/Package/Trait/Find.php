@@ -43,7 +43,7 @@ trait Find {
         $paragraph_list = [];
         switch($options->type){
             case 'sentence':
-                $source_embedding = $object->config('controller.dir.data') . 'Search.Embedding.Word' . $object->config('extension.json');
+                $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
                 $document_list = $data->get('document');
                 $paragraph_list = $data->get('paragraph');
                 $children = $data->get('sentence');
@@ -51,14 +51,10 @@ trait Find {
 
                 $list = [];
                 foreach($children as $child){
-                    ddd($child);
-                    $list[$child->embedding] = $child;
+                    $list[$child->id] = $child;
                 }
                 foreach($paragraph_list as $child){
                     $paragraphs[$child->id] = $child;
-                }
-                foreach($sentence_list as $child){
-                    $sentences[$child->id] = $child;
                 }
                 foreach($word_list as $child){
                     $words[$child->id] = $child;
@@ -67,6 +63,7 @@ trait Find {
                 if(!$data_embedding){
                     $data_embedding = new Data();
                 }
+                ddd($data_embedding);
                 $embeddings = [];
                 $embeddings_list = $data_embedding->get('embedding') ?? (object) [];
                 foreach($embeddings_list as $child){
