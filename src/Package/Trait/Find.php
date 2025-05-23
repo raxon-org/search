@@ -30,7 +30,7 @@ trait Find {
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
-        $source = $dir_version . 'Search' . $object->config('extension.json')
+        $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
         if(!$data){
             return;
