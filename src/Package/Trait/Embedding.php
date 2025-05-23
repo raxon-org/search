@@ -47,8 +47,14 @@ trait Embedding {
         }
         $floats = $data_embedding->get('float') ?? (object) [];
         $float_list = [];
+        $float_value_list = [];
+        $float_available = [];
         if($floats){
             foreach($floats as $float){
+                if(property_exists($float, 'value')){
+                    $float_available[] = $float->value;
+                    $float_value_list["{$float->value}"] = $float->id;
+                }
                 $float_list[$float->id] = $float;
             }
         }
@@ -72,7 +78,25 @@ trait Embedding {
                     ];
 
                     foreach($embedding->embedding as $nr => $value){
-                        ddd($value);
+                        if(
+                            !in_array(
+                                $value,
+                                $float_available,
+                                true
+                            )
+                        ){
+                            $float_list[$id_float] = (object) [
+                                'id' => $id_float,
+                                'value' => $value
+                            ];
+                            $float_value_list["{$value}"] = $id_float;
+                            $float_available[] = $value;
+                            $embedding->embedding[$nr] = $id_float;
+                            $data->set('id.float', $id_float);
+                            $id_float++;
+                        } else {
+                            $embedding->embedding[$nr] = $float_value_list["{$value}"];
+                        }
                     }
                     $embeddings->{$hash} = $embedding;
                     $data->set('id.embedding.word', $id_embedding);
@@ -86,14 +110,17 @@ trait Embedding {
             }
         }
         $data_embedding->set('embedding', $embeddings);
+        $data_float->set('float', $float_list);
         $data->set('word', $words);
         $data->write($source);
         $data_embedding->write($source_embedding);
+        $data_float->write($source_float);
         File::permission($object ,[
             'dir_data' => $dir_data,
             'dir_search' => $dir_search,
             'dir_version' => $dir_version,
             'source' => $source,
+            'source_float' => $source_float,
             'source_embedding' => $source_embedding
         ]);
     }
