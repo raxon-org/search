@@ -64,7 +64,10 @@ trait Embedding {
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
         foreach($words as $word){
-            if(property_exists($word, 'word')){
+            if(property_exists($word, 'word') && $word->word === ''){
+                ddd($words);
+            }
+            if(property_exists($word, 'word') && $word->word !== ''){
                 $hash = hash('sha256', $word->word);
                 if(!property_exists($embeddings, $hash)){
                     $get_embedding = $this->get_embedding($word->word, $options);
