@@ -179,6 +179,11 @@ trait Main {
                             }
                         }
                         if(!$found){
+
+                            if($id_word === 224){
+                                breakpoint('happening');
+                                ddd($word);
+                            }
                             $word_list[] = (object) [
                                 'id' => $id_word,
                                 'word' => $word
