@@ -32,9 +32,8 @@ trait Find {
         $dir_version = $dir_search . $options->version . $object->config('ds');
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
-        ddd($data);
         if(!$data){
-            return;
+            throw new Exception('No data for version: ' . $options->version);
         }
         $words = [];
         $word_list = [];
