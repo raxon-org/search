@@ -180,8 +180,8 @@ trait Main {
                         }
                         if(!$found){
 
-                            if($id_word === 223){
-                                ddd($word);
+                            if($id_word >= 220){
+                                breakpoint($word);
                             }
                             $word_list[] = (object) [
                                 'id' => $id_word,
