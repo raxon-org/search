@@ -168,6 +168,7 @@ trait Main {
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
                         if($word === ''){
+                            breakpoint($word_line_nr);
                             continue;
                         }
                         $found = false;
@@ -179,10 +180,6 @@ trait Main {
                             }
                         }
                         if(!$found){
-
-                            if($id_word >= 220){
-                                breakpoint($word);
-                            }
                             $word_list[] = (object) [
                                 'id' => $id_word,
                                 'word' => $word
