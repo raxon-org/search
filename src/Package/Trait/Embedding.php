@@ -41,6 +41,9 @@ trait Embedding {
         if(!$data_embedding){
             $data_embedding = new Data();
         }
+        if(!$data_float){
+            $data_float = new Data();
+        }
         $words = $data->get('word');
         if(!$words){
             return;
