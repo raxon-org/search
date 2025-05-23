@@ -105,9 +105,8 @@ trait Embedding {
                             $data->set('id.float', $id_float);
                             $id_float++;
                         } else {
-                            d($value);
-                            breakpoint($float_available);
-                            $embedding->embedding[$nr] = $float_value_list["{$value}"];
+                            $id_float = $float_value_list["{$value}"];
+                            $embedding->embedding[$nr] = $id_float;
                             if(!property_exists($float_list[$id_float], 'count')){
                                 $float_list[$id_float]->count = 1;
                             } else {
