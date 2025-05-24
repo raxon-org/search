@@ -442,12 +442,11 @@ trait Find {
         $sum = 0;
         $multiplier = $options->multiplier ?? 1;
         foreach($list as $value){
-            $value += ($value * $multiplier);
-            if(property_exists($options, 'only_positive')) {
-                if($value < 0){
-                    continue;
-                }
+            if(property_exists($options, 'only_positive') && $value < 0) {
+                continue;
             }
+            $value += ($value * $multiplier);
+
             $sum += $value;
             $count++;
         }
