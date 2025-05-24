@@ -270,6 +270,9 @@ trait Main {
         if(!property_exists($options, 'source')){
             $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/php_manual_en/';
         }
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
         $dir = new Dir();
         $read = $dir->read($options->source);
         $chunks = array_chunk($read, 64);
@@ -281,9 +284,9 @@ trait Main {
                 $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
             }
             $count++;
-            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' > /dev/null';
+            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->verion .' > /dev/null';
+            exec($command);
             echo 'Percentage: ' . round($count / $total, 2) . PHP_EOL;
-
         }
     }
 }
