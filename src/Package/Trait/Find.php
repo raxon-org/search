@@ -124,7 +124,7 @@ trait Find {
         krsort($result, SORT_NATURAL);
         foreach($result as $average => $list){
             foreach($list as $nr => $record){
-                echo $record->average . ' | ' . implode(' ', $record->word_text);
+                echo $record->average . ' | ' . $record->id . ' ' . implode(' ', $record->word_text);
                 echo ' Similarity: ' .  implode(' ', $similarity) . PHP_EOL;
             }
         }
@@ -438,8 +438,12 @@ trait Find {
         if(empty($list)){
             return 0;
         }
-        $sum = array_sum($list);
-        $count = count($list);
+        $count = 0;
+        foreach($list as $value){
+            d($value);
+            $count++;
+        }
+        die;
         return $sum / $count;
     }
 
