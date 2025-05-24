@@ -206,7 +206,10 @@ trait Embedding {
         for($i = 0; $i < $pieces_count; $i++){
             $piece = [];
             for($j=$i; $j < ($i + 6); $j++){
-                $piece[] = $pieces[$j];
+                if(!array_key_exists($j, $pieces)){
+                    break 2;
+                }
+                $piece[] = $pieces[$j] ?? null;
             }
             $sentence_piece = [
                 'id' => $id_sentence_piece,
