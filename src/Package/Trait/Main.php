@@ -270,6 +270,11 @@ trait Main {
         if(!property_exists($options, 'source')){
             $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/php_manual_en/';
         }
+        $dir = new Dir();
+        $read = $dir->read($options->source);
+        $partition = Core::array_partition($read, 64);
+        ddd($partition);
+        foreach($read as $file)
         ddd($options);
     }
 }
