@@ -456,6 +456,7 @@ trait Find {
         if($is_debug){
             d($list);
             d($sum);
+            d($sum / $count);
             ddd($count);
         }
         if($count === 0){
