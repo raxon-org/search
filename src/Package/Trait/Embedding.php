@@ -320,7 +320,7 @@ trait Embedding {
                             d($value);
                             breakpoint($nr);
                             breakpoint($embedding);
-                            breakpoint($embeddings_sentence_piece);
+                            $this->get_embedding_sentence_piece($embeddings_sentence_piece, $float_list, true);
                             d(count($float_list));
                             ddd($id_float);
                         }
@@ -639,7 +639,7 @@ trait Embedding {
         return new Data($output);
     }
 
-    public function get_embedding_sentence_piece(array $embeddings, $floats): array
+    public function get_embedding_sentence_piece(array $embeddings, $floats, $is_debug=false): array
     {
         $record = [];
         foreach($embeddings as $embedding){
@@ -654,6 +654,9 @@ trait Embedding {
                     $record[$nr][] = $floats[$id_float]->value;
                 }
             }
+        }
+        if($is_debug){
+            ddd($record);
         }
         foreach($record as $nr => $list){
             $record[$nr] = $this->array_average($list);
