@@ -191,6 +191,17 @@ trait Embedding {
         foreach($embeddings as $embedding){
             $embedding_list[$embedding->id] = $embedding;
         }
+        $floats = $data_float->get('float') ?? (object) [];
+        $float_list = [];
+        $float_value_list = [];
+        $float_available = [];
+        foreach($floats as $float){
+            if(property_exists($float, 'value')){
+                $float_available[] = $float->value;
+                $float_value_list["{$float->value}"] = $float->id;
+            }
+            $float_list[$float->id] = $float;
+        }
         $sentences = $data->get('sentence') ?? [];
         $sentence_pieces = $data->get('sentence_piece') ?? [];
         $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
@@ -257,7 +268,7 @@ trait Embedding {
                     $word = $word_list_id[$id_word];
                     $embeddings[] = $embedding_list[$word->embedding];
                 }
-                ddd($embeddings);
+                $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings, $float_list);
 
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
@@ -527,6 +538,17 @@ trait Embedding {
             $output = Core::object($output);
         }
         return new Data($output);
+    }
+
+    public function get_embedding_sentence_piece(array $embeddings, $floats): array
+    {
+        $result = [];
+        foreach($embeddings as $embedding){
+            foreach($embedding->embedding as $nr => $id_float){
+                ddd($id_float);
+            }
+        }
+        return $result;
     }
 
     public function array_average(array $list=[]): float|int
