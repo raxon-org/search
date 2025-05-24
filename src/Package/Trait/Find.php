@@ -133,7 +133,7 @@ trait Find {
     public function get_embedding_float($embedding, $floats): array
     {
         foreach($embedding as $nr => $float_id){
-            $embedding[$nr] = $floats[$float_id];
+            $embedding[$nr] = $floats[$float_id]->value;
         }
         return $embedding;
     }
