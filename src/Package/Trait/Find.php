@@ -83,8 +83,9 @@ trait Find {
         foreach ($embedding_sentence_piece_list as $child) {
             $embedding_sentence_pieces[$child->id] = $child;
         }
-//        $input = $this->get_embedding($options->input, $options);
-//        $vector = $input->get('embeddings.0');
+        $input = $this->get_embedding($options->input, $options);
+        $vector = $input->get('embeddings.0');
+        breakpoint($vector);
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
             $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
