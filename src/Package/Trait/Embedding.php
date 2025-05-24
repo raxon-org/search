@@ -202,9 +202,25 @@ trait Embedding {
             }
         }
         for($i = 0; $i < $pieces_count; $i++){
-            $sentence_piece = [];
+            $piece = [];
             for($j=$i; $j < ($i + 6); $j++){
-                $sentence_piece[] = $pieces[$j];
+                $piece[] = $pieces[$j];
+            }
+            $sentence_piece = [
+                'word' => [],
+                'sentence' => []
+            ];
+            foreach($piece as $word){
+                $sentence_piece['word'][] = $word['word'];
+                if(
+                    !in_array(
+                        $word['sentence'],
+                        $sentence_piece['sentence'],
+                        true
+                    )
+                ){
+                    $sentence_piece['sentence'][] = $word['sentence'];
+                }
             }
             ddd($sentence_piece);
         }
