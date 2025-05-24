@@ -448,7 +448,7 @@ trait Find {
             if(property_exists($options, 'only-positive') && $value < 0) {
                 continue;
             }
-            $value += ($value * $multiplier);
+            $value = ($value * $multiplier);
 
             $sum += $value;
             $count++;
