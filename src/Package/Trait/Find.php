@@ -116,14 +116,25 @@ trait Find {
         }
         krsort($result, SORT_NATURAL);
         */
+        $input = explode(' ', $options->input);
+        foreach($input as $nr => $value){
+            $input[$nr] = trim($value);
+        }
+        foreach($input as $nr => $value){
+            if(array_key_exists($value, $vocabulary)) {
+                $input[$nr] = $vocabulary[$value];
+            }
+        }
+        ddd($input);
         /*
-        if(array_key_exists($options->input, $vocabulary)){
+        if(array_key_exists($word, $vocabulary)){
             $word = $vocabulary[$options->input];
             $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
         } else {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
         */
+
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
