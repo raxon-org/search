@@ -91,6 +91,7 @@ trait Find {
                         $embeddings[$sentence_piece_nr][$embedding_nr] = $float;
                     }
                 }
+                ddd($embeddings);
                 foreach($embeddings as $nr => $embedding){
                     ddd($embedding);
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
