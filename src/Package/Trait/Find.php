@@ -140,24 +140,59 @@ trait Find {
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
                 $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
             }
+            $similarity = [];
+            foreach($input as $nr => $vector){
+                $similarity[$nr] = [];
+                $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
+                if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
+                    foreach($embedding_sentence_piece->embedding_decode as $nr => $embedding){
+
+                        /*
+                      if(
+                          array_key_exists(0, $embedding) &&
+                          is_int($embedding[0])
+                      ){
+                          $embedding = $this->get_embedding_float($embedding, $floats);
+                      }
+                        */
+                        $similarity[$nr][] = $this->cosine_similarity($vector, $embedding);
+                    }
+
+                    /**
+                     * attention, add 3x the highest score 1x silver, and 1x bronze
+                     */
+                    rsort($similarity, SORT_NATURAL);
+                    $similarity[$nr][] = $similarity[0];
+                    $similarity[$nr][] = $similarity[0];
+                    $similarity[$nr][] = $similarity[0];
+                    $similarity[$nr][] = $similarity[1];
+                    $similarity[$nr][] = $similarity[2];
+                    $average = $this->array_average($similarity[$nr], $options);
+                    $word_text = [];
+                    foreach($embedding_sentence_piece->word as $word_id){
+                        $word_text[] = $words[$word_id]->word ?? null;
+                    }
+                    if(!array_key_exists("{$average}", $result)){
+                        $result["{$average}"] = [];
+                    }
+                    $result["{$average}"][] = (object)[
+                        'id' => $embedding_sentence_piece->id,
+                        'word' => $embedding_sentence_piece->word ?? [],
+                        'sentence' => $embedding_sentence_piece->sentence ?? [],
+                        'tokens' => $embedding_sentence_piece->tokens ?? 0,
+                        'similarity' => $similarity[$nr],
+                        'average' => $average,
+                        'word_text' => $word_text,
+                        'memory' => File::size_format(memory_get_peak_usage(true))
+                    ];
+                }
+            }
+            /*
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding_decode as $nr => $embedding){
-
-                    /*
-                  if(
-                      array_key_exists(0, $embedding) &&
-                      is_int($embedding[0])
-                  ){
-                      $embedding = $this->get_embedding_float($embedding, $floats);
-                  }
-                    */
                   $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
-
-                /**
-                 * attention, add 3x the highest score 1x silver, and 1x bronze
-                 */
                 rsort($similarity, SORT_NATURAL);
                 $similarity[] = $similarity[0];
                 $similarity[] = $similarity[0];
@@ -183,6 +218,7 @@ trait Find {
                     'memory' => File::size_format(memory_get_peak_usage(true))
                 ];
             }
+            */
             unset($embedding_sentence_piece->embedding_decode);
         }
         krsort($result, SORT_NATURAL);
