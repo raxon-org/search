@@ -325,15 +325,47 @@ trait Embedding {
                 }
                 if(!property_exists($embeddings, $embedding->hash)){
                     $embeddings->{$embedding->hash} = $embedding;
+                    $data->set('id.embedding.sentence_piece', $id_embedding);
+                    $id_embedding++;
                 }
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
-                if($id_sentence_piece % 10 === 0){
+                if($id_sentence_piece % 50 === 0){
+                    $data_embedding_sentence_piece->set('embedding', $embeddings);
+                    $float_list = Sort::list($float_list)->with(['count' => 'desc']);
+                    $data_float->set('float', $float_list);
+                    $data->set('word', $words);
+                    $data->write($source);
+                    $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
+                    $data_float->write($source_float);
+                    File::permission($object ,[
+                        'dir_data' => $dir_data,
+                        'dir_search' => $dir_search,
+                        'dir_version' => $dir_version,
+                        'source' => $source,
+                        'source_float' => $source_float,
+                        'source_embedding' => $source_embedding_sentence_piece
+                    ]);
                     echo 'Counter: ' . $id_sentence_piece . PHP_EOL;
                 }
             }
         }
+        $data_embedding_sentence_piece->set('embedding', $embeddings);
+        $float_list = Sort::list($float_list)->with(['count' => 'desc']);
+        $data_float->set('float', $float_list);
+        $data->set('word', $words);
+        $data->write($source);
+        $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
+        $data_float->write($source_float);
+        File::permission($object ,[
+            'dir_data' => $dir_data,
+            'dir_search' => $dir_search,
+            'dir_version' => $dir_version,
+            'source' => $source,
+            'source_float' => $source_float,
+            'source_embedding' => $source_embedding_sentence_piece
+        ]);
         ddd(count($embeddings));
     }
     /**
