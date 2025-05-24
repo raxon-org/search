@@ -83,6 +83,10 @@ trait Find {
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){;
+                    if($id === 130){
+                        breakpoint($vector);
+                        breakpoint($embedding);
+                    }
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
 //                rsort($similarity, SORT_NATURAL);
