@@ -318,6 +318,8 @@ trait Embedding {
                         $embedding->embedding[$nr] = $id_float;
                         if(!array_key_exists($id_float, $float_list)){
                             d($value);
+                            breakpoint($nr);
+                            breakpoint($embedding);
                             d(count($float_list));
                             ddd($id_float);
                         }
