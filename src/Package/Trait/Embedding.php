@@ -549,7 +549,12 @@ trait Embedding {
                 if(!array_key_exists($nr, $record)){
                     $record[$nr] = [];
                 }
-                $record[$nr][] = $floats[$id_float];
+                if(
+                    array_key_exists($id_float, $floats) &&
+                    property_exists($floats[$id_float], 'value')
+                ){
+                    $record[$nr][] = $floats[$id_float]->value;
+                }
             }
         }
         ddd($record);
