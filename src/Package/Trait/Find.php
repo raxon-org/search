@@ -86,14 +86,10 @@ trait Find {
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
         foreach($embedding_words as $id => $embedding_word){
-            breakpoint('found');
-            ddd($embedding_word);
             if(is_array($vector) && is_array($embedding_word->embedding)) {
-                foreach ($embedding_word->embedding as $nr => $embedding) {
-                    $embedding = $this->get_embedding_float($embedding, $floats);
-                    $similarity = $this->cosine_similarity($vector, $embedding);
-                    ddd($similarity);
-                }
+                $embedding = $this->get_embedding_float($embedding_word->embedding, $floats);
+                $similarity = $this->cosine_similarity($vector, $embedding);
+                ddd($similarity);
             }
         }
         breakpoint($vector);
