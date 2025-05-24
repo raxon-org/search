@@ -169,7 +169,13 @@ trait Find {
         foreach($result as $average => $list){
             foreach($list as $nr => $record){
                 echo $record->average . ' | ' . $record->id . ' ' . implode(' ', $record->word_text);
-                echo ' Similarity: ' .  implode(' ', $record->similarity) . PHP_EOL;
+                echo '; Similarity: ';
+                $output = [];
+                foreach($record->similarity as $similarity){
+                    $output[] = round($similarity, 4);
+                }
+                echo implode(' ', $output) . PHP_EOL;
+
             }
         }
     }
