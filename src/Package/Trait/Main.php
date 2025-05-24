@@ -272,8 +272,8 @@ trait Main {
         }
         $dir = new Dir();
         $read = $dir->read($options->source);
-        $partition = Core::array_partition($read, 64);
-        ddd($partition);
+        $chunks = array_chunk($read, 64);
+        ddd($chunks);
         foreach($read as $file)
         ddd($options);
     }
