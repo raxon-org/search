@@ -275,9 +275,11 @@ trait Main {
         $chunks = array_chunk($read, 64);
         $count = count($chunks);
         foreach($chunks as $nr => $chunk){
+            $import=[];
             foreach($chunk as $file){
-                ddd($file);
+                $import[] = 'https://raxon.local/php_manual_en/' . $file->name;
             }
+            ddd($import);
         }
         ddd($chunks);
         foreach($read as $file)
