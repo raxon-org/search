@@ -177,7 +177,14 @@ trait Embedding {
         if(!$words){
             return;
         }
-        ddd($data);
+        $word_list_id = [];
+        $word_list_embedding = [];
+        foreach($words as $word){
+            $word_list_id[$word->id] = $word;
+            $word_list_embedding[$word->embedding] = $word;
+        }
+        $sentences = $data->get('sentence') ?? [];
+        ddd($sentences);
     }
     /**
      * @throws ObjectException
