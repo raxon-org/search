@@ -103,9 +103,6 @@ trait Find {
 //                $similarity[] = $similarity[1];
 //                $similarity[] = $similarity[2];
                 $average = $this->array_average($similarity, $options);
-                if($id === 476){
-                    ddd($this->array_average($similarity, $options, true));
-                }
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
                     $word_text[] = $words[$word_id]->word ?? null;
@@ -436,7 +433,7 @@ trait Find {
         return new Data($output);
     }
 
-    public function array_average(array $list=[], object $options, $is_debug=false) : float|int
+    public function array_average(array $list=[], object $options) : float|int
     {
         if(empty($list)){
             return 0;
@@ -452,12 +449,6 @@ trait Find {
 
             $sum += $value;
             $count++;
-        }
-        if($is_debug){
-            d($list);
-            d($sum);
-            d($sum / $count);
-            ddd($count);
         }
         if($count === 0){
             return 0;
