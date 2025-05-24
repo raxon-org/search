@@ -255,7 +255,7 @@ trait Embedding {
                 $embeddings = [];
                 foreach($sentence_piece->word as $id_word){
                     $word = $word_list_id[$id_word];
-                    $embeddings[] = $embedding_list[$word->embedding]
+                    $embeddings[] = $embedding_list[$word->embedding];
                 }
                 ddd($embeddings);
 
