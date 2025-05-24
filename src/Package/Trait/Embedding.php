@@ -173,7 +173,7 @@ trait Embedding {
         if(!$data_float){
             return;
         }
-        $words = $data->get('word');
+        $words = $data->get('word') ?? [];
         if(!$words){
             return;
         }
@@ -182,6 +182,14 @@ trait Embedding {
         foreach($words as $word){
             $word_list_id[$word->id] = $word;
             $word_list_embedding[$word->embedding] = $word;
+        }
+        $embeddings = $data_embedding_word->get('embedding') ?? [];
+        if(!$embeddings){
+            return;
+        }
+        $embedding_list = [];
+        foreach($embeddings as $embedding){
+            $embedding_list[$embedding->id] = $embedding;
         }
         $sentences = $data->get('sentence') ?? [];
         $sentence_pieces = $data->get('sentence_piece') ?? [];
@@ -244,12 +252,12 @@ trait Embedding {
                     true
                 )
             ){
+                $embeddings = [];
                 foreach($sentence_piece->word as $id_word){
                     $word = $word_list_id[$id_word];
-                    breakpoint('word');
-                    ddd($word);
+                    $embeddings[] = $embedding_list[$word->embedding]
                 }
-
+                ddd($embeddings);
 
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
