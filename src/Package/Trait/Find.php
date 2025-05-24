@@ -95,6 +95,7 @@ trait Find {
                     }
                 }
                 foreach($embeddings as $nr => $embedding){
+                    ddd($embedding);
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
                 d($this->array_average($similarity));
