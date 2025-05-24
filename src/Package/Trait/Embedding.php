@@ -290,9 +290,9 @@ trait Embedding {
                     $tokens += $word->tokens;
                     $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding];
                 }
-                ddd($embeddings_sentence_piece);
-                $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece);
 
+                $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece);
+ddd($sentence_piece);
                 $embedding = (object) [
                     'id' => $id_embedding,
                     'embedding' => $sentence_piece->embedding,
@@ -653,12 +653,12 @@ trait Embedding {
     public function get_embedding_sentence_piece(array $embeddings): array
     {
         $record = [];
-        foreach($embeddings as $embedding){
-            foreach($embedding->embedding as $nr => $id_float){
+        foreach($embeddings as $nr => $embedding){
+            foreach($embedding->embedding as $embedding_nr => $id_float){
                 if(!array_key_exists($nr, $record)){
                     $record[$nr] = [];
                 }
-                $record[$nr][] = $id_float;
+                $record[$nr][$embedding_nr] = $id_float;
             }
         }
         return $record;
