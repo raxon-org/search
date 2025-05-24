@@ -149,6 +149,7 @@ trait Embedding {
      */
     public function sentence_piece(object $flags, object $options): void
     {
+        Core::interactive();
         $object = $this->object();
 
         if(!property_exists($options, 'version')){
@@ -322,10 +323,15 @@ trait Embedding {
                         }
                     }
                 }
-                $embeddings->{$embedding->hash} = $embedding;
+                if(!property_exists($embeddings, $embedding->hash)){
+                    $embeddings->{$embedding->hash} = $embedding;
+                }
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
+                if($id_sentence_piece % 10 === 0){
+                    echo 'Counter: ' . $id_sentence_piece . PHP_EOL;
+                }
             }
         }
         ddd(count($embeddings));
