@@ -449,12 +449,7 @@ trait Find {
             $sum += ($value * $multiplier);
             $count++;
         }
-        if($is_debug){
-            d($sum);
-            d($count);
-            breakpoint($sum / $count);
-        }
-        return ($sum / $count) * $multiplier;
+        return ($sum / $count);
     }
 
     public function cosine_similarity(array $vector1, array $vector2): float|int
