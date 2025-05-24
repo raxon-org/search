@@ -177,7 +177,7 @@ trait Find {
                         'word' => $embedding_sentence_piece->word ?? [],
                         'sentence' => $embedding_sentence_piece->sentence ?? [],
                         'tokens' => $embedding_sentence_piece->tokens ?? 0,
-                        'similarity' => $similarity[$nr],
+                        'similarity' => $similarity,
                         'average' => $average,
                         'word_text' => $word_text,
                         'memory' => File::size_format(memory_get_peak_usage(true))
