@@ -219,7 +219,6 @@ trait Embedding {
                 'id' => $id_sentence_piece,
                 'word' => [],
                 'sentence' => [],
-                'embedding' => []
             ];
             foreach($piece as $word){
                 $sentence_piece->word[] = $word->word;
@@ -245,6 +244,12 @@ trait Embedding {
                     true
                 )
             ){
+                foreach($sentence_piece->word as $id_word){
+                    $word = $word_list_id[$id_word];
+                    ddd($word);
+                }
+
+
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
