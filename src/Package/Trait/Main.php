@@ -73,6 +73,8 @@ trait Main {
         if(!is_array($options->url)){
             $options->url = [$options->url];
         }
+        $count_url = 0;
+        $total_url = count($options->url);
         foreach($options->url as $url){
             $client = new GuzzleHttp\Client();
             $res = $client->request('GET', $url, [
@@ -249,6 +251,11 @@ trait Main {
             $data->set('count.paragraph', $count_paragraph);
             $data->set('count.sentence', $count_sentence);
             $data->set('count.word', $count_word);
+            $count_url++;
+            $time = microtime(true);
+            $duration = round($time - $object->config('time.start'), 3);
+            $duration_percentage = round($duration / ($count_url / $total_url), 3);
+            echo 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% duration: ' . $duration . ' total duration: ' . $duration_percentage . PHP_EOL;
         }
         $data->write($source);
         File::permission($object, [
@@ -273,12 +280,16 @@ trait Main {
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json');
         $dir = new Dir();
         $read = $dir->read($options->source);
-        $chunks = array_chunk($read, 64);
-        $total = count($chunks);
+        $partition = Core::array_partition($read, 4);
+        $total = count($partition);
         $count = 0;
-        foreach($chunks as $nr => $chunk){
+        foreach($partition as $nr => $chunk){
             $import=[];
             foreach($chunk as $file){
                 $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
@@ -286,7 +297,11 @@ trait Main {
             $count++;
             $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version .' > /dev/null';
             exec($command);
-            echo 'Percentage: ' . round(($count / $total) * 1000, 2) . PHP_EOL;
+            $time = microtime(true);
+            $duration = round($time - $object->config('time.start'), 3);
+            $duration_percentage = round($duration / ($count / $total), 3);
+
+            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . ' total duration: ' . $duration_percentage . PHP_EOL;
         }
     }
 }
