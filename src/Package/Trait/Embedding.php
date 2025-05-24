@@ -187,6 +187,10 @@ trait Embedding {
         $sentence_pieces = $data->get('sentence_piece') ?? [];
         $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
         $id_sentence_piece++;
+        $sentence_pieces_hashes = [];
+        foreach($sentence_pieces as $sentence_piece){
+            $sentence_pieces_hashes[] = $sentence_piece->hash;
+        }
         $pieces = [];
         $pieces_count = 0;
         foreach($sentences as $sentence){
@@ -195,7 +199,7 @@ trait Embedding {
                 is_array($sentence->word)
             ){
                 foreach($sentence->word as $word){
-                    $pieces[] = [
+                    $pieces[] = (object) [
                         'word' => $word,
                         'sentence' => $sentence->id
                     ];
@@ -211,31 +215,40 @@ trait Embedding {
                 }
                 $piece[] = $pieces[$j] ?? null;
             }
-            $sentence_piece = [
+            $sentence_piece = (object) [
                 'id' => $id_sentence_piece,
                 'word' => [],
                 'sentence' => [],
                 'embedding' => []
             ];
             foreach($piece as $word){
-                $sentence_piece['word'][] = $word['word'];
+                $sentence_piece->word[] = $word->word;
                 if(
                     !in_array(
-                        $word['sentence'],
-                        $sentence_piece['sentence'],
+                        $word->sentence,
+                        $sentence_piece->sentence,
                         true
                     )
                 ){
-                    $sentence_piece['sentence'][] = $word['sentence'];
+                    $sentence_piece->sentence[] = $word->sentence;
                 }
             }
-            $hash = [
-                'word' => $sentence_piece['word'],
-                'sentence' => $sentence_piece['sentence']
+            $hash = (object) [
+                'word' => $sentence_piece->word,
+                'sentence' => $sentence_piece->sentence
             ];
-            $sentence_piece['hash'] = hash('sha256', Core::object($hash, Core::JSON_LINE));
-            $sentence_pieces[] = $sentence_piece;
-            $id_sentence_piece++;
+            $sentence_piece->hash = hash('sha256', Core::object($hash, Core::JSON_LINE));
+            if(
+                !in_array(
+                    $sentence_piece->hash,
+                    $sentence_pieces_hashes,
+                    true
+                )
+            ){
+                $sentence_pieces[] = $sentence_piece;
+                $sentence_pieces_hashes[] = $sentence_piece->hash;
+                $id_sentence_piece++;
+            }
         }
         ddd($sentence_pieces);
     }
