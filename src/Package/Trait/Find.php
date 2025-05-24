@@ -190,7 +190,7 @@ trait Find {
         }
         if(property_exists($options, 'duration')){
             $time = microtime(true);
-            dd($object->config('time'));
+            $duration = round(($time - $object->config('time.start')) * 1000, 3);
             echo "Duration: " . $duration . 'msec' . PHP_EOL;
         }
     }
