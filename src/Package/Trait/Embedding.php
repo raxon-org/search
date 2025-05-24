@@ -292,7 +292,6 @@ trait Embedding {
                 }
 
                 $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece);
-ddd($sentence_piece);
                 $embedding = (object) [
                     'id' => $id_embedding,
                     'embedding' => $sentence_piece->embedding,

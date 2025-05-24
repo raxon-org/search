@@ -74,17 +74,13 @@ trait Find {
         $embeddings_sentence_pieces = [];
         $embeddings_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
         foreach ($embeddings_sentence_piece_list as $child) {
-            foreach ($child->embedding as $embedding_nr => $list){
-                foreach($list as $word_nr => $float_id) {
-                    $child->embedding[$embedding_nr][$word_nr] = $floats[$float_id]->value;
-                }
-            }
             $embeddings_sentence_pieces[$child->id] = $child;
         }
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
         $result = [];
         foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
+            ddd($embedding_sentence_piece);
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $embeddings = [];
                 foreach($embedding_sentence_piece->embedding as $embedding_nr => $sentence_piece_list){
