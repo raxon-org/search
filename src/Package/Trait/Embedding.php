@@ -69,6 +69,7 @@ trait Embedding {
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
         $words = [(object) [
+            'id' => 1,
             'word' => '(MVC)'
         ]];
         foreach($words as $word){
