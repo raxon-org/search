@@ -229,8 +229,13 @@ trait Embedding {
                     $sentence_piece['sentence'][] = $word['sentence'];
                 }
             }
-            $id_sentence_piece++;
+            $hash = [
+                'word' => $sentence_piece['word'],
+                'sentence' => $sentence_piece['sentence']
+            ];
+            $sentence_piece['hash'] = hash('sha256', Core::object($hash, Core::JSON_LINE));
             $sentence_pieces[] = $sentence_piece;
+            $id_sentence_piece++;
         }
         ddd($sentence_pieces);
     }
