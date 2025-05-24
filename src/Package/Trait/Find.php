@@ -87,8 +87,8 @@ trait Find {
         $result = [];
         foreach($embeddings_sentence_pieces as $embedding_sentence_piece_id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
+                $embeddings = [];
                 foreach($embedding_sentence_piece->embedding as $embedding_nr => $sentence_piece_list){
-                    $embeddings = [];
                     foreach($sentence_piece_list as $sentence_piece_nr => $float){
                         $embeddings[$sentence_piece_nr][$embedding_nr] = $float;
                     }
