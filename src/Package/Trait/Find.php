@@ -104,6 +104,7 @@ trait Find {
 //                $similarity[] = $similarity[2];
                 $average = $this->array_average($similarity, 100);
                 if($embedding_sentence_piece_id === 125){
+                    $average = $this->array_average($similarity, 100, true);
                     d($similarity);
                     ddd($average);
                 }
@@ -437,7 +438,7 @@ trait Find {
         return new Data($output);
     }
 
-    public function array_average(array $list=[], $multiplier=1): float|int
+    public function array_average(array $list=[], $multiplier=1, $is_debug=false): float|int
     {
         if(empty($list)){
             return 0;
@@ -447,6 +448,10 @@ trait Find {
         foreach($list as $value){
             $sum += ($value * $multiplier);
             $count++;
+        }
+        if($is_debug){
+            d($sum);
+            ddd($count);
         }
         return ($sum / $count) * $multiplier;
     }
