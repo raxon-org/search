@@ -68,6 +68,9 @@ trait Embedding {
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
+        $words = (object) [
+            'word' => '(MVC)'
+        ];
         foreach($words as $word){
             if(property_exists($word, 'word') && $word->word === ''){
                 ddd($words);
@@ -76,6 +79,7 @@ trait Embedding {
                 $hash = hash('sha256', $word->word);
                 if(!property_exists($embeddings, $hash)){
                     $get_embedding = $this->get_embedding($word->word, $options);
+                    ddd($get_embedding);
                     $embedding = (object) [
                         'id' => $id_embedding,
                         'embedding' => $get_embedding->get('embeddings.0'),
