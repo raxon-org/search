@@ -356,6 +356,9 @@ trait Embedding {
                     echo 'Counter: ' . $id_sentence_piece . PHP_EOL;
                 }
             } else {
+                if(!property_exists($sentence_piece, 'count')){
+                    $sentence_piece->count = 1;
+                }
                 $sentence_piece->count++;
             }
         }
