@@ -277,9 +277,9 @@ trait Main {
         foreach($chunks as $nr => $chunk){
             $import=[];
             foreach($chunk as $file){
-                $import[] = 'https://raxon.local/php_manual_en/' . $file->name;
+                $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
             }
-            $command = Core::binary($object) . ' raxon/search import page ' . implode('url[]=', $import);
+            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import);
             ddd($command);
         }
         ddd($chunks);
