@@ -122,7 +122,7 @@ trait Find {
         }
         foreach($input as $nr => $value){
             if(array_key_exists($value, $vocabulary)) {
-                $input[$nr] = $vocabulary[$value];
+                $input[$nr] = $embedding_words[$vocabulary[$value]->embedding]->embedding;
             }
         }
         ddd($input);
