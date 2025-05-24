@@ -294,9 +294,6 @@ trait Embedding {
                     'sentence' => $sentence_piece->sentence,
                     'hash' => $sentence_piece->hash
                 ];
-
-                ddd($embedding);
-
                 foreach($embedding->embedding as $nr => $value){
                     if(
                         !in_array(
