@@ -173,11 +173,13 @@ trait Embedding {
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding_word = $object->data_read($source_embedding_word);
+        /*
         foreach($data_embedding_word->data() as $child){
-            $child->embedding = gzdecode(base64_decode($child->embedding));
+
             //base64_encode(gzencode(Core::object($get_embedding->get('embeddings.0'), Core::JSON_LINE), 9))
             ddd($child);
         }
+        */
         $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
 //        $data_float = $object->data_read($source_float);
         if(!$data){
