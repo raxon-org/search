@@ -90,9 +90,6 @@ trait Embedding {
                         'word' => $word->word,
 
                     ];
-                    if(!is_array($embedding->embedding)){
-                        breakpoint($embedding);
-                    }
                     /*
                     foreach($embedding->embedding as $nr => $value){
                         if(
