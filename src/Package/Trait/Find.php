@@ -53,6 +53,7 @@ trait Find {
             $paragraphs[$child->id] = $child;
         }
         foreach ($word_list as $child) {
+            ddd($child);
             $words[$child->id] = $child;
             $vocabulary[$child->word] = $child;
         }
