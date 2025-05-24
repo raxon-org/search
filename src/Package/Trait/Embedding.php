@@ -270,6 +270,12 @@ trait Embedding {
                 'sentence' => $sentence_piece->sentence
             ];
             $sentence_piece->hash = hash('sha256', Core::object($hash, Core::JSON_LINE));
+            d($sentence_piece->hash);
+            breakpoint(in_array(
+                $sentence_piece->hash,
+                $sentence_pieces_hashes,
+                true
+            ));
             if(
                 !in_array(
                     $sentence_piece->hash,
