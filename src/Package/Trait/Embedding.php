@@ -278,6 +278,7 @@ trait Embedding {
                     true
                 )
             ){
+                $sentence_piece->count = 1;
                 $embeddings_sentence_piece = [];
                 $tokens = 0;
                 foreach($sentence_piece->word as $id_word){
@@ -354,6 +355,8 @@ trait Embedding {
                     ]);
                     echo 'Counter: ' . $id_sentence_piece . PHP_EOL;
                 }
+            } else {
+                $sentence_piece->count++;
             }
         }
         $data_embedding_sentence_piece->set('embedding', $embeddings);
