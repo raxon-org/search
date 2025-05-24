@@ -441,6 +441,7 @@ trait Find {
         $count = 0;
         $sum = 0;
         $multiplier = $options->multiplier ?? 1;
+        ddd($options);
         foreach($list as $value){
             if(property_exists($options, 'only_positive') && $value < 0) {
                 ddd('found');
