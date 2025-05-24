@@ -642,31 +642,18 @@ trait Embedding {
         return new Data($output);
     }
 
-    public function get_embedding_sentence_piece(array $embeddings, $floats, $is_debug=false): array
+    public function get_embedding_sentence_piece(array $embeddings): array
     {
         $record = [];
         foreach($embeddings as $embedding){
             foreach($embedding->embedding as $nr => $id_float){
-                if($is_debug){
-                    breakpoint($floats);
-                    d($floats[$id_float]);
-                    ddd($id_float);
-                }
                 if(!array_key_exists($nr, $record)){
                     $record[$nr] = [];
                 }
-                if(
-                    array_key_exists($id_float, $floats) &&
-                    property_exists($floats[$id_float], 'value')
-                ){
-                    $record[$nr][] = $floats[$id_float]->value;
-                }
+                $record[$nr][] = $id_float;
             }
         }
         ddd($record);
-        if($is_debug){
-            ddd($record);
-        }
         foreach($record as $nr => $list){
             $record[$nr] = $this->array_average($list);
         }
