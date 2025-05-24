@@ -1,6 +1,7 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
+use Composer\Advisory\PartialSecurityAdvisory;
 use Exception;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
@@ -316,14 +317,6 @@ trait Embedding {
                     } else {
                         $id_float = $float_value_list["{$value}"];
                         $embedding->embedding[$nr] = $id_float;
-                        if(!array_key_exists($id_float, $float_list)){
-                            d($value);
-                            breakpoint($nr);
-                            breakpoint($embedding);
-                            $this->get_embedding_sentence_piece($embeddings_sentence_piece, $float_list, true);
-                            d(count($float_list));
-                            ddd($id_float);
-                        }
                         if(!property_exists($float_list[$id_float], 'count')){
                             $float_list[$id_float]->count = 1;
                         } else {
@@ -335,7 +328,10 @@ trait Embedding {
                     $embeddings->{$embedding->hash} = $embedding;
                     $data->set('id.embedding.sentence_piece', $id_embedding);
                     $id_embedding++;
+                } else {
+                    $embedding  = $embeddings->{$embedding->hash};
                 }
+                $sentence_piece->embedding = $embedding->id;
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
