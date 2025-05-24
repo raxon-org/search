@@ -342,8 +342,8 @@ trait Embedding {
                 $id_sentence_piece++;
                 if($id_sentence_piece % 50 === 0){
                     $data_embedding_sentence_piece->set('embedding', $embeddings);
-                    $float_list = Sort::list($float_list)->with(['count' => 'desc']);
-                    $data_float->set('float', $float_list);
+                    $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
+                    $data_float->set('float', $float_sort_list);
                     $data->set('word', $words);
                     $data->write($source);
                     $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
@@ -361,8 +361,8 @@ trait Embedding {
             }
         }
         $data_embedding_sentence_piece->set('embedding', $embeddings);
-        $float_list = Sort::list($float_list)->with(['count' => 'desc']);
-        $data_float->set('float', $float_list);
+        $float_sort_list = Sort::list($float_sort_list)->with(['count' => 'desc']);
+        $data_float->set('float', $float_sort_list);
         $data->set('word', $words);
         $data->write($source);
         $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
