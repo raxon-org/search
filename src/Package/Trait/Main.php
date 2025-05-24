@@ -279,8 +279,8 @@ trait Main {
             $import=[];
             foreach($chunk as $file){
                 $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
-                $count++;
             }
+            $count++;
             $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' > /dev/null';
             echo 'Percentage: ' . round($count / $total, 2) . PHP_EOL;
 
