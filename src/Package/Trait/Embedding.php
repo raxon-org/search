@@ -373,7 +373,7 @@ trait Embedding {
                         'dir_search' => $dir_search,
                         'dir_version' => $dir_version,
                         'source' => $source,
-                        'source_float' => $source_float,
+//                        'source_float' => $source_float,
                         'source_embedding' => $source_embedding_sentence_piece
                     ]);
                     echo 'Counter: ' . $id_sentence_piece . PHP_EOL;
@@ -398,7 +398,7 @@ trait Embedding {
             'dir_search' => $dir_search,
             'dir_version' => $dir_version,
             'source' => $source,
-            'source_float' => $source_float,
+//            'source_float' => $source_float,
             'source_embedding' => $source_embedding_sentence_piece
         ]);
     }
@@ -669,6 +669,10 @@ trait Embedding {
     {
         $record = [];
         foreach($embeddings as $nr => $embedding){
+            if(is_string($embedding->embedding)){
+                $embedding->embedding_decode = gzdecode(base64_decode($embedding->embedding));
+                ddd($embedding);
+            }
             foreach($embedding->embedding as $embedding_nr => $id_float){
                 if(!array_key_exists($nr, $record)){
                     $record[$nr] = [];
