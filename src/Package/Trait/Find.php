@@ -96,7 +96,11 @@ trait Find {
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
                 rsort($similarity, SORT_NATURAL);
-                ddd($similarity);
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[1];
+                $similarity[] = $similarity[2];
                 d($this->array_average($similarity));
                 ddd($similarity);
                 $word_text = [];
