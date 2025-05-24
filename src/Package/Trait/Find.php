@@ -93,9 +93,10 @@ trait Find {
                     }
                 }
                 foreach($embeddings as $nr => $embedding){
-                    ddd($embedding);
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
+                rsort($similarity, SORT_NATURAL);
+                ddd($similarity);
                 d($this->array_average($similarity));
                 ddd($similarity);
                 $word_text = [];
