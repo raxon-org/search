@@ -186,6 +186,7 @@ trait Embedding {
         $sentences = $data->get('sentence') ?? [];
         $sentence_pieces = [];
         $pieces = [];
+        $pieces_count = 0;
         foreach($sentences as $sentence){
             if(
                 property_exists($sentence, 'word') &&
@@ -196,8 +197,16 @@ trait Embedding {
                         'word' => $word,
                         'sentence' => $sentence->id
                     ];
+                    $pieces_count++;
                 }
             }
+        }
+        for($i = 0; $i < $pieces_count; $i++){
+            $sentence_piece = [];
+            for($j=$i; $j < ($i + 6); $j++){
+                $sentence_piece[] = $pieces[$j];
+            }
+            ddd($sentence_piece);
         }
         ddd($pieces);
     }
