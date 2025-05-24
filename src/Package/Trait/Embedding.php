@@ -166,7 +166,7 @@ trait Embedding {
         $data = $object->data_read($source);
         $data_embedding_word = $object->data_read($source_embedding_word);
         $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
-        $data_float = $object->data_read($source_float);
+//        $data_float = $object->data_read($source_float);
         if(!$data){
             return;
         }
@@ -176,9 +176,11 @@ trait Embedding {
         if(!$data_embedding_sentence_piece){
             $data_embedding_sentence_piece = new Data();
         }
+        /*
         if(!$data_float){
             return;
         }
+        */
         $words = $data->get('word') ?? [];
         if(!$words){
             return;
@@ -204,6 +206,7 @@ trait Embedding {
         }
         $id_embedding = $data->get('id.embedding.sentence_piece') ?? 0;
         $id_embedding++;
+        /*
         $floats = $data_float->get('float') ?? (object) [];
         $float_list = [];
         $float_value_list = [];
@@ -217,6 +220,7 @@ trait Embedding {
         }
         $id_float = $data->get('id.float') ?? 0;
         $id_float++;
+        */
         $sentences = $data->get('sentence') ?? [];
         $sentence_pieces = $data->get('sentence_piece') ?? [];
         $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
@@ -297,7 +301,9 @@ trait Embedding {
                     'sentence' => $sentence_piece->sentence,
                     'hash' => $sentence_piece->hash
                 ];
+                /*
                 foreach($embedding->embedding as $nr => $value){
+
                     if(
                         !in_array(
                             $value,
@@ -325,6 +331,7 @@ trait Embedding {
                         }
                     }
                 }
+                */
                 if(!property_exists($embeddings, $embedding->hash)){
                     $embeddings->{$embedding->hash} = $embedding;
                     $data->set('id.embedding.sentence_piece', $id_embedding);
@@ -338,13 +345,13 @@ trait Embedding {
                 $id_sentence_piece++;
                 if($id_sentence_piece % 50 === 0){
                     $data_embedding_sentence_piece->set('embedding', $embeddings);
-                    $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
-                    $data_float->set('float', $float_sort_list);
+//                    $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
+//                    $data_float->set('float', $float_sort_list);
                     $data->set('word', $words);
                     $data->set('sentence_piece', $sentence_pieces);
                     $data->write($source);
                     $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
-                    $data_float->write($source_float);
+//                    $data_float->write($source_float);
                     File::permission($object ,[
                         'dir_data' => $dir_data,
                         'dir_search' => $dir_search,
@@ -363,13 +370,13 @@ trait Embedding {
             }
         }
         $data_embedding_sentence_piece->set('embedding', $embeddings);
-        $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
-        $data_float->set('float', $float_sort_list);
+//        $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
+//        $data_float->set('float', $float_sort_list);
         $data->set('word', $words);
         $data->set('sentence_piece', $sentence_pieces);
         $data->write($source);
         $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
-        $data_float->write($source_float);
+//        $data_float->write($source_float);
         File::permission($object ,[
             'dir_data' => $dir_data,
             'dir_search' => $dir_search,
@@ -653,11 +660,8 @@ trait Embedding {
                 $record[$nr][] = $id_float;
             }
         }
-        ddd($record);
-        foreach($record as $nr => $list){
-            $record[$nr] = $this->array_average($list);
-        }
         return $record;
+
     }
 
     public function array_average(array $list=[]): float|int
