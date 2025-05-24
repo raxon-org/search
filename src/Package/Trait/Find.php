@@ -92,7 +92,6 @@ trait Find {
         }
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
-        breakpoint($vector);
         /*
         $result = [];
         foreach($embedding_words as $id => $embedding_word){
