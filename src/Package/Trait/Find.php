@@ -81,7 +81,6 @@ trait Find {
             }
             $embeddings_sentence_pieces[$child->id] = $child;
         }
-        ddd($embeddings_sentence_pieces);
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
         $result = [];
