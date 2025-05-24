@@ -170,9 +170,13 @@ trait Embedding {
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
-        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
+//        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding_word = $object->data_read($source_embedding_word);
+        foreach($data_embedding_word->data() as $child){
+            //base64_encode(gzencode(Core::object($get_embedding->get('embeddings.0'), Core::JSON_LINE), 9))
+            ddd($child);
+        }
         $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
 //        $data_float = $object->data_read($source_float);
         if(!$data){
