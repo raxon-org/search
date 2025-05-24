@@ -33,23 +33,26 @@ trait Embedding {
 
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
-        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
+//        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
-        $data_float = $object->data_read($source_float);
+//        $data_float = $object->data_read($source_float);
         if(!$data){
             return;
         }
         if(!$data_embedding){
             $data_embedding = new Data();
         }
+        /*
         if(!$data_float){
             $data_float = new Data();
         }
+        */
         $words = $data->get('word');
         if(!$words){
             return;
         }
+        /*
         $floats = $data_float->get('float') ?? (object) [];
         $float_list = [];
         $float_value_list = [];
@@ -65,6 +68,7 @@ trait Embedding {
         }
         $id_float = $data->get('id.float') ?? 0;
         $id_float++;
+        */
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
@@ -132,18 +136,18 @@ trait Embedding {
         }
         $data_embedding->set('embedding', $embeddings);
 
-        $float_list = Sort::list($float_list)->with(['count' => 'desc']);
-        $data_float->set('float', $float_list);
+//        $float_list = Sort::list($float_list)->with(['count' => 'desc']);
+//        $data_float->set('float', $float_list);
         $data->set('word', $words);
         $data->write($source);
         $data_embedding->write($source_embedding);
-        $data_float->write($source_float);
+//        $data_float->write($source_float);
         File::permission($object ,[
             'dir_data' => $dir_data,
             'dir_search' => $dir_search,
             'dir_version' => $dir_version,
             'source' => $source,
-            'source_float' => $source_float,
+//            'source_float' => $source_float,
             'source_embedding' => $source_embedding
         ]);
     }
