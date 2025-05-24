@@ -74,9 +74,10 @@ trait Find {
         $embeddings_sentence_pieces = [];
         $embeddings_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
         foreach ($embeddings_sentence_piece_list as $child) {
-            foreach ($child->embedding as $embedding_nr => $list)
+            foreach ($child->embedding as $embedding_nr => $list){
                 foreach($list as $word_nr => $float_id) {
-                $child->embedding[$embedding_nr][$word_nr] = $floats[$float_id]->value;
+                    $child->embedding[$embedding_nr][$word_nr] = $floats[$float_id]->value;
+                }
             }
             $embeddings_sentence_pieces[$child->id] = $child;
         }
