@@ -140,9 +140,9 @@ trait Find {
                 $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
             }
             foreach($input as $nr => $vector){
-                $similarity = [];
                 $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
                 if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
+                    $similarity = [];
                     foreach($embedding_sentence_piece->embedding_decode as $embedding_decode_nr => $embedding){
 
                         /*
@@ -158,12 +158,12 @@ trait Find {
                     /**
                      * attention, add 3x the highest score 1x silver, and 1x bronze
                      */
-//                    rsort($similarity, SORT_NATURAL);
-//                    $similarity[] = $similarity[0];
-//                    $similarity[] = $similarity[0];
-//                    $similarity[] = $similarity[0];
-//                    $similarity[] = $similarity[1];
-//                    $similarity[] = $similarity[2];
+                    rsort($similarity, SORT_NATURAL);
+                    $similarity[] = $similarity[0];
+                    $similarity[] = $similarity[0];
+                    $similarity[] = $similarity[0];
+                    $similarity[] = $similarity[1];
+                    $similarity[] = $similarity[2];
                     $average = $this->array_average($similarity, $options);
                     $word_text = [];
                     foreach($embedding_sentence_piece->word as $word_id){
