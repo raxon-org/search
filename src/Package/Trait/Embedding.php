@@ -671,6 +671,7 @@ trait Embedding {
         foreach($embeddings as $nr => $embedding){
             if(is_string($embedding->embedding)){
                 $embedding->embedding_decode = gzdecode(base64_decode($embedding->embedding));
+                breakpoint('yes');
                 ddd($embedding);
             }
             foreach($embedding->embedding as $embedding_nr => $id_float){
