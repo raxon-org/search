@@ -101,18 +101,21 @@ trait Find {
                 $similarity[] = $similarity[0];
                 $similarity[] = $similarity[1];
                 $similarity[] = $similarity[2];
-                d($this->array_average($similarity));
-                ddd($similarity);
+                $average = $this->array_average($similarity);
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
                     $word_text[] = $words[$word_id] ?? null;
                 }
-                $result["{$similarity}"] = (object)[
+                if(!array_key_exists("{$average}", $result)){
+                    $result["{$average}"] = [];
+                }
+                $result["{$average}"][] = (object)[
                     'id' => $embedding_sentence_piece->id,
                     'word' => $embedding_sentence_piece->word ?? [],
                     'sentence' => $embedding_sentence_piece->sentence ?? [],
                     'tokens' => $embedding_sentence_piece->tokens ?? 0,
                     'similarity' => $similarity,
+                    'average' => $average,
                     'word_text' => $word_text,
                 ];
             }
