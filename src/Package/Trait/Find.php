@@ -122,7 +122,11 @@ trait Find {
             }
         }
         krsort($result, SORT_NATURAL);
-        ddd($result);
+        foreach($result as $average => $list){
+            foreach($list as $nr => $record){
+                echo $record->average . ' | ' . implode(' ', $record->word_text) . PHP_EOL;
+            }
+        }
     }
 
     /**
