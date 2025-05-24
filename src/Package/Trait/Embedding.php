@@ -214,6 +214,7 @@ trait Embedding {
             }
             $float_list[$float->id] = $float;
         }
+        ddd($float_list);
         $id_float = $data->get('id.float') ?? 0;
         $id_float++;
         $sentences = $data->get('sentence') ?? [];
