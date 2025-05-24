@@ -543,11 +543,16 @@ trait Embedding {
     public function get_embedding_sentence_piece(array $embeddings, $floats): array
     {
         $result = [];
+        $record = [];
         foreach($embeddings as $embedding){
             foreach($embedding->embedding as $nr => $id_float){
-                ddd($id_float);
+                if(!array_key_exists($nr, $record)){
+                    $record[$nr] = [];
+                }
+                $record[$nr][] = $floats[$id_float];
             }
         }
+        ddd($record);
         return $result;
     }
 
