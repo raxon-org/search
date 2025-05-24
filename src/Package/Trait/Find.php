@@ -439,11 +439,11 @@ trait Find {
             return 0;
         }
         $count = 0;
+        $sum = 0;
         foreach($list as $value){
-            d($value);
+            $sum += $value;
             $count++;
         }
-        die;
         return $sum / $count;
     }
 
