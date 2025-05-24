@@ -7,6 +7,7 @@ use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
+use Raxon\Module\File;
 
 trait Find {
     const VERSION = '1.0.0';
@@ -168,6 +169,7 @@ trait Find {
                     'similarity' => $similarity,
                     'average' => $average,
                     'word_text' => $word_text,
+                    'memory' => File::size_format(memory_get_peak_usage(true))
                 ];
             }
             unset($embedding_sentence_piece->embedding_decode);
@@ -176,6 +178,7 @@ trait Find {
         foreach($result as $average => $list){
             foreach($list as $nr => $record){
                 echo $record->average . ' | ' . $record->id . ' ' . implode(' ', $record->word_text);
+                echo '; Memory: ' . $record->memory;
                 echo '; Similarity: ';
                 $output = [];
                 foreach($record->similarity as $similarity){
@@ -185,7 +188,6 @@ trait Find {
 
             }
         }
-        echo 'Memory: ' . round(memory_get_peak_usage(true), 2) . PHP_EOL;
     }
 
     public function get_embedding_float($embedding, $floats): array
