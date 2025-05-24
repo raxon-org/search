@@ -155,8 +155,6 @@ trait Find {
                         */
                         $similarity[] = $this->cosine_similarity($vector, $embedding);
                     }
-                    breakpoint($similarity);
-
                     /**
                      * attention, add 3x the highest score 1x silver, and 1x bronze
                      */
