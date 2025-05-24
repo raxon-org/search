@@ -292,7 +292,7 @@ trait Embedding {
                     'tokens' => $tokens,
                     'word' => $sentence_piece->word,
                     'sentence' => $sentence_piece->sentence,
-                    'hash' => $hash
+                    'hash' => $sentence_piece->hash
                 ];
 
                 ddd($embedding);
@@ -325,17 +325,13 @@ trait Embedding {
                         }
                     }
                 }
-                $embeddings->{$hash} = $embedding;
-
-
-
-
+                $embeddings->{$embedding->hash} = $embedding;
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
             }
         }
-        ddd($sentence_pieces);
+        ddd(count($embeddings));
     }
     /**
      * @throws ObjectException
