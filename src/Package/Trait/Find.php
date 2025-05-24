@@ -126,11 +126,11 @@ trait Find {
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             if(is_string($embedding_sentence_piece->embedding)){
-                ddd($embedding_sentence_piece);
+                $embedding_sentence_piece->embedding_decode = Core::object(gzdecode(base64_decode($embedding_sentence_piece->embedding)), Core::OBJECT_ARRAY);
             }
-            if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
+            if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
                 $similarity = [];
-                foreach($embedding_sentence_piece->embedding as $nr => $embedding){
+                foreach($embedding_sentence_piece->embedding_decode as $nr => $embedding){
                     ddd($embedding);
                     /*
                   if(
@@ -170,6 +170,7 @@ trait Find {
                     'word_text' => $word_text,
                 ];
             }
+            unset($embedding_sentence_piece->embedding_decode);
         }
         krsort($result, SORT_NATURAL);
         foreach($result as $average => $list){
