@@ -125,6 +125,9 @@ trait Find {
         */
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
+            if(is_string($embedding_sentence_piece->embedding)){
+                ddd($embedding_sentence_piece);
+            }
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){
