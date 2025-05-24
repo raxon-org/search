@@ -126,7 +126,7 @@ trait Find {
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
-                $embedding_sentence_piece->embedding[$embedding_nr] = $embedding_words[$word_id];
+                $embedding_sentence_piece->embedding[$embedding_nr] = $embedding_words[$word_id]->embedding;
             }
             ddd($embedding_sentence_piece);
             if(is_string($embedding_sentence_piece->embedding)){
