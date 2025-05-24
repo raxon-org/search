@@ -103,6 +103,10 @@ trait Find {
 //                $similarity[] = $similarity[1];
 //                $similarity[] = $similarity[2];
                 $average = $this->array_average($similarity, 100);
+                if($embedding_sentence_piece_id === 125){
+                    d($similarity);
+                    ddd($average);
+                }
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
                     $word_text[] = $words[$word_id]->word ?? null;
