@@ -97,11 +97,11 @@ trait Find {
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
                 rsort($similarity, SORT_NATURAL);
-                $similarity[] = $similarity[0];
-                $similarity[] = $similarity[0];
-                $similarity[] = $similarity[0];
-                $similarity[] = $similarity[1];
-                $similarity[] = $similarity[2];
+//                $similarity[] = $similarity[0];
+//                $similarity[] = $similarity[0];
+//                $similarity[] = $similarity[0];
+//                $similarity[] = $similarity[1];
+//                $similarity[] = $similarity[2];
                 $average = $this->array_average($similarity);
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
