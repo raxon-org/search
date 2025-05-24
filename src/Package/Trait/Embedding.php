@@ -35,7 +35,7 @@ trait Embedding {
         $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding = $object->data_read($source_embedding);
-        $data_float = $object->data_read($source_embedding);
+        $data_float = $object->data_read($source_float);
         if(!$data){
             return;
         }
@@ -49,7 +49,7 @@ trait Embedding {
         if(!$words){
             return;
         }
-        $floats = $data_embedding->get('float') ?? (object) [];
+        $floats = $data_float->get('float') ?? (object) [];
         $float_list = [];
         $float_value_list = [];
         $float_available = [];
@@ -143,6 +143,42 @@ trait Embedding {
         ]);
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function sentence_piece(object $flags, object $options): void
+    {
+        $object = $this->object();
+
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        $data_embedding_word = $object->data_read($source_embedding_word);
+        $data_float = $object->data_read($source_float);
+        if(!$data){
+            return;
+        }
+        if(!$data_embedding_word){
+            return;
+        }
+        if(!$data_float){
+            return;
+        }
+        $words = $data->get('word');
+        if(!$words){
+            return;
+        }
+        ddd($data);
+    }
     /**
      * @throws ObjectException
      * @throws Exception
