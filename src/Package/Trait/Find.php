@@ -185,6 +185,7 @@ trait Find {
 
             }
         }
+        echo 'Memory: ' . round(memory_get_peak_usage(true), 2) . PHP_EOL;
     }
 
     public function get_embedding_float($embedding, $floats): array
