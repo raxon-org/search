@@ -96,7 +96,11 @@ trait Find {
                 foreach($embeddings as $nr => $embedding){
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
+                if($id === 130){
+                    ddd($similarity);
+                }
                 rsort($similarity, SORT_NATURAL);
+
 //                $similarity[] = $similarity[0];
 //                $similarity[] = $similarity[0];
 //                $similarity[] = $similarity[0];
