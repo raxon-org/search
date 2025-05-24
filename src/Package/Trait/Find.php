@@ -97,7 +97,7 @@ trait Find {
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
                 if($id === 130){
-                    ddd($similarity);
+                    d($similarity);
                 }
                 rsort($similarity, SORT_NATURAL);
 
@@ -110,6 +110,9 @@ trait Find {
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
                     $word_text[] = $words[$word_id]->word ?? null;
+                }
+                if($id === 130){
+                    ddd($word_text);
                 }
                 if(!array_key_exists("{$average}", $result)){
                     $result["{$average}"] = [];
