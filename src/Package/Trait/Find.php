@@ -451,7 +451,8 @@ trait Find {
         }
         if($is_debug){
             d($sum);
-            ddd($count);
+            d($count);
+            breakpoint($sum / $count);
         }
         return ($sum / $count) * $multiplier;
     }
