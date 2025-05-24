@@ -136,13 +136,16 @@ trait Find {
                   }
                   $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
-//                rsort($similarity, SORT_NATURAL);
 
-//                $similarity[] = $similarity[0];
-//                $similarity[] = $similarity[0];
-//                $similarity[] = $similarity[0];
-//                $similarity[] = $similarity[1];
-//                $similarity[] = $similarity[2];
+                /**
+                 * attention, add 3x the highest score 1x silver, and 1x bronze
+                 */
+                rsort($similarity, SORT_NATURAL);
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[1];
+                $similarity[] = $similarity[2];
                 $average = $this->array_average($similarity, $options);
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
