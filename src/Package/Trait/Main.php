@@ -281,13 +281,10 @@ trait Main {
                 $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
                 $count++;
             }
-            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import);
+            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' > /dev/null';
             echo 'Percentage: ' . round($count / $total, 2) . PHP_EOL;
 
         }
-        ddd($chunks);
-        foreach($read as $file)
-        ddd($options);
     }
 }
 
