@@ -84,7 +84,7 @@ trait Find {
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
         $result = [];
-        foreach($embeddings_sentence_pieces as $embedding_sentence_piece_id => $embedding_sentence_piece){
+        foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $embeddings = [];
                 foreach($embedding_sentence_piece->embedding as $embedding_nr => $sentence_piece_list){
@@ -103,6 +103,9 @@ trait Find {
 //                $similarity[] = $similarity[1];
 //                $similarity[] = $similarity[2];
                 $average = $this->array_average($similarity, $options);
+                if($id === 476){
+                    ddd($this->array_average($similarity, $options, true));
+                }
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
                     $word_text[] = $words[$word_id]->word ?? null;
@@ -433,7 +436,7 @@ trait Find {
         return new Data($output);
     }
 
-    public function array_average(array $list=[], object $options): float|int
+    public function array_average(array $list=[], object $options, $is_debug) : float|int
     {
         if(empty($list)){
             return 0;
@@ -449,6 +452,10 @@ trait Find {
 
             $sum += $value;
             $count++;
+        }
+        if($is_debug){
+            d($sum);
+            ddd($count);
         }
         if($count === 0){
             return 0;
