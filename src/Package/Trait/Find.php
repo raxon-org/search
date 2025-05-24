@@ -37,7 +37,7 @@ trait Find {
         }
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
-        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
+//        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $document_list = $data->get('document');
         $paragraph_list = $data->get('paragraph');
         $sentence_list = $data->get('sentence');
@@ -66,6 +66,7 @@ trait Find {
             return;
         }
         */
+        /*
         $data_float = $object->data_read($source_float);
         if (!$data_float) {
             return;
@@ -75,6 +76,7 @@ trait Find {
         foreach ($float_list as $child) {
             $floats[$child->id] = $child;
         }
+        */
         $embedding_words = [];
         $embedding_word_list = $data_embedding_word->get('embedding');
         foreach($embedding_word_list as $child){
@@ -127,12 +129,14 @@ trait Find {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){
                     ddd($embedding);
+                    /*
                   if(
                       array_key_exists(0, $embedding) &&
                       is_int($embedding[0])
                   ){
                       $embedding = $this->get_embedding_float($embedding, $floats);
                   }
+                    */
                   $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
 
