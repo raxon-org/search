@@ -139,12 +139,11 @@ trait Find {
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
                 $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
             }
-            $similarity = [];
             foreach($input as $nr => $vector){
-                $similarity[$nr] = [];
+                $similarity = [];
                 $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
                 if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
-                    foreach($embedding_sentence_piece->embedding_decode as $nr => $embedding){
+                    foreach($embedding_sentence_piece->embedding_decode as $embedding_decode_nr => $embedding){
 
                         /*
                       if(
@@ -154,19 +153,20 @@ trait Find {
                           $embedding = $this->get_embedding_float($embedding, $floats);
                       }
                         */
-                        $similarity[$nr][] = $this->cosine_similarity($vector, $embedding);
+                        $similarity[] = $this->cosine_similarity($vector, $embedding);
                     }
+                    breakpoint($similarity);
 
                     /**
                      * attention, add 3x the highest score 1x silver, and 1x bronze
                      */
-                    rsort($similarity[$nr], SORT_NATURAL);
-                    $similarity[$nr][] = $similarity[$nr][0];
-                    $similarity[$nr][] = $similarity[$nr][0];
-                    $similarity[$nr][] = $similarity[$nr][0];
-                    $similarity[$nr][] = $similarity[$nr][1];
-                    $similarity[$nr][] = $similarity[$nr][2];
-                    $average = $this->array_average($similarity[$nr], $options);
+//                    rsort($similarity, SORT_NATURAL);
+//                    $similarity[] = $similarity[0];
+//                    $similarity[] = $similarity[0];
+//                    $similarity[] = $similarity[0];
+//                    $similarity[] = $similarity[1];
+//                    $similarity[] = $similarity[2];
+                    $average = $this->array_average($similarity, $options);
                     $word_text = [];
                     foreach($embedding_sentence_piece->word as $word_id){
                         $word_text[] = $words[$word_id]->word ?? null;
