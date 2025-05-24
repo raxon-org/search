@@ -316,6 +316,10 @@ trait Embedding {
                     } else {
                         $id_float = $float_value_list["{$value}"];
                         $embedding->embedding[$nr] = $id_float;
+                        if(!array_key_exists($id_float, $float_list)){
+                            d($value);
+                            ddd($id_float);
+                        }
                         if(!property_exists($float_list[$id_float], 'count')){
                             $float_list[$id_float]->count = 1;
                         } else {
