@@ -188,6 +188,11 @@ trait Find {
 
             }
         }
+        if(property_exists($options, 'duration')){
+            $time = microtime(true);
+            dd($object->config('time'));
+            echo "Duration: " . $duration . 'msec' . PHP_EOL;
+        }
     }
 
     public function get_embedding_float($embedding, $floats): array
