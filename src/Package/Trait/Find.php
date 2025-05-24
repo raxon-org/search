@@ -127,9 +127,14 @@ trait Find {
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){
-                    ddd($embedding);
-                    $embedding = $this->get_embedding_float($embedding, $floats);
-                    $similarity[] = $this->cosine_similarity($vector, $embedding);
+//                    ddd($embedding);
+                  if(
+                      array_key_exists(0, $embedding) &&
+                      is_int($embedding[0])
+                  ){
+                      $embedding = $this->get_embedding_float($embedding, $floats);
+                  }
+                  $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
 //                rsort($similarity, SORT_NATURAL);
 
