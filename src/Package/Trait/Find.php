@@ -441,10 +441,10 @@ trait Find {
         $count = 0;
         $sum = 0;
         foreach($list as $value){
-            $sum += $value * $multiplier;
+            $sum += ($value * $multiplier);
             $count++;
         }
-        return $sum / $count;
+        return ($sum / $count) * $multiplier;
     }
 
     public function cosine_similarity(array $vector1, array $vector2): float|int
