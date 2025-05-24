@@ -68,9 +68,9 @@ trait Embedding {
         $embeddings = $data_embedding->get('embedding') ?? (object) [];
         $id_embedding = $data->get('id.embedding.word') ?? 0;
         $id_embedding++;
-        $words = (object) [
+        $words = [(object) [
             'word' => '(MVC)'
-        ];
+        ]];
         foreach($words as $word){
             if(property_exists($word, 'word') && $word->word === ''){
                 ddd($words);
