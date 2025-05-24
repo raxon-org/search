@@ -82,7 +82,8 @@ trait Find {
         foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = [];
-                foreach($embedding_sentence_piece->embedding as $nr => $embedding){;
+                foreach($embedding_sentence_piece->embedding as $nr => $embedding){
+                    $embedding = $this->get_embedding_float($embedding, $floats);
                     if($id === 130){
                         breakpoint($vector);
                         breakpoint($embedding);
@@ -127,6 +128,10 @@ trait Find {
                 echo ' Similarity: ' .  implode(' ', $record->similarity) . PHP_EOL;
             }
         }
+    }
+
+    public function get_embedding_float($embedding, $floats){
+        ddd($embedding);
     }
 
     /**
