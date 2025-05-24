@@ -308,9 +308,10 @@ trait Embedding {
                     }
                 }
                 $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece);
+
                 $embedding = (object) [
                     'id' => $id_embedding,
-                    'embedding' => $sentence_piece->embedding,
+                    'embedding' => base64_encode(gzencode(Core::object($sentence_piece->embedding, Core::JSON_LINE), 9)),
                     'model' => 'average-words-6',
                     'tokens' => $tokens,
                     'word' => $sentence_piece->word,
