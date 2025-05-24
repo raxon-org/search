@@ -125,6 +125,9 @@ trait Find {
         */
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
+            foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
+                $embedding_sentence_piece[$embedding_nr] = $embedding_words[$word_id];
+            }
             ddd($embedding_sentence_piece);
             if(is_string($embedding_sentence_piece->embedding)){
                 $embedding_sentence_piece->embedding_decode = Core::object(gzdecode(base64_decode($embedding_sentence_piece->embedding)), Core::OBJECT_ARRAY);
