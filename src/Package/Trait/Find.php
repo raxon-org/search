@@ -74,9 +74,9 @@ trait Find {
         $embeddings_sentence_pieces = [];
         $embeddings_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
         foreach ($embeddings_sentence_piece_list as $child) {
-            ddd($child);
-            foreach ($child->embedding as $embedding_nr => $float_id) {
-                $child->embedding[$embedding_nr] = $floats[$float_id]->value;
+            foreach ($child->embedding as $embedding_nr => $list)
+                foreach($list as $word_nr => $float_id) {
+                $child->embedding[$embedding_nr][$word_nr] = $floats[$float_id]->value;
             }
             $embeddings_sentence_pieces[$child->id] = $child;
         }
@@ -85,6 +85,7 @@ trait Find {
         $result = [];
         foreach($embeddings_sentence_pieces as $embedding_sentence_piece_id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
+                ddd($embedding_sentence_piece);
                 $similarity = $this->cosine_similarity($vector, $embedding_sentence_piece->embedding);
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
