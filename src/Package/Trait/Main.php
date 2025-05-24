@@ -120,24 +120,32 @@ trait Main {
                 $document_list = $data->get('document') ?? [];
                 $id_document = $data->get('id.document') ?? 0;
                 $id_document++;
+                $count_document = $data->get('count.document') ?? 0;
                 $paragraph_list = $data->get('paragraph') ?? [];
                 $id_paragraph = $data->get('id.paragraph') ?? 0;
                 $id_paragraph++;
+                $count_paragraph = $data->get('count.paragraph') ?? 0;
                 $word_list = $data->get('word') ?? [];
                 $id_word = $data->get('id.word') ?? 0;
                 $id_word++;
+                $count_word = $data->get('count.word') ?? 0;
                 $sentence_list = $data->get('sentence') ?? [];
                 $id_sentence = $data->get('id.sentence') ?? 0;
                 $id_sentence++;
+                $count_sentence = $data->get('count.sentence') ?? 0;
             } else {
                 $document_list = [];
                 $id_document = 1;
+                $count_document = 0;
                 $paragraph_list = [];
                 $id_paragraph = 1;
+                $count_paragraph = 0;
                 $word_list = [];
                 $id_word = 1;
+                $count_word = 0;
                 $sentence_list = [];
                 $id_sentence = 1;
+                $count_sentence = 0;
                 $data = new Data();
             }
             $document_list_nr = null;
@@ -171,6 +179,7 @@ trait Main {
                             continue;
                         }
                         $found = false;
+                        $count_word++;
                         foreach($word_list as $word_list_nr => $word_list_item){
                             if($word_list_item->word === $word){
                                 $found = true;
@@ -202,6 +211,7 @@ trait Main {
                         $id_sentence++;
                     }
                     $sentence_paragraph_list[] = $sentence->id;
+                    $count_sentence++;
                 }
                 $found = false;
                 foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
@@ -211,6 +221,7 @@ trait Main {
                         break;
                     }
                 }
+                $count_paragraph++;
                 if(!$found){
                     $paragraph_list[] = (object) [
                         'id' => $id_paragraph,
@@ -227,12 +238,17 @@ trait Main {
                 $document_list[$is_put] = $document;
             } else {
                 $document_list[] = $document;
+                $count_document++;
             }
             $data->set('paragraph', $paragraph_list);
             $data->set('sentence', $sentence_list);
             $data->set('word', $word_list);
             $data->set('document', $document_list);
             $data->set('id.document', $id_document);
+            $data->set('count.document', $count_document);
+            $data->set('count.paragraph', $count_paragraph);
+            $data->set('count.sentence', $count_sentence);
+            $data->set('count.word', $count_word);
         }
         $data->write($source);
         File::permission($object, [
