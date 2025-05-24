@@ -171,6 +171,9 @@ trait Embedding {
         if(!$data_embedding_word){
             return;
         }
+        if(!$data_embedding_sentence_piece){
+            $data_embedding_sentence_piece = new Data();
+        }
         if(!$data_float){
             return;
         }
