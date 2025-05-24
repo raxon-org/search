@@ -76,7 +76,6 @@ trait Find {
         $embedding_words = [];
         $embedding_word_list = $data_embedding_word->get('embedding');
         foreach($embedding_word_list as $child){
-            ddd($child);
             $embedding_words[$child->id] = $child;
         }
         $embedding_sentence_pieces = [];
@@ -88,7 +87,7 @@ trait Find {
 //        $vector = $input->get('embeddings.0');
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
-            $vector = $embedding_sentence_pieces[$word->embedding];
+            $vector = $embedding_words[$word->embedding];
         } else {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
