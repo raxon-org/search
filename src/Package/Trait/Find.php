@@ -165,6 +165,8 @@ trait Find {
                     $similarity[] = $similarity[1];
                     $similarity[] = $similarity[2];
                     $average = $this->array_average($similarity, $options);
+                    $length = mb_strlen($average);
+                    $average = $average . str_repeat('0', 16 - $length);
                     $word_text = [];
                     foreach($embedding_sentence_piece->word as $word_id){
                         $word_text[] = $words[$word_id]->word ?? null;
