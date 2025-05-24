@@ -87,7 +87,7 @@ trait Find {
 //        $vector = $input->get('embeddings.0');
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
-            $vector = $embedding_words[$word->embedding];
+            $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
         } else {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
