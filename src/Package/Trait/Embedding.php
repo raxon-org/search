@@ -304,7 +304,7 @@ trait Embedding {
                     if(array_key_exists($id_word, $word_list_id)){
                         $word = $word_list_id[$id_word];
                         $tokens += $word->tokens;
-                        $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding];
+                        $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding]->id;
                     }
                 }
                 ddd($embeddings_sentence_piece);
