@@ -195,7 +195,7 @@ trait Embedding {
         foreach($embeddings_word as $embedding){
             $embedding_word_list[$embedding->id] = $embedding;
         }
-        $embeddings = $data_embedding_sentence_piece->get('embedding') ?? [];
+        $embeddings = $data_embedding_sentence_piece->get('embedding') ?? (object) [];
         $embedding_list = [];
         foreach($embeddings as $embedding){
             $embedding_list[$embedding->id] = $embedding;
