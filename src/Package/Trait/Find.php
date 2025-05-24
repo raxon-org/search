@@ -71,17 +71,23 @@ trait Find {
         foreach ($float_list as $child) {
             $floats[$child->id] = $child;
         }
-        $embeddings_sentence_piece = [];
+        $embeddings_sentence_pieces = [];
         $embeddings_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
         foreach ($embeddings_sentence_piece_list as $child) {
             foreach ($child->embedding as $embedding_nr => $float_id) {
                 $child->embedding[$embedding_nr] = $floats[$float_id]->value;
             }
-            $embeddings_sentence_piece[$child->id] = $child;
+            $embeddings_sentence_pieces[$child->id] = $child;
         }
-        ddd(reset($embeddings_sentence_piece));
         $input = $this->get_embedding($options->input, $options);
-        ddd($input);
+        $vector = $input->get('embeddings.0');
+        foreach($embeddings_sentence_pieces as $embedding_sentence_piece_id => $embedding_sentence_piece){
+            if(is_array($vector) && is_array($embedding_sentence_piece->embedding)){
+                $similarity = $this->cosine_similarity($vector, $embedding_sentence_piece->embedding);
+                ddd($similarity);
+        }
+    }
+
     }
 
     /**
