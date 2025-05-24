@@ -81,13 +81,21 @@ trait Find {
         }
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
+        $result = [];
         foreach($embeddings_sentence_pieces as $embedding_sentence_piece_id => $embedding_sentence_piece){
-            if(is_array($vector) && is_array($embedding_sentence_piece->embedding)){
+            if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = $this->cosine_similarity($vector, $embedding_sentence_piece->embedding);
-                ddd($similarity);
+                $result["{$similarity}"] = (object)[
+                    'id' => $embedding_sentence_piece->id,
+                    'word' => $embedding_sentence_piece->word ?? [],
+                    'sentence' => $embedding_sentence_piece->sentence ?? [],
+                    'tokens' => $embedding_sentence_piece->tokens ?? 0,
+                    'similarity' => $similarity,
+                ];
+            }
         }
-    }
-
+        krsort($result, SORT_NATURAL);
+        ddd($result);
     }
 
     /**
