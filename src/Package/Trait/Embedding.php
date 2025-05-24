@@ -79,7 +79,6 @@ trait Embedding {
                 $hash = hash('sha256', $word->word);
                 if(!property_exists($embeddings, $hash)){
                     $get_embedding = $this->get_embedding($word->word, $options);
-                    ddd($get_embedding);
                     $embedding = (object) [
                         'id' => $id_embedding,
                         'embedding' => $get_embedding->get('embeddings.0'),

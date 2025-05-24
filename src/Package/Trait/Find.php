@@ -90,6 +90,8 @@ trait Find {
         foreach($embedding_words as $id => $embedding_word){
             if(is_array($vector) && is_array($embedding_word->embedding)) {
                 $embedding = $this->get_embedding_float($embedding_word->embedding, $floats);
+                breakpoint($vector);
+                breakpoint($embedding);
                 $similarity = $this->cosine_similarity($vector, $embedding);
                 if(!array_key_exists("{$similarity}", $result)){
                     $result["{$similarity}"] = [];
