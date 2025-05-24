@@ -88,9 +88,6 @@ trait Find {
                 foreach($embedding_sentence_piece->embedding as $embedding_nr => $sentence_piece_list){
                     $embeddings = [];
                     foreach($sentence_piece_list as $sentence_piece_nr => $float){
-                        if(!array_key_exists($sentence_piece_nr, $embeddings)){
-                            $embeddings[$sentence_piece_nr] = [];
-                        }
                         $embeddings[$sentence_piece_nr][$embedding_nr] = $float;
                     }
                 }
