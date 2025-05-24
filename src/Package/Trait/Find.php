@@ -125,6 +125,9 @@ trait Find {
         foreach($result as $average => $list){
             foreach($list as $nr => $record){
                 echo $record->average . ' | ' . implode(' ', $record->word_text) . PHP_EOL;
+                foreach($record->similarity as $similarity){
+                    echo 'Similarity: ' . $similarity . PHP_EOL;
+                }
             }
         }
     }
