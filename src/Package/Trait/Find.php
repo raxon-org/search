@@ -93,8 +93,8 @@ trait Find {
         foreach ($embedding_sentence_piece_list as $child) {
             $embedding_sentence_pieces[$child->id] = $child;
         }
-//        $input = $this->get_embedding($options->input, $options);
-//        $vector = $input->get('embeddings.0');
+        $input = $this->get_embedding($options->input, $options);
+        $input = [ $input->get('embeddings.0') ];
         /*
         $result = [];
         foreach($embedding_words as $id => $embedding_word){
@@ -116,6 +116,7 @@ trait Find {
         }
         krsort($result, SORT_NATURAL);
         */
+        /*
         $input = explode(' ', $options->input);
         foreach($input as $nr => $value){
             $input[$nr] = trim($value);
@@ -125,6 +126,7 @@ trait Find {
                 $input[$nr] = $embedding_words[$vocabulary[$value]->embedding]->embedding;
             }
         }
+        */
         /*
         if(array_key_exists($word, $vocabulary)){
             $word = $vocabulary[$options->input];
