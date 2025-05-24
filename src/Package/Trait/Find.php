@@ -142,7 +142,9 @@ trait Find {
                 $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
             }
             foreach($input as $nr => $vector){
-                $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
+                if(!is_array($vector)){
+                    $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
+                }
                 if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
                     $similarity = [];
                     foreach($embedding_sentence_piece->embedding_decode as $embedding_decode_nr => $embedding){
