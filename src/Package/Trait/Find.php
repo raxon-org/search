@@ -436,7 +436,7 @@ trait Find {
         return new Data($output);
     }
 
-    public function array_average(array $list=[], object $options, $is_debug) : float|int
+    public function array_average(array $list=[], object $options, $is_debug=false) : float|int
     {
         if(empty($list)){
             return 0;
