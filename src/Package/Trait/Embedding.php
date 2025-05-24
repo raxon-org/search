@@ -184,7 +184,22 @@ trait Embedding {
             $word_list_embedding[$word->embedding] = $word;
         }
         $sentences = $data->get('sentence') ?? [];
-        ddd($sentences);
+        $sentence_pieces = [];
+        $pieces = [];
+        foreach($sentences as $sentence){
+            if(
+                property_exists($sentence, 'word') &&
+                is_array($sentence->word)
+            ){
+                foreach($sentence->word as $word){
+                    $pieces[] = [
+                        'word' => $word,
+                        'sentence' => $sentence->id
+                    ];
+                }
+            }
+        }
+        ddd($pieces);
     }
     /**
      * @throws ObjectException
