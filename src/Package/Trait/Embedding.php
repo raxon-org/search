@@ -233,9 +233,6 @@ trait Embedding {
                     $sentence_piece->sentence[] = $word->sentence;
                 }
             }
-            // makes position of the word ordered by id and if we do favorite word by id ?
-            sort($sentence_piece->word, SORT_NATURAL);
-            sort($sentence_piece->sentence, SORT_NATURAL);
             $hash = (object) [
                 'word' => $sentence_piece->word,
                 'sentence' => $sentence_piece->sentence
