@@ -273,14 +273,17 @@ trait Main {
         $dir = new Dir();
         $read = $dir->read($options->source);
         $chunks = array_chunk($read, 64);
-        $count = count($chunks);
+        $total = count($chunks);
+        $count = 0;
         foreach($chunks as $nr => $chunk){
             $import=[];
             foreach($chunk as $file){
                 $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
+                $count++;
             }
             $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import);
-            ddd($command);
+            echo 'Percentage: ' . round($count / $total, 2) . PHP_EOL;
+
         }
         ddd($chunks);
         foreach($read as $file)
