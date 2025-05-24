@@ -286,7 +286,7 @@ trait Main {
             $count++;
             $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version .' > /dev/null';
             exec($command);
-            echo 'Percentage: ' . round($count / $total, 2) . PHP_EOL;
+            echo 'Percentage: ' . round(($count / $total) * 1000, 2) . PHP_EOL;
         }
     }
 }
