@@ -284,7 +284,7 @@ trait Main {
                 $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
             }
             $count++;
-            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->verion .' > /dev/null';
+            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version .' > /dev/null';
             exec($command);
             echo 'Percentage: ' . round($count / $total, 2) . PHP_EOL;
         }
