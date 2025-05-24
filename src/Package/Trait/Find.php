@@ -81,7 +81,12 @@ trait Find {
             $embedding_words[$child->id] = $child;
         }
         $embedding_sentence_pieces = [];
-        $embedding_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
+        if($data_embedding_sentence_piece){
+            $embedding_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
+        } else {
+            $embedding_sentence_piece_list = [];
+        }
+
         foreach ($embedding_sentence_piece_list as $child) {
             $embedding_sentence_pieces[$child->id] = $child;
         }
