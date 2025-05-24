@@ -645,6 +645,7 @@ trait Embedding {
         foreach($embeddings as $embedding){
             foreach($embedding->embedding as $nr => $id_float){
                 if($is_debug){
+                    d($floats[$id_float]);
                     ddd($id_float);
                 }
                 if(!array_key_exists($nr, $record)){
