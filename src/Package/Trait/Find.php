@@ -101,6 +101,7 @@ trait Find {
                 ];
             }
         }
+        krsort($result, SORT_NATURAL);
         breakpoint($result);
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
