@@ -61,9 +61,11 @@ trait Find {
             return;
         }
         $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
+        /*
         if (!$data_embedding_sentence_piece) {
             return;
         }
+        */
         $data_float = $object->data_read($source_float);
         if (!$data_float) {
             return;
