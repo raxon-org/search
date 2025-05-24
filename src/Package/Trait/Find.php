@@ -85,9 +85,8 @@ trait Find {
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){;
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
-                ddd($similarity);
                 if($id === 130){
-                    d($similarity);
+                    ddd($similarity);
                 }
                 rsort($similarity, SORT_NATURAL);
 
