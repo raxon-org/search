@@ -191,6 +191,8 @@ trait Embedding {
         foreach($embeddings as $embedding){
             $embedding_list[$embedding->id] = $embedding;
         }
+        $id_embedding = $data->get('id.embedding.word') ?? 0;
+        $id_embedding++;
         $floats = $data_float->get('float') ?? (object) [];
         $float_list = [];
         $float_value_list = [];
@@ -202,6 +204,8 @@ trait Embedding {
             }
             $float_list[$float->id] = $float;
         }
+        $id_float = $data->get('id.float') ?? 0;
+        $id_float++;
         $sentences = $data->get('sentence') ?? [];
         $sentence_pieces = $data->get('sentence_piece') ?? [];
         $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
@@ -263,12 +267,58 @@ trait Embedding {
                     true
                 )
             ){
-                $embeddings = [];
+                $embeddings_sentence_piece = [];
                 foreach($sentence_piece->word as $id_word){
                     $word = $word_list_id[$id_word];
-                    $embeddings[] = $embedding_list[$word->embedding];
+                    ddd($word);
+                    $embeddings_sentence_piece[] = $embedding_list[$word->embedding];
                 }
-                $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings, $float_list);
+                $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece, $float_list);
+
+                $embedding = (object) [
+                    'id' => $id_embedding,
+                    'embedding' => $sentence_piece->embedding,
+                    'model' => 'average-words-6',
+                    'tokens' => $get_embedding->get('prompt_eval_count'),
+                    'word' => $sentence_piece->word,
+                    'sentence' => $sentence_piece->sentence,
+
+                ];
+
+                ddd($embedding);
+
+                foreach($embedding->embedding as $nr => $value){
+                    if(
+                        !in_array(
+                            $value,
+                            $float_available,
+                            true
+                        )
+                    ){
+                        $float_list[$id_float] = (object) [
+                            'id' => $id_float,
+                            'value' => $value,
+                            'count' => 1,
+                        ];
+                        $float_value_list["{$value}"] = $id_float;
+                        $float_available[] = $value;
+                        $embedding->embedding[$nr] = $id_float;
+                        $data->set('id.float', $id_float);
+                        $id_float++;
+                    } else {
+                        $id_float = $float_value_list["{$value}"];
+                        $embedding->embedding[$nr] = $id_float;
+                        if(!property_exists($float_list[$id_float], 'count')){
+                            $float_list[$id_float]->count = 1;
+                        } else {
+                            $float_list[$id_float]->count++;
+                        }
+                    }
+                }
+                $embeddings->{$hash} = $embedding;
+
+
+
 
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
