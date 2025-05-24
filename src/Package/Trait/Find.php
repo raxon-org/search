@@ -93,6 +93,7 @@ trait Find {
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
         breakpoint($vector);
+        /*
         $result = [];
         foreach($embedding_words as $id => $embedding_word){
             if(is_array($vector) && is_array($embedding_word->embedding)) {
@@ -112,13 +113,15 @@ trait Find {
             }
         }
         krsort($result, SORT_NATURAL);
-        breakpoint($result);
+        */
+        /*
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
             $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
         } else {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
+        */
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
@@ -138,11 +141,6 @@ trait Find {
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
                     $word_text[] = $words[$word_id]->word ?? null;
-                }
-                if($id === 130){
-                    d($similarity);
-                    d($average);
-                    ddd($word_text);
                 }
                 if(!array_key_exists("{$average}", $result)){
                     $result["{$average}"] = [];

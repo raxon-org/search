@@ -290,9 +290,11 @@ trait Embedding {
                 $embeddings_sentence_piece = [];
                 $tokens = 0;
                 foreach($sentence_piece->word as $id_word){
-                    $word = $word_list_id[$id_word];
-                    $tokens += $word->tokens;
-                    $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding];
+                    if(array_key_exists($id_word, $word_list_id)){
+                        $word = $word_list_id[$id_word];
+                        $tokens += $word->tokens;
+                        $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding];
+                    }
                 }
 
                 $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece);
