@@ -374,7 +374,6 @@ trait Embedding {
             'source_float' => $source_float,
             'source_embedding' => $source_embedding_sentence_piece
         ]);
-        ddd(count($embeddings));
     }
     /**
      * @throws ObjectException
