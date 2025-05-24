@@ -674,8 +674,6 @@ trait Embedding {
         foreach($embeddings as $nr => $embedding){
             if(is_string($embedding->embedding)){
                 $embedding->embedding_decode = Core::object(gzdecode(base64_decode($embedding->embedding)), Core::OBJECT_ARRAY);
-                breakpoint('yes');
-                breakpoint($embedding);
             }
             foreach($embedding->embedding_decode as $embedding_nr => $id_float){
                 if(!array_key_exists($nr, $record)){
