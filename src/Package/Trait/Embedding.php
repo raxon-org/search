@@ -351,6 +351,7 @@ trait Embedding {
                     $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
                     $data_float->set('float', $float_sort_list);
                     $data->set('word', $words);
+                    $data->set('sentence_piece', $sentence_pieces);
                     $data->write($source);
                     $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
                     $data_float->write($source_float);
@@ -370,6 +371,7 @@ trait Embedding {
         $float_sort_list = Sort::list($float_sort_list)->with(['count' => 'desc']);
         $data_float->set('float', $float_sort_list);
         $data->set('word', $words);
+        $data->set('sentence_piece', $sentence_pieces);
         $data->write($source);
         $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
         $data_float->write($source_float);
