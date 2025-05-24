@@ -80,18 +80,12 @@ trait Find {
         $vector = $input->get('embeddings.0');
         $result = [];
         foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
-            ddd($embedding_sentence_piece);
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
-                $embeddings = [];
-                foreach($embedding_sentence_piece->embedding as $embedding_nr => $sentence_piece_list){
-                    foreach($sentence_piece_list as $sentence_piece_nr => $float){
-                        $embeddings[$sentence_piece_nr][$embedding_nr] = $float;
-                    }
-                }
                 $similarity = [];
-                foreach($embeddings as $nr => $embedding){;
+                foreach($embedding_sentence_piece->embedding as $nr => $embedding){;
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
+                ddd($similarity);
                 if($id === 130){
                     d($similarity);
                 }
