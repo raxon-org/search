@@ -17,6 +17,79 @@ trait Find {
      */
     public function input(object $flags, object $options): void
     {
+        if (!property_exists($options, 'input')) {
+            throw new Exception('Option input not set');
+        }
+        if (!property_exists($options, 'type')) {
+            $options->type = 'word';
+        }
+        $object = $this->object();
+        if (!property_exists($options, 'version')) {
+            $options->version = self::VERSION;
+        }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        if (!$data) {
+            throw new Exception('No data for version: ' . $options->version);
+        }
+        $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
+        $document_list = $data->get('document');
+        $paragraph_list = $data->get('paragraph');
+        $sentence_list = $data->get('sentence');
+        $word_list = $data->get('word');
+        $sentences = [];
+        $paragraphs = [];
+        $words = [];
+        foreach ($sentence_list as $child) {
+            $sentences[$child->id] = $child;
+        }
+        foreach ($paragraph_list as $child) {
+            $paragraphs[$child->id] = $child;
+        }
+        foreach ($word_list as $child) {
+            $words[$child->id] = $child;
+        }
+        $data_embedding_word = $object->data_read($source_embedding_word);
+        if (!$data_embedding_word) {
+            return;
+        }
+        $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
+        if (!$data_embedding_sentence_piece) {
+            return;
+        }
+        $data_float = $object->data_read($source_float);
+        if (!$data_float) {
+            return;
+        }
+        $floats = [];
+        $float_list = $data_float->get('float') ?? [];
+        foreach ($float_list as $child) {
+            $floats[$child->id] = $child;
+        }
+        $embeddings_sentence_piece = [];
+        $embeddings_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
+        foreach ($embeddings_sentence_piece_list as $child) {
+            foreach ($child->embedding as $embedding_nr => $float_id) {
+                $child->embedding[$embedding_nr] = $floats[$float_id]->value;
+            }
+            $embeddings_sentence_piece[$child->id] = $child;
+        }
+        ddd(reset($embeddings_sentence_piece));
+        $input = $this->get_embedding($options->input, $options);
+        ddd($input);
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function input_old(object $flags, object $options): void
+    {
         if(!property_exists($options, 'input')){
             throw new Exception('Option input not set');
         }
