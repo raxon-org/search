@@ -115,10 +115,6 @@ trait Find {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){
                     $embedding = $this->get_embedding_float($embedding, $floats);
-                    if($id === 130){
-                        breakpoint($vector);
-                        breakpoint($embedding);
-                    }
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
 //                rsort($similarity, SORT_NATURAL);
@@ -461,9 +457,10 @@ trait Find {
     public function get_embedding($text, $options): Data
     {
         $model = $options->model ?? 'nomic-embed-text';
+
         $command = 'curl http://localhost:11434/api/embed -d \'{
-            "model": "' . $model . '",
-            "input": "' . str_replace("\n", '\\n', $text) . '"
+            "model": "' . $model .'",
+            "input": "' . str_replace(["\\", '\''], ['\\\\', '&apos;'], $text) . '"
         }\'';
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
