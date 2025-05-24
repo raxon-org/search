@@ -160,7 +160,7 @@ trait Find {
                     /**
                      * attention, add 3x the highest score 1x silver, and 1x bronze
                      */
-                    rsort($similarity, SORT_NATURAL);
+                    rsort($similarity[$nr], SORT_NATURAL);
                     $similarity[$nr][] = $similarity[$nr][0];
                     $similarity[$nr][] = $similarity[$nr][0];
                     $similarity[$nr][] = $similarity[$nr][0];
