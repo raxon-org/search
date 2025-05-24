@@ -273,6 +273,12 @@ trait Main {
         $dir = new Dir();
         $read = $dir->read($options->source);
         $chunks = array_chunk($read, 64);
+        $count = count($chunks);
+        foreach($chunks as $nr => $chunk){
+            foreach($chunk as $file){
+                ddd($file);
+            }
+        }
         ddd($chunks);
         foreach($read as $file)
         ddd($options);
