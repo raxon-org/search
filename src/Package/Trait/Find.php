@@ -454,6 +454,7 @@ trait Find {
             $count++;
         }
         if($is_debug){
+            d($list);
             d($sum);
             ddd($count);
         }
