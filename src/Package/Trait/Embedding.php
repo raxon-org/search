@@ -663,6 +663,7 @@ trait Embedding {
                 }
             }
         }
+        ddd($record);
         if($is_debug){
             ddd($record);
         }
