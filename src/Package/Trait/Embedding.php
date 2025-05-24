@@ -542,7 +542,6 @@ trait Embedding {
 
     public function get_embedding_sentence_piece(array $embeddings, $floats): array
     {
-        $result = [];
         $record = [];
         foreach($embeddings as $embedding){
             foreach($embedding->embedding as $nr => $id_float){
@@ -557,8 +556,10 @@ trait Embedding {
                 }
             }
         }
-        ddd($record);
-        return $result;
+        foreach($record as $nr => $list){
+            $record[$nr] = $this->array_average($list);
+        }
+        return $record;
     }
 
     public function array_average(array $list=[]): float|int
