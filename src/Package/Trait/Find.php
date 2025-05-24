@@ -93,9 +93,7 @@ trait Find {
                     }
                 }
                 $similarity = [];
-                foreach($embeddings as $nr => $embedding){
-                    breakpoint($vector);
-                    breakpoint($embedding);
+                foreach($embeddings as $nr => $embedding){;
                     $similarity[] = $this->cosine_similarity($vector, $embedding);
                 }
                 if($id === 130){

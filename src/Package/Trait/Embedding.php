@@ -290,6 +290,7 @@ trait Embedding {
                     $tokens += $word->tokens;
                     $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding];
                 }
+                ddd($embeddings_sentence_piece);
                 $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece);
 
                 $embedding = (object) [
