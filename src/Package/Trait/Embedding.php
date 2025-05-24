@@ -84,9 +84,6 @@ trait Embedding {
                         'word' => $word->word,
 
                     ];
-                    if($word->word === '(MVC)'){
-                        ddd($embedding);
-                    }
                     if(!is_array($embedding->embedding)){
                         breakpoint($embedding);
                     }
