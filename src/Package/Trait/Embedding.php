@@ -320,6 +320,7 @@ trait Embedding {
                             d($value);
                             breakpoint($nr);
                             breakpoint($embedding);
+                            breakpoint($sentence_piece);
                             d(count($float_list));
                             ddd($id_float);
                         }
