@@ -81,9 +81,9 @@ trait Find {
 //        $input = $this->get_embedding($options->input, $options);
 //        $vector = $input->get('embeddings.0');
         if(array_key_exists($options->input, $vocabulary)){
-            $vector = $vocabulary[$input->input];
+            $vector = $vocabulary[$options->input];
         } else {
-            throw new Exception('Vocabulary not found: ' . $input->input);
+            throw new Exception('Vocabulary not found: ' . $options->input);
         }
         $result = [];
         foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
