@@ -85,6 +85,10 @@ trait Find {
         foreach($embeddings_sentence_pieces as $embedding_sentence_piece_id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = $this->cosine_similarity($vector, $embedding_sentence_piece->embedding);
+                $word_text = [];
+                foreach($embedding_sentence_piece->word as $word){
+                    $word_text[] = $words[$word->id] ?? null;
+                }
                 $result["{$similarity}"] = (object)[
                     'id' => $embedding_sentence_piece->id,
                     'word' => $embedding_sentence_piece->word ?? [],
