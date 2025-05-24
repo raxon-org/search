@@ -184,7 +184,9 @@ trait Embedding {
             $word_list_embedding[$word->embedding] = $word;
         }
         $sentences = $data->get('sentence') ?? [];
-        $sentence_pieces = [];
+        $sentence_pieces = $data->get('sentence_piece') ?? [];
+        $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
+        $id_sentence_piece++;
         $pieces = [];
         $pieces_count = 0;
         foreach($sentences as $sentence){
@@ -207,8 +209,10 @@ trait Embedding {
                 $piece[] = $pieces[$j];
             }
             $sentence_piece = [
+                'id' => $id_sentence_piece,
                 'word' => [],
-                'sentence' => []
+                'sentence' => [],
+                'embedding' => []
             ];
             foreach($piece as $word){
                 $sentence_piece['word'][] = $word['word'];
@@ -222,9 +226,10 @@ trait Embedding {
                     $sentence_piece['sentence'][] = $word['sentence'];
                 }
             }
-            ddd($sentence_piece);
+            $id_sentence_piece++;
+            $sentence_pieces[] = $sentence_piece;
         }
-        ddd($pieces);
+        ddd($sentence_pieces);
     }
     /**
      * @throws ObjectException
