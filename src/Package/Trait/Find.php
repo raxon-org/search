@@ -105,7 +105,7 @@ trait Find {
                 $average = $this->array_average($similarity);
                 $word_text = [];
                 foreach($embedding_sentence_piece->word as $word_id){
-                    $word_text[] = $words[$word_id] ?? null;
+                    $word_text[] = $words[$word_id]->word ?? null;
                 }
                 if(!array_key_exists("{$average}", $result)){
                     $result["{$average}"] = [];
