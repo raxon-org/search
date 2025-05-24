@@ -665,21 +665,25 @@ trait Embedding {
         return new Data($output);
     }
 
+    /**
+     * @throws ObjectException
+     */
     public function get_embedding_sentence_piece(array $embeddings): array
     {
         $record = [];
         foreach($embeddings as $nr => $embedding){
             if(is_string($embedding->embedding)){
-                $embedding->embedding_decode = gzdecode(base64_decode($embedding->embedding));
+                $embedding->embedding_decode = Core::object(gzdecode(base64_decode($embedding->embedding)), Core::OBJECT_ARRAY);
                 breakpoint('yes');
-                ddd($embedding);
+                breakpoint($embedding);
             }
-            foreach($embedding->embedding as $embedding_nr => $id_float){
+            foreach($embedding->embedding_decode as $embedding_nr => $id_float){
                 if(!array_key_exists($nr, $record)){
                     $record[$nr] = [];
                 }
                 $record[$nr][$embedding_nr] = $id_float;
             }
+            unset($embedding->embedding_decode);
         }
         return $record;
 
