@@ -73,22 +73,28 @@ trait Find {
         foreach ($float_list as $child) {
             $floats[$child->id] = $child;
         }
-        $embeddings_sentence_pieces = [];
-        $embeddings_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
-        foreach ($embeddings_sentence_piece_list as $child) {
-            $embeddings_sentence_pieces[$child->id] = $child;
+        $embedding_words = [];
+        $embedding_word_list = $data_embedding_word->get('embedding');
+        foreach($embedding_word_list as $child){
+            ddd($child);
+            $embedding_words[$child->id] = $child;
+        }
+        $embedding_sentence_pieces = [];
+        $embedding_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
+        foreach ($embedding_sentence_piece_list as $child) {
+            $embedding_sentence_pieces[$child->id] = $child;
         }
 //        $input = $this->get_embedding($options->input, $options);
 //        $vector = $input->get('embeddings.0');
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
-            $vector = $embeddings_sentence_pieces[$word->embedding];
+            $vector = $embedding_sentence_pieces[$word->embedding];
         } else {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
         ddd($vector);
         $result = [];
-        foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
+        foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
                 $similarity = [];
                 foreach($embedding_sentence_piece->embedding as $nr => $embedding){
