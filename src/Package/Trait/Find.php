@@ -93,8 +93,8 @@ trait Find {
         foreach ($embedding_sentence_piece_list as $child) {
             $embedding_sentence_pieces[$child->id] = $child;
         }
-        $input = $this->get_embedding($options->input, $options);
-        $vector = $input->get('embeddings.0');
+//        $input = $this->get_embedding($options->input, $options);
+//        $vector = $input->get('embeddings.0');
         /*
         $result = [];
         foreach($embedding_words as $id => $embedding_word){
@@ -125,7 +125,6 @@ trait Find {
                 $input[$nr] = $embedding_words[$vocabulary[$value]->embedding]->embedding;
             }
         }
-        ddd($input);
         /*
         if(array_key_exists($word, $vocabulary)){
             $word = $vocabulary[$options->input];
@@ -162,11 +161,11 @@ trait Find {
                      * attention, add 3x the highest score 1x silver, and 1x bronze
                      */
                     rsort($similarity, SORT_NATURAL);
-                    $similarity[$nr][] = $similarity[0];
-                    $similarity[$nr][] = $similarity[0];
-                    $similarity[$nr][] = $similarity[0];
-                    $similarity[$nr][] = $similarity[1];
-                    $similarity[$nr][] = $similarity[2];
+                    $similarity[$nr][] = $similarity[$nr][0];
+                    $similarity[$nr][] = $similarity[$nr][0];
+                    $similarity[$nr][] = $similarity[$nr][0];
+                    $similarity[$nr][] = $similarity[$nr][1];
+                    $similarity[$nr][] = $similarity[$nr][2];
                     $average = $this->array_average($similarity[$nr], $options);
                     $word_text = [];
                     foreach($embedding_sentence_piece->word as $word_id){
