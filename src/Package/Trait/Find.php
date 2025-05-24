@@ -498,11 +498,11 @@ trait Find {
         $dot_product = 0;
         foreach ($vector1 as $key => $value) {
             if(array_key_exists($key, $vector2)){
-                if(is_array($value)){
+                if(is_object($value)){
                     trace();
                     ddd('end');
                 }
-                if(is_array($vector2[$key])){
+                if(is_object($vector2[$key])){
                     trace();
                     ddd('end');
                 }
