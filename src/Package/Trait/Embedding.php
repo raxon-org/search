@@ -93,6 +93,7 @@ trait Embedding {
                     if(!is_array($embedding->embedding)){
                         breakpoint($embedding);
                     }
+                    /*
                     foreach($embedding->embedding as $nr => $value){
                         if(
                             !in_array(
@@ -121,6 +122,7 @@ trait Embedding {
                             }
                         }
                     }
+                    */
                     $embeddings->{$hash} = $embedding;
                     $data->set('id.embedding.word', $id_embedding);
                     $id_embedding++;
