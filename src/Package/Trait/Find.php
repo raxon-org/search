@@ -85,14 +85,23 @@ trait Find {
         }
         $input = $this->get_embedding($options->input, $options);
         $vector = $input->get('embeddings.0');
+        $result = [];
         foreach($embedding_words as $id => $embedding_word){
             if(is_array($vector) && is_array($embedding_word->embedding)) {
                 $embedding = $this->get_embedding_float($embedding_word->embedding, $floats);
                 $similarity = $this->cosine_similarity($vector, $embedding);
-                ddd($similarity);
+                if(!array_key_exists("{$similarity}", $result)){
+                    $result["{$similarity}"] = [];
+                }
+                $result["{$similarity}"][] = (object)[
+                    'id' => $id,
+                    'word_text' => $embedding_word->word ?? null,
+                    'tokens' => $embedding_word->tokens ?? 0,
+                    'similarity' => $similarity,
+                ];
             }
         }
-        breakpoint($vector);
+        breakpoint($result);
         if(array_key_exists($options->input, $vocabulary)){
             $word = $vocabulary[$options->input];
             $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
