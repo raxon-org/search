@@ -259,5 +259,18 @@ trait Main {
         ]);
         echo 'File written: ' . $source . PHP_EOL;
     }
+
+    /**
+     * @throws Exception
+     * @throws GuzzleException
+     */
+    public function import_php(object $flags, object $options): void
+    {
+        $object = $this->object();
+        if(!property_exists($options, 'source')){
+            $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/php_manual_en/';
+        }
+        ddd($options);
+    }
 }
 
