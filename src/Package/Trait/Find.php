@@ -503,7 +503,7 @@ trait Find {
                     ddd('end');
                 }
                 if(is_object($vector2[$key])){
-                    trace();
+                    ddd($vector2);
                     ddd('end');
                 }
                 $dot_product += $value * $vector2[$key];
