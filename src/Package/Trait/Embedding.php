@@ -246,6 +246,7 @@ trait Embedding {
             ){
                 foreach($sentence_piece->word as $id_word){
                     $word = $word_list_id[$id_word];
+                    breakpoint('word');
                     ddd($word);
                 }
 
