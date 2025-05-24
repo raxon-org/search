@@ -443,7 +443,7 @@ trait Find {
         $multiplier = $options->multiplier ?? 1;
         foreach($list as $value){
             $value += ($value * $multiplier);
-            if(property_exists('only_positive', $options)) {
+            if(property_exists($options, 'only_positive')) {
                 if($value < 0){
                     continue;
                 }
