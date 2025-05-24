@@ -85,6 +85,7 @@ trait Find {
         } else {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
+        ddd($vector);
         $result = [];
         foreach($embeddings_sentence_pieces as $id => $embedding_sentence_piece){
             if(is_array($vector) && is_array($embedding_sentence_piece->embedding)) {
