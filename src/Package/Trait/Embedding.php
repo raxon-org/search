@@ -163,6 +163,7 @@ trait Embedding {
         $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $data = $object->data_read($source);
         $data_embedding_word = $object->data_read($source_embedding_word);
+        $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
         $data_float = $object->data_read($source_float);
         if(!$data){
             return;
@@ -183,7 +184,15 @@ trait Embedding {
             $word_list_id[$word->id] = $word;
             $word_list_embedding[$word->embedding] = $word;
         }
-        $embeddings = $data_embedding_word->get('embedding') ?? [];
+        $embeddings_word = $data_embedding_word->get('embedding') ?? [];
+        if(!$embeddings_word){
+            return;
+        }
+        $embedding_word_list = [];
+        foreach($embeddings_word as $embedding){
+            $embedding_word_list[$embedding->id] = $embedding;
+        }
+        $embeddings = $data_embedding_sentence_piece->get('embedding') ?? [];
         if(!$embeddings){
             return;
         }
@@ -191,7 +200,7 @@ trait Embedding {
         foreach($embeddings as $embedding){
             $embedding_list[$embedding->id] = $embedding;
         }
-        $id_embedding = $data->get('id.embedding.word') ?? 0;
+        $id_embedding = $data->get('id.embedding.sentence_piece') ?? 0;
         $id_embedding++;
         $floats = $data_float->get('float') ?? (object) [];
         $float_list = [];
@@ -272,7 +281,7 @@ trait Embedding {
                 foreach($sentence_piece->word as $id_word){
                     $word = $word_list_id[$id_word];
                     $tokens += $word->tokens;
-                    $embeddings_sentence_piece[] = $embedding_list[$word->embedding];
+                    $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding];
                 }
                 $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece, $float_list);
 
@@ -283,7 +292,7 @@ trait Embedding {
                     'tokens' => $tokens,
                     'word' => $sentence_piece->word,
                     'sentence' => $sentence_piece->sentence,
-
+                    'hash' => $hash
                 ];
 
                 ddd($embedding);
