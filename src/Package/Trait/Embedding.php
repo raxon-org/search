@@ -268,9 +268,10 @@ trait Embedding {
                 )
             ){
                 $embeddings_sentence_piece = [];
+                $tokens = 0;
                 foreach($sentence_piece->word as $id_word){
                     $word = $word_list_id[$id_word];
-                    ddd($word);
+                    $tokens += $word->tokens;
                     $embeddings_sentence_piece[] = $embedding_list[$word->embedding];
                 }
                 $sentence_piece->embedding = $this->get_embedding_sentence_piece($embeddings_sentence_piece, $float_list);
@@ -279,7 +280,7 @@ trait Embedding {
                     'id' => $id_embedding,
                     'embedding' => $sentence_piece->embedding,
                     'model' => 'average-words-6',
-                    'tokens' => $get_embedding->get('prompt_eval_count'),
+                    'tokens' => $tokens,
                     'word' => $sentence_piece->word,
                     'sentence' => $sentence_piece->sentence,
 
