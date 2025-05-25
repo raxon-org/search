@@ -142,7 +142,7 @@ trait Embedding {
                         $duration_percentage = round($duration / ($count / $count_words), 3);
                         echo 'Percentage: ' . round($count / $count_words, 2) . '; Duration: ' . $duration . '; Total duration: ' . $duration_percentage . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                     } else {
-                        echo 'Percentage: ' . round($count / $count_words, 2) . '; Duration: ' . $duration . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                        echo 'Percentage: ' . round($count / 1, 2) . '; Duration: ' . $duration . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                     }
 
                 }
