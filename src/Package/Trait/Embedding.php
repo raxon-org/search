@@ -673,7 +673,7 @@ trait Embedding {
     {
         $model = $options->model ?? 'nomic-embed-text';
 
-
+        /*
         $ch = curl_init();
         // Set the URL of the localhost
         curl_setopt($ch, CURLOPT_URL, "http://localhost:11434/api/embed");
@@ -716,10 +716,7 @@ trait Embedding {
         }
         // Close the cURL session
         curl_close($ch);
-
-
-
-        /*
+        */
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "' . $model .'",
             "input": "' . str_replace(["\\", '\''], ['\\\\', '&apos;'], $text) . '"
@@ -728,9 +725,7 @@ trait Embedding {
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
         }
-        */
-        ddd('end');
-        return new Data();
+        return new Data($output);
     }
 
     /**
