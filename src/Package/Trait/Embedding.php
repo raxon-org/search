@@ -79,6 +79,7 @@ trait Embedding {
         ]];
         */
         $count_words = $data->get('id.embedding.word') ?? 0;
+        ddd($count_words);
         $count = 0;
         foreach($words as $word){
             if(property_exists($word, 'word') && $word->word === ''){
