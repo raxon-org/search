@@ -694,15 +694,15 @@ trait Embedding {
         curl_setopt($ch, CURLOPT_TIMEOUT, 2 * 3600);           // 120 minutes for the full request
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);    // 10 seconds for the connection
 
-        $data = [];
+//        $data = [];
 
         curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $chunk) use ($options) {
-            $data[] = $chunk;
+//            $data[] = $chunk;
             //make abort happen here
             // Output each chunk as it comes in
-//                    echo $chunk;
+                    echo $chunk;
             // Optionally flush the output buffer to ensure it's displayed immediately
-//                    flush();
+                    flush();
             // Return the number of bytes processed in this chunk
             return strlen($chunk);
         });
