@@ -729,7 +729,7 @@ trait Embedding {
             $output = Core::object($output);
         }
         */
-        ddd($data);
+        ddd('end');
         return new Data();
     }
 
