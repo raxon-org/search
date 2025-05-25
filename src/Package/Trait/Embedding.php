@@ -78,8 +78,7 @@ trait Embedding {
             'word' => '(MVC)'
         ]];
         */
-        $count_words = $data->get('id.word') ?? 0;
-        ddd($count_words);
+        $count_words = $data->get('id.word') ?? 0;;
         $count = 0;
         foreach($words as $word){
             if(property_exists($word, 'word') && $word->word === ''){
