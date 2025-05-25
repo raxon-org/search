@@ -256,7 +256,7 @@ trait Main {
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count_url / $total_url), 3);
             if($count_url % 10 === 0){
-                echo 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% duration: ' . $duration . ' total duration: ' . $duration_percentage . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                echo 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . $duration . ' Total Duration: ' . $duration_percentage . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
             }
         }
         $data->write($source);

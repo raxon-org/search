@@ -78,6 +78,8 @@ trait Embedding {
             'word' => '(MVC)'
         ]];
         */
+        $count_words = $data->get('id.embedding.word') ?? 0;
+        $count = 0;
         foreach($words as $word){
             if(property_exists($word, 'word') && $word->word === ''){
                 ddd($words);
@@ -132,6 +134,14 @@ trait Embedding {
                 }
                 $word->embedding = $embedding->id;
                 $word->tokens = $embedding->tokens;
+                $count++;
+                if($count % 10 === 0){
+                    $time = microtime(true);
+                    $duration = round($time - $object->config('time.start'), 3);
+                    $duration_percentage = round($duration / ($count / $count_words), 3);
+                    echo 'Percentage: ' . round($count / $count_words, 2) . '; Duration: ' . $duration . '; Total duration: ' . $duration_percentage . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                }
+
             }
         }
         $data_embedding->set('embedding', $embeddings);
@@ -661,7 +671,7 @@ trait Embedding {
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "' . $model .'",
             "input": "' . str_replace(["\\", '\''], ['\\\\', '&apos;'], $text) . '"
-        }\'';
+        }\' > /dev/null';
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
