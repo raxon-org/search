@@ -673,15 +673,64 @@ trait Embedding {
     {
         $model = $options->model ?? 'nomic-embed-text';
 
+
+        $ch = curl_init();
+        // Set the URL of the localhost
+        curl_setopt($ch, CURLOPT_URL, "http://localhost:11434/api/embed");
+        // Set the POST method
+        curl_setopt($ch, CURLOPT_POST, true);
+        // Set the POST fields
+
+        $post = [
+            'model' => $model,
+            'input'=> str_replace(["\\", '\''], ['\\\\', '&apos;'], $text)
+        ];
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        // Disable CURLOPT_RETURNTRANSFER to output directly
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);
+        // Set option to receive data in chunks
+        $result = [];
+        curl_setopt($ch, CURLOPT_TIMEOUT, 2 * 3600);           // 120 minutes for the full request
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);    // 10 seconds for the connection
+
+        $data = [];
+
+        curl_setopt($ch, CURLOPT_WRITEFUNCTION, function($ch, $chunk) use ($options) {
+            $data[] = $chunk;
+            //make abort happen here
+            // Output each chunk as it comes in
+//                    echo $chunk;
+            // Optionally flush the output buffer to ensure it's displayed immediately
+//                    flush();
+            // Return the number of bytes processed in this chunk
+            return strlen($chunk);
+        });
+        curl_exec($ch);
+        if (curl_errno($ch)) {
+            //restart ollama ? need to record curl errors and if 5 or more, or specific error like cannot connect to http server
+            // restart ollama
+            // app raxon/ollama stop (stops ollama)
+            // app raxon/ollama start & (starts ollama)
+            echo 'Curl error: ' . curl_error($ch);
+        }
+        // Close the cURL session
+        curl_close($ch);
+
+
+
+        /*
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "' . $model .'",
             "input": "' . str_replace(["\\", '\''], ['\\\\', '&apos;'], $text) . '"
-        }\' > /dev/null';
+        }\'';
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
         }
-        return new Data($output);
+        */
+        ddd($data);
+        return new Data();
     }
 
     /**
