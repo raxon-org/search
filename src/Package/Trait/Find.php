@@ -135,7 +135,6 @@ trait Find {
             throw new Exception('Vocabulary not found: ' . $options->input);
         }
         */
-
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){

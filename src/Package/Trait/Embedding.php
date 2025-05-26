@@ -378,15 +378,16 @@ trait Embedding {
                 $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
-                if($id_sentence_piece % 50 === 0){
+                if($id_sentence_piece % 500 === 0){
                     $data_embedding_sentence_piece->set('embedding', $embeddings);
 //                    $float_sort_list = Sort::list($float_list)->with(['count' => 'desc']);
 //                    $data_float->set('float', $float_sort_list);
                     $data->set('word', $words);
                     $data->set('sentence_piece', $sentence_pieces);
-                    $data->write($source);
-                    $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
+//                    $data->write($source);
+//                    $data_embedding_sentence_piece->write($source_embedding_sentence_piece);
 //                    $data_float->write($source_float);
+                    /*
                     File::permission($object ,[
                         'dir_data' => $dir_data,
                         'dir_search' => $dir_search,
@@ -395,6 +396,7 @@ trait Embedding {
 //                        'source_float' => $source_float,
                         'source_embedding' => $source_embedding_sentence_piece
                     ]);
+                    */
                     echo 'Counter: ' . $id_sentence_piece . PHP_EOL;
                 }
             } else {
