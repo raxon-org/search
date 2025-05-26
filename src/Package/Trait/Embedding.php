@@ -305,7 +305,7 @@ trait Embedding {
             }
             $hash = (object) [
                 'word' => $sentence_piece->word,
-                'sentence' => $sentence_piece->sentence
+//                'sentence' => $sentence_piece->sentence
             ];
             $sentence_piece->hash = hash('sha256', Core::object($hash, Core::JSON_LINE));
             if(
@@ -407,6 +407,7 @@ trait Embedding {
                     $sentence_piece->count = 1;
                 }
                 $sentence_piece->count++;
+                ddd('add sentences');
             }
         }
         $data_embedding_sentence_piece->set('embedding', $embeddings);
