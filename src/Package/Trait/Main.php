@@ -63,6 +63,7 @@ trait Main {
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
+        Core::interactive();
         $object = $this->object();
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
@@ -255,8 +256,9 @@ trait Main {
             $time = microtime(true);
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count_url / $total_url), 3);
+            $duration_left = round($duration_percentage - $duration, 3);
             if($count_url % 10 === 0){
-                echo 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . $duration . ' Total Duration: ' . $duration_percentage . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                echo 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . $duration . ' Total Duration: ' . $duration_percentage . ' time left: ' . $duration_left  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
             }
         }
         $data->write($source);
@@ -276,6 +278,7 @@ trait Main {
     public function import_php(object $flags, object $options): void
     {
         $object = $this->object();
+        Core::interactive();
         if(!property_exists($options, 'source')){
             $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/php_manual_en/';
         }
@@ -303,7 +306,8 @@ trait Main {
             $time = microtime(true);
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count / $total), 3);
-            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . ' total duration: ' . $duration_percentage . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+            $duration_left = round($duration_percentage - $duration, 3);
+            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . ' total duration: ' . $duration_percentage . ' time left: ' . $duration_left  . 'memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
     }
 }
