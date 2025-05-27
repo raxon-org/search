@@ -407,6 +407,7 @@ trait Embedding {
                     $sentence_piece->count = 1;
                 }
                 $sentence_piece->count++;
+                d($sentence_piece);
                 ddd('add sentences');
             }
         }
