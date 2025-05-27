@@ -224,7 +224,7 @@ trait Main {
                 foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
                     if($paragraph_list_item->sentence === $sentence_paragraph_list){
                         $found = true;
-                        $paragraph->count++;
+                        $paragraph_list_item->count++;
                         $paragraph = $paragraph_list_item;
                         break;
                     }
