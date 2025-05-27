@@ -175,6 +175,7 @@ trait Main {
                     $sentence = (object) [
                         'id' => $id_sentence,
                         'word' => [],
+                        'count' => 1
                     ];
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
@@ -185,6 +186,7 @@ trait Main {
                         $count_word++;
                         foreach($word_list as $word_list_nr => $word_list_item){
                             if($word_list_item->word === $word){
+                                $word_list_item->count++;
                                 $found = true;
                                 $sentence->word[] = $word_list_item->id;
                                 break;
@@ -193,7 +195,8 @@ trait Main {
                         if(!$found){
                             $word_list[] = (object) [
                                 'id' => $id_word,
-                                'word' => $word
+                                'word' => $word,
+                                'count' => 1
                             ];
                             $sentence->word[] = $id_word;
                             $data->set('id.word', $id_word);
@@ -204,6 +207,7 @@ trait Main {
                     foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
                         if($sentence_list_item->word === $sentence->word){
                             $found = true;
+                            $sentence->count++;
                             $sentence = $sentence_list_item;
                             break;
                         }
@@ -220,6 +224,7 @@ trait Main {
                 foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
                     if($paragraph_list_item->sentence === $sentence_paragraph_list){
                         $found = true;
+                        $paragraph->count++;
                         $paragraph = $paragraph_list_item;
                         break;
                     }
@@ -228,7 +233,8 @@ trait Main {
                 if(!$found){
                     $paragraph_list[] = (object) [
                         'id' => $id_paragraph,
-                        'sentence' => $sentence_paragraph_list
+                        'sentence' => $sentence_paragraph_list,
+                        'count' => 1
                     ];
                     $document->paragraph[] = $id_paragraph;
                     $data->set('id.paragraph', $id_paragraph);
