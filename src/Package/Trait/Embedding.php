@@ -333,11 +333,12 @@ trait Embedding {
                     'id' => $id_embedding,
 //                    'embedding' => base64_encode(gzencode(Core::object($sentence_piece->embedding, Core::JSON_LINE), 9)),
                     'embedding' => $sentence_piece->embedding,
-                    'model' => 'average-words-6',
+                    'model' => 'average-words-' . $options->amount,
                     'tokens' => $tokens,
                     'word' => $sentence_piece->word,
                     'sentence' => $sentence_piece->sentence,
-                    'hash' => $sentence_piece->hash
+                    'hash' => $sentence_piece->hash,
+                    'count' => 1
                 ];
                 /*
                 foreach($embedding->embedding as $nr => $value){
@@ -376,6 +377,7 @@ trait Embedding {
                     $id_embedding++;
                 } else {
                     $embedding  = $embeddings->{$embedding->hash};
+                    $embedding->count++;
                 }
                 $sentence_piece->embedding = $embedding->id;
                 $sentence_pieces[] = $sentence_piece;
