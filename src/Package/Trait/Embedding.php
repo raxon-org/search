@@ -180,7 +180,7 @@ trait Embedding {
             $options->version = self::VERSION;
         }
         if(!property_exists($options, 'amount')){
-            $options->amount = 3;
+            $options->amount = 6;
         }
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
@@ -278,7 +278,7 @@ trait Embedding {
                 }
             }
         }
-        for($i = 0; $i < $pieces_count; $i++){
+        for($i = 0; $i < $pieces_count; $i+=$options->amount){
             $piece = [];
             for($j=$i; $j < ($i + $options->amount); $j++){
                 if(!array_key_exists($j, $pieces)){
