@@ -407,6 +407,9 @@ trait Embedding {
                     $sentence_piece->count = 1;
                 }
                 $sentence_piece->count++;
+                foreach($piece as $word){
+                    d($word);
+                }
                 d($sentence_piece);
                 ddd('add sentences');
             }
