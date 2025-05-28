@@ -726,7 +726,7 @@ trait Embedding {
         */
         $command = 'curl http://localhost:11434/api/embed -d \'{
             "model": "' . $model .'",
-            "input": "' . str_replace(["\\", '\'', '"'], ['\\\\', '&apos;', '&quot;'], $text) . '"
+            "input": "' . str_replace(["\\", '\'', '"', "\t"], ['\\\\', '&apos;', '&quot;', '&#9;'], $text) . '"
         }\'';
         $output = shell_exec($command);
         if(substr($output, 0, 1) === '{'){
