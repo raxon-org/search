@@ -3,6 +3,7 @@ namespace Package\Raxon\Search\Trait;
 
 use Composer\Advisory\PartialSecurityAdvisory;
 use Exception;
+use Raxon\Exception\ErrorException;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
@@ -138,10 +139,15 @@ trait Find {
         $result = [];
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
-                $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
-                if(!is_array($embedding_sentence_piece->embedding_decode[$embedding_nr])){
+                try {
+                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
+                    if(!is_array($embedding_sentence_piece->embedding_decode[$embedding_nr])){
+                        ddd($embedding_words[$word_id]);
+                    }
+                } catch(Exception | ErrorException | Error $e){
                     ddd($embedding_words[$word_id]);
                 }
+
             }
             foreach($input as $nr => $vector){
                 if(!is_array($vector)){
