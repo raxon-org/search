@@ -1,13 +1,12 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
-use Composer\Advisory\PartialSecurityAdvisory;
+use Error;
+use ErrorException;
 use Exception;
-use Raxon\Exception\ErrorException;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
-use Raxon\Module\Dir;
 use Raxon\Module\File;
 
 trait Find {
