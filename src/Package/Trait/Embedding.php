@@ -90,7 +90,8 @@ trait Embedding {
                     $get_embedding = $this->get_embedding($word->word, $options);
                     $embedding = (object) [
                         'id' => $id_embedding,
-                        'embedding' => base64_encode(gzencode(Core::object($get_embedding->get('embeddings.0'), Core::JSON_LINE), 9)),
+//                        'embedding' => base64_encode(gzencode(Core::object($get_embedding->get('embeddings.0'), Core::JSON_LINE), 9)),
+                        'embedding' => $get_embedding->get('embeddings.0'),
                         'model' => $get_embedding->get('model'),
                         'tokens' => $get_embedding->get('prompt_eval_count'),
                         'word' => $word->word,
