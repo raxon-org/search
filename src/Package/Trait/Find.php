@@ -150,6 +150,7 @@ trait Find {
             }
             foreach($input as $nr => $vector){
                 if(!is_array($vector)){
+                    ddd($vector);
                     $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
                 }
                 if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
