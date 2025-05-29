@@ -94,7 +94,9 @@ trait Find {
             $embedding_sentence_pieces[$child->id] = $child;
         }
         $input = $this->get_embedding($options->input, $options);
-        ddd($input);
+        if($input->has('error')){
+            throw new Exception($input->get('error'));
+        }
         $input = [ $input->get('embeddings.0') ];
         /*
         $result = [];
@@ -565,7 +567,6 @@ trait Find {
             "input": "' . str_replace(["\\", '\'', '"', "\t"], ['\\\\', '&apos;', '&quot;', '&#9;'], $text) . '"
         }\'';
         $output = shell_exec($command);
-        d($output);
         if(substr($output, 0, 1) === '{'){
             $output = Core::object($output);
         }
