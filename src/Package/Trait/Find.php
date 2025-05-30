@@ -209,11 +209,6 @@ trait Find {
                         'word_text' => $word_text,
                         'memory' => File::size_format(memory_get_peak_usage(true))
                     ];
-                    if($count > $options->limit){
-                        krsort($result, SORT_NATURAL);
-                        array_pop($result);
-                    }
-                    $count++;
                 }
             }
             /*
@@ -259,8 +254,13 @@ trait Find {
                 $output = [];
                 foreach($record->similarity as $similarity){
                     $output[] = round($similarity, 4);
+
                 }
                 echo implode(' ', $output) . PHP_EOL;
+                $count++;
+                if($count > $options->limit){
+                    break 2;
+                }
 
             }
         }
