@@ -8,6 +8,7 @@ use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\File;
+use Raxon\Module\SharedMemory;
 
 trait Find {
     const VERSION = '1.0.0';
@@ -49,7 +50,12 @@ trait Find {
         if (!$data) {
             throw new Exception('No data for version: ' . $options->version);
         }
-        ddd(count($data));
+        $read  = File::read($source);
+        $size = mb_strlen($read);
+        $shmop = SharedMemory::open(1, 'n', 0600, $size);
+        $int = SharedMemory::write($shmop, $read);
+        d($int);
+        ddd($size);
 
 
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
