@@ -210,6 +210,7 @@ trait Find {
                         'memory' => File::size_format(memory_get_peak_usage(true))
                     ];
                     if($count > $options->limit){
+                        krsort($result, SORT_NATURAL);
                         array_pop($result);
                     }
                     $count++;
