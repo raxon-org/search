@@ -62,7 +62,7 @@ trait Find {
                 }
             }
         }
-        $data = Core::object($read, Core::OBJECT);
+        $data = new Data(Core::object($read, Core::OBJECT));
 //        $data = $object->data_read($source);
         if (!$data) {
             throw new Exception('No data for version: ' . $options->version);
@@ -84,7 +84,7 @@ trait Find {
                 }
             }
         }
-        $data_embedding_word = Core::object($read, Core::OBJECT);
+        $data_embedding_word = new Data(Core::object($read, Core::OBJECT));
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
         $shmop_read = SharedMemory::open(3, 'a', 0, 0);
         if($shmop_read){
@@ -102,7 +102,7 @@ trait Find {
                 }
             }
         }
-        $data_embedding_sentence_piece = Core::object($read, Core::OBJECT);
+        $data_embedding_sentence_piece = Data(Core::object($read, Core::OBJECT));
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $document_list = $data->get('document');
         $paragraph_list = $data->get('paragraph');
