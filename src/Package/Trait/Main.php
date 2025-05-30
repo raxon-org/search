@@ -193,7 +193,7 @@ trait Main {
                             }
                         }
                         if(!$found){
-                            $word_list[$id_word] = (object) [
+                            $word_list->{$id_word} = (object) [
                                 'id' => $id_word,
                                 'word' => $word,
                                 'count' => 1
@@ -213,7 +213,7 @@ trait Main {
                         }
                     }
                     if(!$found){
-                        $sentence_list[$sentence->id] = $sentence;
+                        $sentence_list->{$sentence->id} = $sentence;
                         $data->set('id.sentence', $id_sentence);
                         $id_sentence++;
                     }
@@ -231,7 +231,7 @@ trait Main {
                 }
                 $count_paragraph++;
                 if(!$found){
-                    $paragraph_list[$id_paragraph] = (object) [
+                    $paragraph_list->{$id_paragraph} = (object) [
                         'id' => $id_paragraph,
                         'sentence' => $sentence_paragraph_list,
                         'count' => 1
@@ -244,9 +244,9 @@ trait Main {
                 }
             }
             if($is_put !== false){
-                $document_list[$document->id] = $document;
+                $document_list->{$document->id} = $document;
             } else {
-                $document_list[$document->id] = $document;
+                $document_list->{$document->id} = $document;
                 $count_document++;
             }
             $data->set('paragraph', $paragraph_list);
