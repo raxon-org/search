@@ -45,12 +45,16 @@ trait Find {
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
-
-        $shmop_read = SharedMemory::open(1, 'a', 0, 0);
-        ddd(mb_strlen($shmop_read));
-
-
         $source = $dir_version . 'Search' . $object->config('extension.json');
+        $shmop_read = SharedMemory::open(1, 'a', 0, 0);
+        if($shmop_read){
+            $read = SharedMemory::read($shmop_read, 0, File::size($source));
+            ddd(mb_strlen($read));
+        }
+
+
+
+
         $data = $object->data_read($source);
         if (!$data) {
             throw new Exception('No data for version: ' . $options->version);
