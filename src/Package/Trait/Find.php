@@ -53,14 +53,16 @@ trait Find {
         $read  = File::read($source);
         $size = mb_strlen($read);
         $shmop = SharedMemory::open(1, 'n', 0600, $size);
-        $int = SharedMemory::write($shmop, $read);
-        if($int !== $size){
-            throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
+        if($shmop === false){
+
+        } else {
+            $int = SharedMemory::write($shmop, $read);
+            if($int !== $size){
+                throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
+            }
+            d($int);
+            ddd($size);
         }
-        d($int);
-        ddd($size);
-
-
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
