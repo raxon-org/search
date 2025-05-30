@@ -11,6 +11,7 @@ use Raxon\Module\File;
 
 trait Find {
     const VERSION = '1.0.0';
+    const LIMIT = 10000;
 
     /**
      * @throws ObjectException
@@ -27,6 +28,9 @@ trait Find {
         $object = $this->object();
         if (!property_exists($options, 'version')) {
             $options->version = self::VERSION;
+        }
+        if(!property_exists($options, 'limit')){
+            $options->limit = self::LIMIT;
         }
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
@@ -139,6 +143,7 @@ trait Find {
         }
         */
         $result = [];
+        $count = 0;
         foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
                 try {
@@ -194,7 +199,7 @@ trait Find {
                     if(!array_key_exists("{$average}", $result)){
                         $result["{$average}"] = [];
                     }
-                    $result["{$average}"][] = (object)[
+                    $result["{$average}"][] = (object) [
                         'id' => $embedding_sentence_piece->id,
                         'word' => $embedding_sentence_piece->word ?? [],
                         'sentence' => $embedding_sentence_piece->sentence ?? [],
@@ -204,6 +209,10 @@ trait Find {
                         'word_text' => $word_text,
                         'memory' => File::size_format(memory_get_peak_usage(true))
                     ];
+                    if($count > $options->limit){
+                        array_pop($result);
+                    }
+                    $count++;
                 }
             }
             /*
