@@ -49,31 +49,60 @@ trait Find {
         $shmop_read = SharedMemory::open(1, 'a', 0, 0);
         if($shmop_read){
             $read = SharedMemory::read($shmop_read, 0, File::size($source));
-            ddd(mb_strlen($read));
+        } else {
+            $read  = File::read($source);
+            $size = mb_strlen($read);
+            $shmop = SharedMemory::open(1, 'n', 0600, $size);
+            if($shmop === false){
+
+            } else {
+                $int = SharedMemory::write($shmop, $read);
+                if($int !== $size){
+                    throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
+                }
+            }
         }
-
-
-
-
-        $data = $object->data_read($source);
+        $data = Core::object($read, Core::OBJECT);
+//        $data = $object->data_read($source);
         if (!$data) {
             throw new Exception('No data for version: ' . $options->version);
         }
-        $read  = File::read($source);
-        $size = mb_strlen($read);
-        $shmop = SharedMemory::open(1, 'n', 0600, $size);
-        if($shmop === false){
-
-        } else {
-            $int = SharedMemory::write($shmop, $read);
-            if($int !== $size){
-                throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
-            }
-            d($int);
-            ddd($size);
-        }
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $shmop_read = SharedMemory::open(2, 'a', 0, 0);
+        if($shmop_read){
+            $read = SharedMemory::read($shmop_read, 0, File::size($source_embedding_word));
+        } else {
+            $read  = File::read($source_embedding_word);
+            $size = mb_strlen($read);
+            $shmop = SharedMemory::open(2, 'n', 0600, $size);
+            if($shmop === false){
+
+            } else {
+                $int = SharedMemory::write($shmop, $read);
+                if($int !== $size){
+                    throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
+                }
+            }
+        }
+        $data_embedding_word = Core::object($read, Core::OBJECT);
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+        $shmop_read = SharedMemory::open(3, 'a', 0, 0);
+        if($shmop_read){
+            $read = SharedMemory::read($shmop_read, 0, File::size($source_embedding_sentence_piece));
+        } else {
+            $read  = File::read($source_embedding_sentence_piece);
+            $size = mb_strlen($read);
+            $shmop = SharedMemory::open(2, 'n', 0600, $size);
+            if($shmop === false){
+
+            } else {
+                $int = SharedMemory::write($shmop, $read);
+                if($int !== $size){
+                    throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
+                }
+            }
+        }
+        $data_embedding_sentence_piece = Core::object($read, Core::OBJECT);
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $document_list = $data->get('document');
         $paragraph_list = $data->get('paragraph');
@@ -93,15 +122,11 @@ trait Find {
             $words[$child->id] = $child;
             $vocabulary[$child->word] = $child;
         }
-        $data_embedding_word = $object->data_read($source_embedding_word);
+//        $data_embedding_word = $object->data_read($source_embedding_word);
         if (!$data_embedding_word) {
             return;
         }
-        
-        
-        
-        
-        $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
+//        $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
         /*
         if (!$data_embedding_sentence_piece) {
             return;
