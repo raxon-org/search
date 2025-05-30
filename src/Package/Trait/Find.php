@@ -4,21 +4,17 @@ namespace Package\Raxon\Search\Trait;
 use Error;
 use ErrorException;
 use Exception;
+use Raxon\Config;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
+use Raxon\Module\Dir;
 use Raxon\Module\File;
 use Raxon\Module\SharedMemory;
 
 trait Find {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
-
-    const SHARED_MEMORY_IDS = [
-        1,
-        2,
-        3,
-    ];
 
     /**
      * @throws ObjectException
@@ -39,70 +35,89 @@ trait Find {
         if(!property_exists($options, 'limit')){
             $options->limit = self::LIMIT;
         }
-        if(!property_exists($options, 'shared_memory_ids')){
-            $options->shared_memory_ids = self::SHARED_MEMORY_IDS;
+        if(!property_exists($options, 'ramdisk')){
+            $options->ramdisk = false;
         }
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
         $source = $dir_version . 'Search' . $object->config('extension.json');
-        $shmop_read = SharedMemory::open(1, 'a', 0, 0);
-        if($shmop_read){
-            $read = SharedMemory::read($shmop_read, 0, File::size($source));
-        } else {
-            $read  = File::read($source);
-            $size = mb_strlen($read);
-            $shmop = SharedMemory::open(1, 'n', 0600, $size);
-            if($shmop === false){
-
+        $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+        $source_ramdisk_user = $object->config('ramdisk.url') .
+            $object->config(Config::POSIX_ID) .
+            $object->config('ds');
+        $source_ramdisk_user_package = $source_ramdisk_user .
+            'Package' .
+            $object->config('ds');
+        $source_ramdisk_user_package_raxon = $source_ramdisk_user_package .
+            'Raxon' .
+            $object->config('ds');
+        $source_ramdisk_user_package_raxon_search = $source_ramdisk_user_package_raxon .
+            'Search' .
+            $object->config('ds');
+        $source_ramdisk_user_package_raxon_search_version = $source_ramdisk_user_package_raxon_search .
+            $options->version .
+            $object->config('ds');
+        $source_ramdisk = $source_ramdisk_user_package_raxon_search_version .
+            'Search' .
+            $object->config('extension.json')
+        ;
+        $source_ramdisk_embedding_word = $source_ramdisk_user_package_raxon_search_version .
+            'Search.Embedding.Word' .
+            $object->config('extension.json')
+        ;
+        $source_ramdisk_embedding_sentence_piece = $source_ramdisk_user_package_raxon_search_version .
+            'Search.Embedding.Sentence.Piece' .
+            $object->config('extension.json')
+        ;
+        if($options->ramdisk === true){
+            if(File::exist($source_ramdisk)){
+                $data = $object->data_read($source_ramdisk);
             } else {
-                $int = SharedMemory::write($shmop, $read);
-                if($int !== $size){
-                    throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
-                }
+                Dir::create($source_ramdisk_user_package_raxon_search_version, Dir::CHMOD);
+                File::copy($source, $source_ramdisk);
+                File::permission($object, [
+                    'source_ramdisk' => $source_ramdisk,
+                    'source_ramdisk_user' => $source_ramdisk_user,
+                    'source_ramdisk_user_package' => $source_ramdisk_user_package,
+                    'source_ramdisk_user_package_raxon' => $source_ramdisk_user_package_raxon,
+                    'source_ramdisk_user_package_raxon_search' => $source_ramdisk_user_package_raxon_search,
+                    'source_ramdisk_user_package_raxon_search_version' => $source_ramdisk_user_package_raxon_search_version,
+                ]);
+                $data = $object->data_read($source_ramdisk);
             }
+            if(File::exist($source_ramdisk_embedding_word)) {
+                $data_embedding_word = $object->data_read($source_ramdisk_embedding_word);
+            } else {
+                File::copy($source_embedding_word, $source_ramdisk_embedding_word);
+                File::permission($object, [
+                    'source_ramdisk_embedding_word' => $source_ramdisk_embedding_word
+                ]);
+                $data_embedding_word = $object->data_read($source_ramdisk_embedding_word);
+            }
+            if(File::exist($source_ramdisk_embedding_sentence_piece)) {
+                $data_embedding_sentence_piece = $object->data_read($source_ramdisk_embedding_sentence_piece);
+            } else {
+                File::copy($source_embedding_sentence_piece, $source_ramdisk_embedding_sentence_piece);
+                File::permission($object, [
+                    'source_ramdisk_embedding_sentence_piece' => $source_ramdisk_embedding_sentence_piece
+                ]);
+                $data_embedding_sentence_piece = $object->data_read($source_ramdisk_embedding_sentence_piece);
+            }
+        } else {
+            $data = $object->data_read($source);
+            $data_embedding_word = $object->data_read($source_embedding_word);
+            $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
         }
-        $data = new Data(Core::object($read, Core::OBJECT));
-//        $data = $object->data_read($source);
+
         if (!$data) {
             throw new Exception('No data for version: ' . $options->version);
         }
-        $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
-        $shmop_read = SharedMemory::open(2, 'a', 0, 0);
-        if($shmop_read){
-            $read = SharedMemory::read($shmop_read, 0, File::size($source_embedding_word));
-        } else {
-            $read  = File::read($source_embedding_word);
-            $size = mb_strlen($read);
-            $shmop = SharedMemory::open(2, 'n', 0600, $size);
-            if($shmop === false){
 
-            } else {
-                $int = SharedMemory::write($shmop, $read);
-                if($int !== $size){
-                    throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
-                }
-            }
+        if (!$data_embedding_word) {
+            return;
         }
-        $data_embedding_word = new Data(Core::object($read, Core::OBJECT));
-        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
-        $shmop_read = SharedMemory::open(3, 'a', 0, 0);
-        if($shmop_read){
-            $read = SharedMemory::read($shmop_read, 0, File::size($source_embedding_sentence_piece));
-        } else {
-            $read  = File::read($source_embedding_sentence_piece);
-            $size = mb_strlen($read);
-            $shmop = SharedMemory::open(2, 'n', 0600, $size);
-            if($shmop === false){
-
-            } else {
-                $int = SharedMemory::write($shmop, $read);
-                if($int !== $size){
-                    throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
-                }
-            }
-        }
-        $data_embedding_sentence_piece = Data(Core::object($read, Core::OBJECT));
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
         $document_list = $data->get('document');
         $paragraph_list = $data->get('paragraph');
@@ -122,11 +137,6 @@ trait Find {
             $words[$child->id] = $child;
             $vocabulary[$child->word] = $child;
         }
-//        $data_embedding_word = $object->data_read($source_embedding_word);
-        if (!$data_embedding_word) {
-            return;
-        }
-//        $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
         /*
         if (!$data_embedding_sentence_piece) {
             return;
