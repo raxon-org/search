@@ -54,6 +54,9 @@ trait Find {
         $size = mb_strlen($read);
         $shmop = SharedMemory::open(1, 'n', 0600, $size);
         $int = SharedMemory::write($shmop, $read);
+        if($int !== $size){
+            throw new Exception('SharedMemory error, bytes read: ' . $size . ', bytes written: ' . $int);
+        }
         d($int);
         ddd($size);
 
