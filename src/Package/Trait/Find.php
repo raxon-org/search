@@ -342,6 +342,337 @@ trait Find {
         }
     }
 
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function parallel(object $flags, object $options): void
+    {
+        if (!property_exists($options, 'input')) {
+            throw new Exception('Option input not set');
+        }
+        if (!property_exists($options, 'type')) {
+            $options->type = 'word';
+        }
+        $object = $this->object();
+        if (!property_exists($options, 'version')) {
+            $options->version = self::VERSION;
+        }
+        if(!property_exists($options, 'limit')){
+            $options->limit = self::LIMIT;
+        }
+        if(!property_exists($options, 'ramdisk')){
+            $options->ramdisk = false;
+        }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+        $source_ramdisk_user = $object->config('ramdisk.url') .
+            $object->config(Config::POSIX_ID) .
+            $object->config('ds');
+        $source_ramdisk_user_package = $source_ramdisk_user .
+            'Package' .
+            $object->config('ds');
+        $source_ramdisk_user_package_raxon = $source_ramdisk_user_package .
+            'Raxon' .
+            $object->config('ds');
+        $source_ramdisk_user_package_raxon_search = $source_ramdisk_user_package_raxon .
+            'Search' .
+            $object->config('ds');
+        $source_ramdisk_user_package_raxon_search_version = $source_ramdisk_user_package_raxon_search .
+            $options->version .
+            $object->config('ds');
+        $source_ramdisk = $source_ramdisk_user_package_raxon_search_version .
+            'Search' .
+            $object->config('extension.json')
+        ;
+        $source_ramdisk_embedding_word = $source_ramdisk_user_package_raxon_search_version .
+            'Search.Embedding.Word' .
+            $object->config('extension.json')
+        ;
+        $source_ramdisk_embedding_sentence_piece = $source_ramdisk_user_package_raxon_search_version .
+            'Search.Embedding.Sentence.Piece' .
+            $object->config('extension.json')
+        ;
+        if($options->ramdisk === true){
+            if(File::exist($source_ramdisk)){
+                $data = $object->data_read($source_ramdisk);
+            } else {
+                Dir::create($source_ramdisk_user_package_raxon_search_version, Dir::CHMOD);
+                File::copy($source, $source_ramdisk);
+                File::permission($object, [
+                    'source_ramdisk' => $source_ramdisk,
+                    'source_ramdisk_user' => $source_ramdisk_user,
+                    'source_ramdisk_user_package' => $source_ramdisk_user_package,
+                    'source_ramdisk_user_package_raxon' => $source_ramdisk_user_package_raxon,
+                    'source_ramdisk_user_package_raxon_search' => $source_ramdisk_user_package_raxon_search,
+                    'source_ramdisk_user_package_raxon_search_version' => $source_ramdisk_user_package_raxon_search_version,
+                ]);
+                $data = $object->data_read($source_ramdisk);
+            }
+            if(File::exist($source_ramdisk_embedding_word)) {
+                $data_embedding_word = $object->data_read($source_ramdisk_embedding_word);
+            } else {
+                File::copy($source_embedding_word, $source_ramdisk_embedding_word);
+                File::permission($object, [
+                    'source_ramdisk_embedding_word' => $source_ramdisk_embedding_word
+                ]);
+                $data_embedding_word = $object->data_read($source_ramdisk_embedding_word);
+            }
+            if(File::exist($source_ramdisk_embedding_sentence_piece)) {
+                $data_embedding_sentence_piece = $object->data_read($source_ramdisk_embedding_sentence_piece);
+            } else {
+                File::copy($source_embedding_sentence_piece, $source_ramdisk_embedding_sentence_piece);
+                File::permission($object, [
+                    'source_ramdisk_embedding_sentence_piece' => $source_ramdisk_embedding_sentence_piece
+                ]);
+                $data_embedding_sentence_piece = $object->data_read($source_ramdisk_embedding_sentence_piece);
+            }
+        } else {
+            $data = $object->data_read($source);
+            $data_embedding_word = $object->data_read($source_embedding_word);
+            $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
+        }
+
+        if (!$data) {
+            throw new Exception('No data for version: ' . $options->version);
+        }
+
+        if (!$data_embedding_word) {
+            return;
+        }
+//        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
+        $document_list = $data->get('document');
+        $paragraph_list = $data->get('paragraph');
+        $sentence_list = $data->get('sentence');
+        $word_list = $data->get('word');
+        $sentences = [];
+        $paragraphs = [];
+        $words = [];
+        $vocabulary = [];
+        foreach ($sentence_list as $child) {
+            $sentences[$child->id] = $child;
+        }
+        foreach ($paragraph_list as $child) {
+            $paragraphs[$child->id] = $child;
+        }
+        foreach ($word_list as $child) {
+            $words[$child->id] = $child;
+            $vocabulary[$child->word] = $child;
+        }
+        /*
+        if (!$data_embedding_sentence_piece) {
+            return;
+        }
+        */
+        /*
+        $data_float = $object->data_read($source_float);
+        if (!$data_float) {
+            return;
+        }
+        $floats = [];
+        $float_list = $data_float->get('float') ?? [];
+        foreach ($float_list as $child) {
+            $floats[$child->id] = $child;
+        }
+        */
+        $embedding_words = [];
+        $embedding_word_list = $data_embedding_word->get('embedding');
+        foreach($embedding_word_list as $child){
+            $embedding_words[$child->id] = $child;
+        }
+        $embedding_sentence_pieces = [];
+        if($data_embedding_sentence_piece){
+            $embedding_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
+        } else {
+            $embedding_sentence_piece_list = [];
+        }
+
+        foreach ($embedding_sentence_piece_list as $child) {
+            $embedding_sentence_pieces[$child->id] = $child;
+        }
+        $input = $this->get_embedding($options->input, $options);
+        if($input->has('error')){
+            throw new Exception($input->get('error'));
+        }
+        $input = [ $input->get('embeddings.0') ];
+        /*
+        $result = [];
+        foreach($embedding_words as $id => $embedding_word){
+            if(is_array($vector) && is_array($embedding_word->embedding)) {
+                $embedding = $this->get_embedding_float($embedding_word->embedding, $floats);
+                breakpoint($vector);
+                breakpoint($embedding);
+                $similarity = $this->cosine_similarity($vector, $embedding);
+                if(!array_key_exists("{$similarity}", $result)){
+                    $result["{$similarity}"] = [];
+                }
+                $result["{$similarity}"][] = (object)[
+                    'id' => $id,
+                    'word_text' => $embedding_word->word ?? null,
+                    'tokens' => $embedding_word->tokens ?? 0,
+                    'similarity' => $similarity,
+                ];
+            }
+        }
+        krsort($result, SORT_NATURAL);
+        */
+        /*
+        $input = explode(' ', $options->input);
+        foreach($input as $nr => $value){
+            $input[$nr] = trim($value);
+        }
+        foreach($input as $nr => $value){
+            if(array_key_exists($value, $vocabulary)) {
+                $input[$nr] = $embedding_words[$vocabulary[$value]->embedding]->embedding;
+            }
+        }
+        */
+        /*
+        if(array_key_exists($word, $vocabulary)){
+            $word = $vocabulary[$options->input];
+            $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
+        } else {
+            throw new Exception('Vocabulary not found: ' . $options->input);
+        }
+        */
+        $result = [];
+        $count = 0;
+
+        ddd(count($embedding_sentence_pieces));
+
+
+
+        foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
+            foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
+                try {
+//                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
+                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = $embedding_words[$word_id]->embedding;
+                    if(!is_array($embedding_sentence_piece->embedding_decode[$embedding_nr])){
+                        ddd($embedding_words[$word_id]);
+                    }
+                } catch(Exception | ErrorException | Error $e){
+                    ddd($embedding_words[$word_id]);
+                }
+
+            }
+            foreach($input as $nr => $vector){
+                if($vector && !is_array($vector)){
+                    $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
+                }
+                if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
+                    $similarity = [];
+                    foreach($embedding_sentence_piece->embedding_decode as $embedding_decode_nr => $embedding){
+                        if(!is_array($vector)){
+                            continue;
+                        }
+                        if(!is_array($embedding)){
+                            ddd($embedding);
+                        }
+                        /*
+                      if(
+                          array_key_exists(0, $embedding) &&
+                          is_int($embedding[0])
+                      ){
+                          $embedding = $this->get_embedding_float($embedding, $floats);
+                      }
+                        */
+                        $similarity[] = $this->cosine_similarity($vector, $embedding);
+                    }
+                    /**
+                     * attention, add 3x the highest score 1x silver, and 1x bronze
+                     */
+                    rsort($similarity, SORT_NATURAL);
+                    $similarity[] = $similarity[0];
+                    $similarity[] = $similarity[0];
+                    $similarity[] = $similarity[0];
+                    $similarity[] = $similarity[1];
+                    $similarity[] = $similarity[2];
+                    $average = $this->array_average($similarity, $options);
+                    $length = mb_strlen($average);
+                    $average = $average . str_repeat('0', 16 - $length);
+                    $word_text = [];
+                    foreach($embedding_sentence_piece->word as $word_id){
+                        $word_text[] = $words[$word_id]->word ?? null;
+                    }
+                    if(!array_key_exists("{$average}", $result)){
+                        $result["{$average}"] = [];
+                    }
+                    $result["{$average}"][] = (object) [
+                        'id' => $embedding_sentence_piece->id,
+                        'word' => $embedding_sentence_piece->word ?? [],
+                        'sentence' => $embedding_sentence_piece->sentence ?? [],
+                        'tokens' => $embedding_sentence_piece->tokens ?? 0,
+                        'similarity' => $similarity,
+                        'average' => $average,
+                        'word_text' => $word_text,
+                        'memory' => File::size_format(memory_get_peak_usage(true))
+                    ];
+                }
+            }
+            /*
+            if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
+                $similarity = [];
+                foreach($embedding_sentence_piece->embedding_decode as $nr => $embedding){
+                  $similarity[] = $this->cosine_similarity($vector, $embedding);
+                }
+                rsort($similarity, SORT_NATURAL);
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[0];
+                $similarity[] = $similarity[1];
+                $similarity[] = $similarity[2];
+                $average = $this->array_average($similarity, $options);
+                $word_text = [];
+                foreach($embedding_sentence_piece->word as $word_id){
+                    $word_text[] = $words[$word_id]->word ?? null;
+                }
+                if(!array_key_exists("{$average}", $result)){
+                    $result["{$average}"] = [];
+                }
+                $result["{$average}"][] = (object)[
+                    'id' => $embedding_sentence_piece->id,
+                    'word' => $embedding_sentence_piece->word ?? [],
+                    'sentence' => $embedding_sentence_piece->sentence ?? [],
+                    'tokens' => $embedding_sentence_piece->tokens ?? 0,
+                    'similarity' => $similarity,
+                    'average' => $average,
+                    'word_text' => $word_text,
+                    'memory' => File::size_format(memory_get_peak_usage(true))
+                ];
+            }
+            */
+            unset($embedding_sentence_piece->embedding_decode);
+        }
+        krsort($result, SORT_NATURAL);
+        foreach($result as $average => $list){
+            foreach($list as $nr => $record){
+                echo $record->average . ' | ' . $record->id . ' ' . implode(' ', $record->word_text);
+                echo '; Memory: ' . $record->memory;
+                echo '; Similarity: ';
+                $output = [];
+                foreach($record->similarity as $similarity){
+                    $output[] = round($similarity, 4);
+
+                }
+                echo implode(' ', $output) . PHP_EOL;
+                $count++;
+                if($count > $options->limit){
+                    break 2;
+                }
+
+            }
+        }
+        if(property_exists($options, 'duration')){
+            $time = microtime(true);
+            $duration = round(($time - $object->config('time.start')) * 1000, 3);
+            echo "Duration: " . $duration . 'msec' . PHP_EOL;
+        }
+    }
+
     public function get_embedding_float($embedding, $floats): array
     {
         foreach($embedding as $nr => $float_id){
