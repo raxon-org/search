@@ -143,7 +143,7 @@ trait Main {
                 $paragraph_list = (object) [];
                 $id_paragraph = 1;
                 $count_paragraph = 0;
-                $word_list = [];
+                $word_list = (object) [];
                 $id_word = 1;
                 $count_word = 0;
                 $sentence_list = (object) [];
