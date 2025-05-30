@@ -13,6 +13,12 @@ trait Find {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
 
+    const SHARED_MEMORY_IDS = [
+        1,
+        2,
+        3,
+    ];
+
     /**
      * @throws ObjectException
      * @throws Exception
@@ -32,6 +38,9 @@ trait Find {
         if(!property_exists($options, 'limit')){
             $options->limit = self::LIMIT;
         }
+        if(!property_exists($options, 'shared_memory_ids')){
+            $options->shared_memory_ids = self::SHARED_MEMORY_IDS;
+        }
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
@@ -40,6 +49,9 @@ trait Find {
         if (!$data) {
             throw new Exception('No data for version: ' . $options->version);
         }
+        ddd(count($data));
+
+
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
@@ -65,6 +77,10 @@ trait Find {
         if (!$data_embedding_word) {
             return;
         }
+        
+        
+        
+        
         $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
         /*
         if (!$data_embedding_sentence_piece) {
