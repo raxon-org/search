@@ -120,7 +120,7 @@ trait Main {
             }
             $paragraph = array_values($paragraph);
             if($data){
-                $document_list = $data->get('document') ?? [];
+                $document_list = $data->get('document') ?? (object) [];
                 $id_document = $data->get('id.document') ?? 0;
                 $id_document++;
                 $count_document = $data->get('count.document') ?? 0;
@@ -128,11 +128,11 @@ trait Main {
                 $id_paragraph = $data->get('id.paragraph') ?? 0;
                 $id_paragraph++;
                 $count_paragraph = $data->get('count.paragraph') ?? 0;
-                $word_list = $data->get('word') ?? [];
+                $word_list = $data->get('word') ?? (object) [];
                 $id_word = $data->get('id.word') ?? 0;
                 $id_word++;
                 $count_word = $data->get('count.word') ?? 0;
-                $sentence_list = $data->get('sentence') ?? [];
+                $sentence_list = $data->get('sentence') ?? (object) [];
                 $id_sentence = $data->get('id.sentence') ?? 0;
                 $id_sentence++;
                 $count_sentence = $data->get('count.sentence') ?? 0;
@@ -193,7 +193,7 @@ trait Main {
                             }
                         }
                         if(!$found){
-                            $word_list[] = (object) [
+                            $word_list[$id_word] = (object) [
                                 'id' => $id_word,
                                 'word' => $word,
                                 'count' => 1
@@ -213,7 +213,7 @@ trait Main {
                         }
                     }
                     if(!$found){
-                        $sentence_list[] = $sentence;
+                        $sentence_list[$sentence->id] = $sentence;
                         $data->set('id.sentence', $id_sentence);
                         $id_sentence++;
                     }
@@ -231,7 +231,7 @@ trait Main {
                 }
                 $count_paragraph++;
                 if(!$found){
-                    $paragraph_list[] = (object) [
+                    $paragraph_list[$id_paragraph] = (object) [
                         'id' => $id_paragraph,
                         'sentence' => $sentence_paragraph_list,
                         'count' => 1
@@ -244,9 +244,9 @@ trait Main {
                 }
             }
             if($is_put !== false){
-                $document_list[$is_put] = $document;
+                $document_list[$document->id] = $document;
             } else {
-                $document_list[] = $document;
+                $document_list[$document->id] = $document;
                 $count_document++;
             }
             $data->set('paragraph', $paragraph_list);

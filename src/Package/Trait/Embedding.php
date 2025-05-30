@@ -141,7 +141,8 @@ trait Embedding {
                     $duration = round($time - $object->config('time.start'), 3);
                     if($count_words > 0){
                         $duration_percentage = round($duration / ($count / $count_words), 3);
-                        echo 'Percentage: ' . round($count / $count_words, 2) . '; Duration: ' . $duration . '; Total duration: ' . $duration_percentage . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                        $duration_left = round($duration_percentage - $duration, 3);
+                        echo 'Percentage: ' . round((($count / $count_words) * 100), 2) . '; Duration: ' . $duration . '; Total duration: ' . $duration_percentage . '; TIme left: ' . $duration_left . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                     } else {
                         echo 'Percentage: ' . round($count / 1, 2) . '; Duration: ' . $duration . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                     }
@@ -219,25 +220,15 @@ trait Embedding {
         if(!$words){
             return;
         }
-        $word_list_id = [];
         $word_list_embedding = [];
         foreach($words as $word){
-            $word_list_id[$word->id] = $word;
             $word_list_embedding[$word->embedding] = $word;
         }
         $embeddings_word = $data_embedding_word->get('embedding') ?? [];
         if(!$embeddings_word){
             return;
         }
-        $embedding_word_list = [];
-        foreach($embeddings_word as $embedding){
-            $embedding_word_list[$embedding->id] = $embedding;
-        }
         $embeddings = $data_embedding_sentence_piece->get('embedding') ?? (object) [];
-        $embedding_list = [];
-        foreach($embeddings as $embedding){
-            $embedding_list[$embedding->id] = $embedding;
-        }
         $id_embedding = $data->get('id.embedding.sentence_piece') ?? 0;
         $id_embedding++;
         /*
@@ -320,10 +311,10 @@ trait Embedding {
                 $embeddings_sentence_piece = [];
                 $tokens = 0;
                 foreach($sentence_piece->word as $id_word){
-                    if(array_key_exists($id_word, $word_list_id)){
-                        $word = $word_list_id[$id_word];
+                    if(array_key_exists($id_word, $words)){
+                        $word = $words[$id_word];
                         $tokens += $word->tokens;
-                        $embeddings_sentence_piece[] = $embedding_word_list[$word->embedding]->id;
+                        $embeddings_sentence_piece[] = $word_list_embedding[$word->embedding]->id;
                     }
                 }
                 $sentence_piece->embedding = $embeddings_sentence_piece;
@@ -381,7 +372,7 @@ trait Embedding {
                     $embedding->count++;
                 }
                 $sentence_piece->embedding = $embedding->id;
-                $sentence_pieces[] = $sentence_piece;
+                $sentence_pieces[$id_sentence_piece] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
                 if($id_sentence_piece % 500 === 0){
