@@ -137,16 +137,16 @@ trait Main {
                 $id_sentence++;
                 $count_sentence = $data->get('count.sentence') ?? 0;
             } else {
-                $document_list = [];
+                $document_list = (object) [];
                 $id_document = 1;
                 $count_document = 0;
-                $paragraph_list = [];
+                $paragraph_list = (object) [];
                 $id_paragraph = 1;
                 $count_paragraph = 0;
                 $word_list = [];
                 $id_word = 1;
                 $count_word = 0;
-                $sentence_list = [];
+                $sentence_list = (object) [];
                 $id_sentence = 1;
                 $count_sentence = 0;
                 $data = new Data();
