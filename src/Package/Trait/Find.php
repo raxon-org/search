@@ -45,6 +45,11 @@ trait Find {
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
+
+        $shmop_read = SharedMemory::open(1, 'a', 0, 0);
+        ddd(mb_strlen($shmop_read));
+
+
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
         if (!$data) {
