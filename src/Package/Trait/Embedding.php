@@ -311,8 +311,8 @@ trait Embedding {
                 $embeddings_sentence_piece = [];
                 $tokens = 0;
                 foreach($sentence_piece->word as $id_word){
-                    if(array_key_exists($id_word, $words)){
-                        $word = $words[$id_word];
+                    if(property_exists($words, $id_word)){
+                        $word = $words->{$id_word};
                         $tokens += $word->tokens;
                         $embeddings_sentence_piece[] = $word_list_embedding[$word->embedding]->id;
                     }
@@ -372,7 +372,7 @@ trait Embedding {
                     $embedding->count++;
                 }
                 $sentence_piece->embedding = $embedding->id;
-                $sentence_pieces[$id_sentence_piece] = $sentence_piece;
+                $sentence_pieces[] = $sentence_piece;
                 $sentence_pieces_hashes[] = $sentence_piece->hash;
                 $id_sentence_piece++;
                 if($id_sentence_piece % 500 === 0){
