@@ -119,22 +119,24 @@ trait Find {
             return;
         }
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
-        $document_list = $data->get('document');
-        $paragraph_list = $data->get('paragraph');
-        $sentence_list = $data->get('sentence');
-        $word_list = $data->get('word');
-        $sentences = [];
-        $paragraphs = [];
-        $words = [];
+        $documents = $data->get('document');
+        $paragraphs = $data->get('paragraph');
+        $sentences = $data->get('sentence');
+        $words = $data->get('word');
+//        $sentences = [];
+//        $paragraphs = [];
+//        $words = [];
         $vocabulary = [];
+        /*
         foreach ($sentence_list as $child) {
             $sentences[$child->id] = $child;
         }
         foreach ($paragraph_list as $child) {
             $paragraphs[$child->id] = $child;
         }
-        foreach ($word_list as $child) {
-            $words[$child->id] = $child;
+        */
+        foreach ($words as $child) {
+//            $words[$child->id] = $child;
             $vocabulary[$child->word] = $child;
         }
         /*
@@ -153,20 +155,19 @@ trait Find {
             $floats[$child->id] = $child;
         }
         */
-        $embedding_words = [];
+        $embedding_words = (object) [];
         $embedding_word_list = $data_embedding_word->get('embedding');
         foreach($embedding_word_list as $child){
-            $embedding_words[$child->id] = $child;
+            $embedding_words->{$child->id} = $child;
         }
-        $embedding_sentence_pieces = [];
+        $embedding_sentence_pieces = (object) [];
         if($data_embedding_sentence_piece){
             $embedding_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
         } else {
             $embedding_sentence_piece_list = [];
         }
-
         foreach ($embedding_sentence_piece_list as $child) {
-            $embedding_sentence_pieces[$child->id] = $child;
+            $embedding_sentence_pieces->{$child->id} = $child;
         }
         $input = $this->get_embedding($options->input, $options);
         if($input->has('error')){
