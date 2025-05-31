@@ -220,12 +220,13 @@ trait Find {
             foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
                 try {
 //                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
-                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = $embedding_words[$word_id]->embedding;
+                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = $embedding_words->{$word_id}->embedding;
                     if(!is_array($embedding_sentence_piece->embedding_decode[$embedding_nr])){
                         ddd($embedding_words[$word_id]);
                     }
                 } catch(Exception | ErrorException | Error $e){
-                    ddd($embedding_words[$word_id]);
+                    d($e);
+                    ddd($embedding_words->{$word_id});
                 }
 
             }
