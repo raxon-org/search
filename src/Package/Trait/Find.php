@@ -267,7 +267,7 @@ trait Find {
                     $average = $average . str_repeat('0', 16 - $length);
                     $word_text = [];
                     foreach($embedding_sentence_piece->word as $word_id){
-                        $word_text[] = $words[$word_id]->word ?? null;
+                        $word_text[] = $words->{$word_id}->word ?? null;
                     }
                     if(!array_key_exists("{$average}", $result)){
                         $result["{$average}"] = [];
