@@ -86,7 +86,7 @@ trait Embedding {
             }
             if(property_exists($word, 'word') && $word->word !== ''){
                 $hash = hash('sha256', $word->word);
-                if(!property_exists($embeddings, $hash)){
+                if(!property_exists($embeddings, $id_embedding)){
                     $get_embedding = $this->get_embedding($word->word, $options);
                     $embedding = (object) [
                         'id' => $id_embedding,
@@ -126,11 +126,11 @@ trait Embedding {
                         }
                     }
                     */
-                    $embeddings->{$hash} = $embedding;
+                    $embeddings->{$id_embedding} = $embedding;
                     $data->set('id.embedding.word', $id_embedding);
                     $id_embedding++;
                 } else {
-                    $embedding = $embeddings->{$hash};
+                    $embedding = $embeddings->{$id_embedding};
 
                 }
                 $word->embedding = $embedding->id;
@@ -247,12 +247,12 @@ trait Embedding {
         $id_float++;
         */
         $sentences = $data->get('sentence') ?? [];
-        $sentence_pieces = $data->get('sentence_piece') ?? [];
+        $sentence_pieces = $data->get('sentence_piece') ?? (object) [];
         $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
         $id_sentence_piece++;
-        $sentence_pieces_hashes = [];
+        $sentence_pieces_ids = [];
         foreach($sentence_pieces as $sentence_piece){
-            $sentence_pieces_hashes[] = $sentence_piece->hash;
+            $sentence_pieces_ids[] = $sentence_piece->id;
         }
         $pieces = [];
         $pieces_count = 0;
@@ -302,8 +302,8 @@ trait Embedding {
             $sentence_piece->hash = hash('sha256', Core::object($hash, Core::JSON_LINE));
             if(
                 !in_array(
-                    $sentence_piece->hash,
-                    $sentence_pieces_hashes,
+                    $sentence_piece->id,
+                    $sentence_pieces_ids,
                     true
                 )
             ){
@@ -363,17 +363,17 @@ trait Embedding {
                     }
                 }
                 */
-                if(!property_exists($embeddings, $embedding->hash)){
-                    $embeddings->{$embedding->hash} = $embedding;
+                if(!property_exists($embeddings, $embedding->id)){
+                    $embeddings->{$embedding->id} = $embedding;
                     $data->set('id.embedding.sentence_piece', $id_embedding);
                     $id_embedding++;
                 } else {
-                    $embedding  = $embeddings->{$embedding->hash};
+                    $embedding  = $embeddings->{$embedding->id};
                     $embedding->count++;
                 }
                 $sentence_piece->embedding = $embedding->id;
-                $sentence_pieces[] = $sentence_piece;
-                $sentence_pieces_hashes[] = $sentence_piece->hash;
+                $sentence_pieces->{$sentence_piece->id} = $sentence_piece;
+                $sentence_pieces_ids[] = $sentence_piece->id;
                 $id_sentence_piece++;
                 if($id_sentence_piece % 500 === 0){
 //                    $data_embedding_sentence_piece->set('embedding', $embeddings);
