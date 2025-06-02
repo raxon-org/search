@@ -153,9 +153,9 @@ trait Find {
                 $split = mb_str_split($read, $part_size);
                 for($i = 0; $i < $parts; $i++){
                     $shmop = SharedMemory::open($offset + $i, 'n', 0600, $part_size);
-                    $data = $split[$i] . "\0";
+                    $memory_data = $split[$i] . "\0";
                     if($shmop){
-                        SharedMemory::write($shmop, $data);
+                        SharedMemory::write($shmop, $memory_data);
                     }
                 }
                 $data_embedding_word = new Data(Core::object($read));
