@@ -22,6 +22,7 @@ trait Find {
      */
     public function input(object $flags, object $options): void
     {
+        $offset = 10;
         if (!property_exists($options, 'input')) {
             throw new Exception('Option input not set');
         }
@@ -114,13 +115,20 @@ trait Find {
             $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
             $key = 1;
             $shmop = SharedMemory::open($key, 'a', 0, 0);
+            $shmop = false;
             if($shmop){
                 $size = File::size($source_embedding_word);
-
-                $parts = $size / ((1024 * 1024) * 4);
-                ddd($parts);
-
-
+                $part_size = ((1024 * 1024) * 4);
+                $parts = ceil($size / $part_size);
+                $read = [];
+                for($i = 0; $i < $parts; $i++){
+                    $shmop = SharedMemory::open($offset + $i, 'a', 0, 0);
+                    if($shmop){
+                        $read[$i] = SharedMemory::read($shmop, 0, $part_size);
+                    }
+                }
+                d(count($read));
+                /*
                 try {
                     $read = SharedMemory::read($shmop, 0, $size);
                     $data_embedding_word = new Data(Core::object($read));
@@ -136,11 +144,20 @@ trait Find {
                     }
                     $data_embedding_word = new Data(Core::object($read));
                 }
+                */
             } else {
                 $read = File::read($source_embedding_word);
 //                $gzip = gzencode($read, 9);
                 $size = File::size($source_embedding_word);
-                $shmop = SharedMemory::open(1, 'n', 0600, $size);
+                $part_size = ((1024 * 1024) * 4);
+                $parts = ceil($size / $part_size);
+                $split = mb_str_split($read, $part_size);
+                ddd(count($split));
+                for($i = 0; $i < $parts; $i++){
+                    $shmop = SharedMemory::open($offset + $i, 'n', 0600, $part_size);
+                }
+
+
                 if($shmop){
                     SharedMemory::write($shmop, $read);
                 }
