@@ -115,7 +115,6 @@ trait Find {
             $shmop = SharedMemory::open(10, 'a', 0, 0);
             if($shmop){
                 $size = File::size($source_embedding_word);
-                ddd($size);
                 try {
                     $read = SharedMemory::read($shmop, 0, $size);
                     $data_embedding_word = new Data(Core::object($read));
@@ -131,8 +130,6 @@ trait Find {
                     }
                     $data_embedding_word = new Data(Core::object($read));
                 }
-
-
             } else {
                 $read = File::read($source_embedding_word);
 //                $gzip = gzencode($read, 9);
