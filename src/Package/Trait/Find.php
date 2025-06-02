@@ -115,7 +115,7 @@ trait Find {
             $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
             $key = $offset + 1;
             $shmop = SharedMemory::open($key, 'a', 0, 0);
-            $shmop = false;
+//            $shmop = false;
             if($shmop){
                 $size = File::size($source_embedding_word);
                 $part_size = ((1024 * 1024) * 4);
