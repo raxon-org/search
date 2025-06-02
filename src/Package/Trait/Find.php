@@ -114,10 +114,25 @@ trait Find {
             $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
             $shmop = SharedMemory::open(10, 'a', 0, 0);
             if($shmop){
-                $read = SharedMemory::read($shmop, 0, File::size($source_embedding_word));
-                $data_embedding_word = new Data(Core::object($read));
-                ddd($data_embedding_word);
-                //read data
+                $size = File::size($source_embedding_word);
+                ddd($size);
+                try {
+                    $read = SharedMemory::read($shmop, 0, $size);
+                    $data_embedding_word = new Data(Core::object($read));
+                    ddd($data_embedding_word);
+                    //read data
+                }
+                catch (Exception $e){
+                    $read = File::read($source_embedding_word);
+                    $size = File::size($source_embedding_word);
+                    $shmop = SharedMemory::open(10, 'n', 0600, $size);
+                    if($shmop){
+                        SharedMemory::write($shmop, $read);
+                    }
+                    $data_embedding_word = new Data(Core::object($read));
+                }
+
+
             } else {
                 $read = File::read($source_embedding_word);
 //                $gzip = gzencode($read, 9);
