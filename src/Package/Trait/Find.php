@@ -42,6 +42,7 @@ trait Find {
         if(!property_exists($options, 'memory')){
             $options->memory = false;
         }
+        $part_size = ((1024 * 1024) * 4);
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
@@ -118,7 +119,6 @@ trait Find {
 //            $shmop = false;
             if($shmop){
                 $size = File::size($source_embedding_word);
-                $part_size = ((1024 * 1024) * 4);
                 $parts = ceil($size / $part_size);
                 $read = [];
                 for($i = 0; $i < $parts; $i++){
@@ -156,7 +156,6 @@ trait Find {
                 $read = File::read($source_embedding_word);
 //                $gzip = gzencode($read, 9);
                 $size = File::size($source_embedding_word);
-                $part_size = ((1024 * 1024) * 4);
                 $parts = ceil($size / $part_size);
                 $split = mb_str_split($read, $part_size);
                 for($i = 0; $i < $parts; $i++){
