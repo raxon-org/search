@@ -113,7 +113,7 @@ trait Find {
         elseif($options->memory){
             $data = $object->data_read($source);
             $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
-            $key = 1;
+            $key = $offset + 1;
             $shmop = SharedMemory::open($key, 'a', 0, 0);
             $shmop = false;
             if($shmop){
