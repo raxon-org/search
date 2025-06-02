@@ -115,7 +115,8 @@ trait Find {
             $shmop = SharedMemory::open(10, 'a', 0, 0);
             if($shmop){
                 $read = SharedMemory::read($shmop, 0, File::size($source_embedding_word));
-                ddd($read);
+                $data_embedding_word = new Data(Core::object($read));
+                ddd($data_embedding_word);
                 //read data
             } else {
                 $read = File::read($source_embedding_word);
@@ -125,6 +126,7 @@ trait Find {
                 if($shmop){
                     SharedMemory::write($shmop, $read);
                 }
+                $data_embedding_word = new Data(Core::object($read));
             }
         }
         else {
