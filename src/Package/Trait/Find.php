@@ -152,14 +152,12 @@ trait Find {
                 $part_size = ((1024 * 1024) * 4);
                 $parts = ceil($size / $part_size);
                 $split = mb_str_split($read, $part_size);
-                ddd(count($split));
                 for($i = 0; $i < $parts; $i++){
                     $shmop = SharedMemory::open($offset + $i, 'n', 0600, $part_size);
-                }
-
-
-                if($shmop){
-                    SharedMemory::write($shmop, $read);
+                    $data = $split[$i] . "\0";
+                    if($shmop){
+                        SharedMemory::write($shmop, $data);
+                    }
                 }
                 $data_embedding_word = new Data(Core::object($read));
             }
