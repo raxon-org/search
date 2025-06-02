@@ -38,6 +38,9 @@ trait Find {
         if(!property_exists($options, 'ramdisk')){
             $options->ramdisk = false;
         }
+        if(!property_exists($options, 'memory')){
+            $options->memory = false;
+        }
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
@@ -105,7 +108,26 @@ trait Find {
                 ]);
                 $data_embedding_sentence_piece = $object->data_read($source_ramdisk_embedding_sentence_piece);
             }
-        } else {
+        }
+        elseif($options->memory){
+            $data = $object->data_read($source);
+            $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
+            $shmop = SharedMemory::open(10, 'a', 0, 0);
+            if($shmop){
+                $read = SharedMemory::read($shmop, 0, File::size($source_embedding_word));
+                ddd($read);
+                //read data
+            } else {
+                $read = File::read($source_embedding_word);
+//                $gzip = gzencode($read, 9);
+                $size = File::size($source_embedding_word);
+                $shmop = SharedMemory::open(10, 'n', 0600, $size);
+                if($shmop){
+                    SharedMemory::write($shmop, $read);
+                }
+            }
+        }
+        else {
             $data = $object->data_read($source);
             $data_embedding_word = $object->data_read($source_embedding_word);
             $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
