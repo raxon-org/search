@@ -268,9 +268,9 @@ trait Similarity {
                     }
                 }
             }
+            d($chunk_x);
+            d($chunk_y);
         }
-        d($chunk_x);
-        d($chunk_y);
 
         /*
                     $average = $this->array_average($similarity, $options);
