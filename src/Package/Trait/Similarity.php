@@ -163,7 +163,6 @@ trait Similarity {
                     $duration  = microtime(true) - $object->config('time.start');
                     echo 'Objectifying...' . PHP_EOL;
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Objectifying duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
-
                 }
                 /*
                 try {
