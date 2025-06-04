@@ -156,7 +156,12 @@ trait Similarity {
                         echo 'Memory read: ' . File::size_format($size_read). '; percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
                     }
                     $read = implode('', $read);
+                    echo 'Memory read: ' . File::size_format($size_read). '; percentage: ' . 100 . '; time left: ' . 0 . ' sec;' . PHP_EOL;
+                    $start = microtime(true);
                     $data_embedding_word = new Data(Core::object($read));
+                    $duration  = microtime(true) - $object->config('time.start');
+                    echo 'Objectifying duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
+
                 }
                 /*
                 try {
