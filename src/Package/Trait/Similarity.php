@@ -145,7 +145,12 @@ trait Similarity {
                             }
                         }
                         $duration = microtime(true) - $object->config('time.start');
-                        $duration_percentage = round($duration / ($i / $parts), 3);
+                        if($i / $parts === 0){
+                            $duration_percentage = round($duration / 1, 3);
+                        } else {
+                            $duration_percentage = round($duration / ($i / $parts), 3);
+                        }
+
                         $duration_left = round($duration_percentage - $duration, 3);
                         echo 'Memory percentage: ' . round($i / $parts, 3) . '; time left: ' . $duration_left . ';' . PHP_EOL;
                     }
