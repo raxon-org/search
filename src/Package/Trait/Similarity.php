@@ -133,6 +133,7 @@ trait Similarity {
                     $size = File::size($source_embedding_word);
                     $parts = ceil($size / $part_size);
                     $read = [];
+                    $size_read = 0;
                     for($i = 0; $i < $parts; $i++){
                         $shmop = SharedMemory::open($offset + $i, 'a', 0, 0);
                         if($shmop){
@@ -140,8 +141,10 @@ trait Similarity {
                             $explode = explode("\0", $memory_data);
                             if(array_key_exists(1, $explode)){
                                 $read[$i] = $explode[0];
+                                $size_read += mb_strlen($explode[0]);
                             } else {
                                 $read[$i] = $memory_data;
+                                $size_read += $part_size;
                             }
                         }
                         $duration = microtime(true) - $object->config('time.start');
@@ -150,7 +153,7 @@ trait Similarity {
                         }
                         $duration_percentage = round($duration / ($i / $parts), 3);
                         $duration_left = round($duration_percentage - $duration, 3);
-                        echo 'Memory percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
+                        echo 'Memory read: ' . File::size_format($size_read). '; percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
                     }
                     $read = implode('', $read);
                     $data_embedding_word = new Data(Core::object($read));
