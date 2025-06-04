@@ -144,6 +144,7 @@ trait Similarity {
                                 $read[$i] = $memory_data;
                             }
                         }
+                        echo 'Percentage: ' . round($i / $parts, 3);
                     }
                     $read = implode('', $read);
                     $data_embedding_word = new Data(Core::object($read));
