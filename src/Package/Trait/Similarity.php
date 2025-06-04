@@ -158,9 +158,10 @@ trait Similarity {
                         if($i === 0){
                             $i = 1;
                         }
+                        $speed = round($read / $duration, 3);
                         $duration_percentage = round($duration / ($i / $parts), 3);
                         $duration_left = round($duration_percentage - $duration, 3);
-                        echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec; duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
+                        echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec; duration: ' . round($duration, 3) . ' sec; speed:' . File::size_format($speed) . '/sec;' . PHP_EOL;
                     }
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . 100 . '; time left: ' . 0 . ' sec; duration: ' . round($duration, 3) . ' sec;' .PHP_EOL;
                     $start = microtime(true);
