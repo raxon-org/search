@@ -39,6 +39,9 @@ trait Similarity {
         if(!property_exists($options, 'memory')){
             $options->memory = false;
         }
+        if(!property_exists($options, 'clear')){
+            $options->clear = false;
+        }
         $part_size = ((1024 * 1024) * 4);
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
@@ -125,7 +128,7 @@ trait Similarity {
                             SharedMemory::delete($shmop);
                         }
                     }
-                    die('cleared');
+                    die('cleared' . PHP_EOL);
                 } else {
                     $size = File::size($source_embedding_word);
                     $parts = ceil($size / $part_size);
