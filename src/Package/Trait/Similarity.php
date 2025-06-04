@@ -133,18 +133,19 @@ trait Similarity {
                 } else {
                     $size = File::size($source_embedding_word);
                     $parts = ceil($size / $part_size);
-                    $read = [];
+                    $read = '';
                     $size_read = 0;
+                    echo PHP_EOL;
                     for($i = 0; $i < $parts; $i++){
                         $shmop = SharedMemory::open($offset + $i, 'a', 0, 0);
                         if($shmop){
                             $memory_data = SharedMemory::read($shmop, 0, $part_size);
                             $explode = explode("\0", $memory_data);
                             if(array_key_exists(1, $explode)){
-                                $read[$i] = $explode[0];
+                                $read .= $explode[0];
                                 $size_read += mb_strlen($explode[0]);
                             } else {
-                                $read[$i] = $memory_data;
+                                $read .= $memory_data;
                                 $size_read += $part_size;
                             }
                         }
@@ -154,14 +155,14 @@ trait Similarity {
                         }
                         $duration_percentage = round($duration / ($i / $parts), 3);
                         $duration_left = round($duration_percentage - $duration, 3);
-                        echo Cli::tput('cursor.up') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
+                        echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
                     }
-                    $read = implode('', $read);
-                    echo Cli::tput('cursor.up') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . 100 . '; time left: ' . 0 . ' sec;' . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . 100 . '; time left: ' . 0 . ' sec;' . PHP_EOL;
                     $start = microtime(true);
                     $data_embedding_word = new Data(Core::object($read));
                     $duration  = microtime(true) - $object->config('time.start');
-                    echo 'Objectifying duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
+                    echo 'Objectifying...' . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Objectifying duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
 
                 }
                 /*
