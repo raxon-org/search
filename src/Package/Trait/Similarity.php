@@ -118,23 +118,36 @@ trait Similarity {
             $shmop = SharedMemory::open($key, 'a', 0, 0);
 //            $shmop = false;
             if($shmop){
-                $size = File::size($source_embedding_word);
-                $parts = ceil($size / $part_size);
-                $read = [];
-                for($i = 0; $i < $parts; $i++){
-                    $shmop = SharedMemory::open($offset + $i, 'a', 0, 0);
-                    if($shmop){
-                        $memory_data = SharedMemory::read($shmop, 0, $part_size);
-                        $explode = explode("\0", $memory_data);
-                        if(array_key_exists(1, $explode)){
-                            $read[$i] = $explode[0];
-                        } else {
-                            $read[$i] = $memory_data;
+                if($options->clear){
+                    $size = File::size($source_embedding_word);
+                    $parts = ceil($size / $part_size);
+                    $read = [];
+                    for($i = 0; $i < $parts; $i++) {
+                        $shmop = SharedMemory::open($offset + $i, 'w', 0, 0);
+                        if($shmop){
+                            SharedMemory::delete($shmop);
                         }
                     }
+                    die('cleared');
+                } else {
+                    $size = File::size($source_embedding_word);
+                    $parts = ceil($size / $part_size);
+                    $read = [];
+                    for($i = 0; $i < $parts; $i++){
+                        $shmop = SharedMemory::open($offset + $i, 'a', 0, 0);
+                        if($shmop){
+                            $memory_data = SharedMemory::read($shmop, 0, $part_size);
+                            $explode = explode("\0", $memory_data);
+                            if(array_key_exists(1, $explode)){
+                                $read[$i] = $explode[0];
+                            } else {
+                                $read[$i] = $memory_data;
+                            }
+                        }
+                    }
+                    $read = implode('', $read);
+                    $data_embedding_word = new Data(Core::object($read));
                 }
-                $read = implode('', $read);
-                $data_embedding_word = new Data(Core::object($read));
                 /*
                 try {
                     $read = SharedMemory::read($shmop, 0, $size);
