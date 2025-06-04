@@ -150,7 +150,7 @@ trait Similarity {
                         }
                         $duration_percentage = round($duration / ($i / $parts), 3);
                         $duration_left = round($duration_percentage - $duration, 3);
-                        echo 'Memory percentage: ' . round(($i / $parts) * 1000, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
+                        echo 'Memory percentage: ' . round(($i / $parts) * 100, 3) . '; time left: ' . $duration_left . ' sec;' . PHP_EOL;
                     }
                     $read = implode('', $read);
                     $data_embedding_word = new Data(Core::object($read));
