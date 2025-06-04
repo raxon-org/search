@@ -144,7 +144,10 @@ trait Similarity {
                                 $read[$i] = $memory_data;
                             }
                         }
-                        echo 'Percentage: ' . round($i / $parts, 3);
+                        $duration = microtime(true) - $object->config('time.start');
+                        $duration_percentage = round($duration / ($i / $parts), 3);
+                        $duration_left = round($duration_percentage - $duration, 3);
+                        echo 'Memory percentage: ' . round($i / $parts, 3) . '; time left: ' . $duration_left . ';' . PHP_EOL;
                     }
                     $read = implode('', $read);
                     $data_embedding_word = new Data(Core::object($read));
