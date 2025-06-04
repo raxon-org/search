@@ -220,7 +220,7 @@ trait Similarity {
             return;
         }
         $duration = microtime(true) - $object->config('time.start');
-        ddd($duration);
+        d($duration);
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
 //        $documents = $data->get('document');
 //        $paragraphs = $data->get('paragraph');
@@ -270,6 +270,8 @@ trait Similarity {
             }
             d($chunk_x);
             d($chunk_y);
+            $duration = microtime(true) - $object->config('time.start');
+            d($duration);
         }
 
         /*
