@@ -43,7 +43,8 @@ trait Similarity {
         if(!property_exists($options, 'clear')){
             $options->clear = false;
         }
-        $part_size = ((1024 * 1024) * 4);
+//        $part_size = ((1024 * 1024) * 4); // 4 MB = 220 Mbit
+        $part_size = 1024 * 4; // 4 KB =
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
