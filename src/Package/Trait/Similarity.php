@@ -209,7 +209,7 @@ trait Similarity {
         else {
             $data = $object->data_read($source);
             $data_embedding_word = $object->data_read($source_embedding_word);
-            $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
+//            $data_embedding_sentence_piece = $object->data_read($source_embedding_sentence_piece);
         }
 
         if (!$data) {
@@ -222,9 +222,9 @@ trait Similarity {
         $duration = microtime(true) - $object->config('time.start');
         ddd($duration);
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
-        $documents = $data->get('document');
-        $paragraphs = $data->get('paragraph');
-        $sentences = $data->get('sentence');
+//        $documents = $data->get('document');
+//        $paragraphs = $data->get('paragraph');
+//        $sentences = $data->get('sentence');
         $words = $data->get('word');
 //        $sentences = [];
 //        $paragraphs = [];
@@ -238,133 +238,41 @@ trait Similarity {
             $paragraphs[$child->id] = $child;
         }
         */
+        $word_list = [];
+        $total = 0;
         foreach ($words as $child) {
-//            $words[$child->id] = $child;
+            $word_list[] = $child;
             $vocabulary[$child->word] = $child;
+            $total++;
         }
-        /*
-        if (!$data_embedding_sentence_piece) {
-            return;
-        }
-        */
-        /*
-        $data_float = $object->data_read($source_float);
-        if (!$data_float) {
-            return;
-        }
-        $floats = [];
-        $float_list = $data_float->get('float') ?? [];
-        foreach ($float_list as $child) {
-            $floats[$child->id] = $child;
-        }
-        */
-        $embedding_words = (object) [];
-        $embedding_word_list = $data_embedding_word->get('embedding');
-        foreach($embedding_word_list as $child){
-            $embedding_words->{$child->id} = $child;
-        }
-        $embedding_sentence_pieces = (object) [];
-        if($data_embedding_sentence_piece){
-            $embedding_sentence_piece_list = $data_embedding_sentence_piece->get('embedding') ?? [];
-        } else {
-            $embedding_sentence_piece_list = [];
-        }
-        foreach ($embedding_sentence_piece_list as $child) {
-            $embedding_sentence_pieces->{$child->id} = $child;
-        }
-        $input = $this->get_embedding($options->input, $options);
-        if($input->has('error')){
-            throw new Exception($input->get('error'));
-        }
-        $input = [ $input->get('embeddings.0') ];
-        /*
-        $result = [];
-        foreach($embedding_words as $id => $embedding_word){
-            if(is_array($vector) && is_array($embedding_word->embedding)) {
-                $embedding = $this->get_embedding_float($embedding_word->embedding, $floats);
-                breakpoint($vector);
-                breakpoint($embedding);
-                $similarity = $this->cosine_similarity($vector, $embedding);
-                if(!array_key_exists("{$similarity}", $result)){
-                    $result["{$similarity}"] = [];
-                }
-                $result["{$similarity}"][] = (object)[
-                    'id' => $id,
-                    'word_text' => $embedding_word->word ?? null,
-                    'tokens' => $embedding_word->tokens ?? 0,
-                    'similarity' => $similarity,
-                ];
+        $threads = $options->threads ?? 2;
+        $similarity = $options->similarity ?? 64;
+        $amount = $options->amount ?? 100;
+        if ($words) {
+            $chunks = array_chunk($word_list, $similarity);
+            $chunk_count = count($chunks);
+            for ($nr = 0; $nr < $amount; $nr++) {
+                $chunk_rand = rand(0, $chunk_count - 1);
+                $chunk_y[$nr] = $chunks[$chunk_rand][rand(0, count($chunks[$chunk_rand]) - 1)];
             }
-        }
-        krsort($result, SORT_NATURAL);
-        */
-        /*
-        $input = explode(' ', $options->input);
-        foreach($input as $nr => $value){
-            $input[$nr] = trim($value);
-        }
-        foreach($input as $nr => $value){
-            if(array_key_exists($value, $vocabulary)) {
-                $input[$nr] = $embedding_words[$vocabulary[$value]->embedding]->embedding;
-            }
-        }
-        */
-        /*
-        if(array_key_exists($word, $vocabulary)){
-            $word = $vocabulary[$options->input];
-            $vector = $this->get_embedding_float($embedding_words[$word->embedding]->embedding, $floats);
-        } else {
-            throw new Exception('Vocabulary not found: ' . $options->input);
-        }
-        */
-        $result = [];
-        $count = 0;
-        foreach($embedding_sentence_pieces as $id => $embedding_sentence_piece){
-            foreach($embedding_sentence_piece->embedding as $embedding_nr => $word_id){
-                try {
-//                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = Core::object(gzdecode(base64_decode($embedding_words[$word_id]->embedding)), Core::OBJECT_ARRAY);
-                    $embedding_sentence_piece->embedding_decode[$embedding_nr] = $embedding_words->{$word_id}->embedding;
-                    if(!is_array($embedding_sentence_piece->embedding_decode[$embedding_nr])){
-                        ddd($embedding_words[$word_id]);
+            $chunk_x = [];
+            for ($i = 0; $i < $similarity; $i++) {
+                $temp = $chunks[rand(0, count($chunks) - 1)] ?? null;
+                if ($temp !== null) {
+                    while (true) {
+                        $similarity_rand = rand(0, count($temp) - 1);
+                        if (array_key_exists($similarity_rand, $temp)) {
+                            $chunk_x[$i] = $temp[$similarity_rand];
+                            break;
+                        }
                     }
-                } catch(Exception | ErrorException | Error $e){
-                    d($e);
-                    ddd($embedding_words->{$word_id});
                 }
+            }
+        }
+        d($chunk_x);
+        d($chunk_y);
 
-            }
-            foreach($input as $nr => $vector){
-                if($vector && !is_array($vector)){
-                    $vector = Core::object(gzdecode(base64_decode($vector)), Core::OBJECT_ARRAY);
-                }
-                if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
-                    $similarity = [];
-                    foreach($embedding_sentence_piece->embedding_decode as $embedding_decode_nr => $embedding){
-                        if(!is_array($vector)){
-                            continue;
-                        }
-                        if(!is_array($embedding)){
-                            ddd($embedding);
-                        }
-                        /*
-                      if(
-                          array_key_exists(0, $embedding) &&
-                          is_int($embedding[0])
-                      ){
-                          $embedding = $this->get_embedding_float($embedding, $floats);
-                      }
-                        */
-                        $similarity[] = $this->cosine_similarity($vector, $embedding);
-                    }
-                    /**
-                     * attention, add 3x the highest score 1x silver, and 1x bronze
-                     */
-                    rsort($similarity, SORT_NATURAL);
-                    $similarity[] = $similarity[0];
-                    $similarity[] = $similarity[0];
-                    $similarity[] = $similarity[0];
-                    $similarity[] = $similarity[1];
-                    $similarity[] = $similarity[2];
+        /*
                     $average = $this->array_average($similarity, $options);
                     $length = mb_strlen($average);
                     $average = $average . str_repeat('0', 16 - $length);
@@ -418,7 +326,7 @@ trait Similarity {
                     'memory' => File::size_format(memory_get_peak_usage(true))
                 ];
             }
-            */
+
             unset($embedding_sentence_piece->embedding_decode);
         }
         krsort($result, SORT_NATURAL);
@@ -440,6 +348,7 @@ trait Similarity {
 
             }
         }
+        */
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = round(($time - $object->config('time.start')) * 1000, 3);
