@@ -161,8 +161,10 @@ trait Similarity {
                     $start = microtime(true);
                     echo 'Objectifying...' . PHP_EOL;
                     $data_embedding_word = new Data(Core::object($read));
-                    $duration  = microtime(true) - $object->config('time.start');
+                    $duration = microtime(true) - $start;
+                    $duration_total  = microtime(true) - $object->config('time.start');
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Objectifying duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
+                    echo 'Total duration: ' . round($duration_total, 3) . PHP_EOL;
                 }
                 /*
                 try {
