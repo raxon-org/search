@@ -146,7 +146,7 @@ trait Similarity {
                         }
                         $duration = microtime(true) - $object->config('time.start');
                         if($i / $parts === 0){
-                            $duration_percentage = round($duration / 1, 3);
+                            $duration_percentage = round($duration / 0.01, 3);
                         } else {
                             $duration_percentage = round($duration / ($i / $parts), 3);
                         }
