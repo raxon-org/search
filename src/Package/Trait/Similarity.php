@@ -23,9 +23,6 @@ trait Similarity {
     public function word(object $flags, object $options): void
     {
         $offset = 10;
-        if (!property_exists($options, 'input')) {
-            throw new Exception('Option input not set');
-        }
         if (!property_exists($options, 'type')) {
             $options->type = 'word';
         }
