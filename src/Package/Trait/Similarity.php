@@ -159,9 +159,9 @@ trait Similarity {
                     }
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Memory read: ' . File::size_format($size_read). '; percentage: ' . 100 . '; time left: ' . 0 . ' sec;' . PHP_EOL;
                     $start = microtime(true);
+                    echo 'Objectifying...' . PHP_EOL;
                     $data_embedding_word = new Data(Core::object($read));
                     $duration  = microtime(true) - $object->config('time.start');
-                    echo 'Objectifying...' . PHP_EOL;
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Objectifying duration: ' . round($duration, 3) . ' sec;' . PHP_EOL;
                 }
                 /*
