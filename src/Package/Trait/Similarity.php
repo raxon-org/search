@@ -140,10 +140,15 @@ trait Similarity {
                         $shmop = SharedMemory::open($offset + $i, 'a', 0, 0);
                         if($shmop){
                             $memory_data = SharedMemory::read($shmop, 0, $part_size);
-                            $explode = explode("\0", $memory_data);
-                            if(array_key_exists(1, $explode)){
-                                $read .= $explode[0];
-                                $size_read += mb_strlen($explode[0]);
+                            if($i === $parts - 1){
+                                $explode = explode("\0", $memory_data);
+                                if(array_key_exists(1, $explode)){
+                                    $read .= $explode[0];
+                                    $size_read += mb_strlen($explode[0]);
+                                } else {
+                                    $read .= $memory_data;
+                                    $size_read += $part_size;
+                                }
                             } else {
                                 $read .= $memory_data;
                                 $size_read += $part_size;
