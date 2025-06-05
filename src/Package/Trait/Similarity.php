@@ -493,7 +493,7 @@ trait Similarity {
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = round(($time - $object->config('time.start')) * 1000, 3);
-            echo "Duration: " . Time::format($duration . 'msec' . PHP_EOL;
+            echo "Duration: " . Time::format($duration) .  PHP_EOL;
         }
     }
 
