@@ -251,6 +251,7 @@ trait Similarity {
         $threads = $options->threads ?? 2;
         $similarity = $options->similarity ?? 64;
         $amount = $options->amount ?? 100;
+        $count = 0;
         if ($words) {
             $chunks = array_chunk($word_list, $similarity);
             $chunk_count = count($chunks);
