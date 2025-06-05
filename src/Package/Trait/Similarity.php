@@ -11,6 +11,7 @@ use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
+use Raxon\Module\Logger;
 use Raxon\Module\Parallel;
 use Raxon\Module\SharedMemory;
 use Raxon\Module\Time;
@@ -480,6 +481,7 @@ trait Similarity {
                     $blocks_per_hour = ($block_count + round(($count / $amount), 3)) * (3600 / $duration);
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                     if($duration >= 60 * 59.75){
+                        Logger::info('Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';', [], );
                         /*
                          * 15 seconds to close before the end of the hour.
                          * Removes high cpu usage (double process)
