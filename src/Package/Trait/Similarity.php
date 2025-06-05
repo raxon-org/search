@@ -33,9 +33,6 @@ trait Similarity {
         if (!property_exists($options, 'version')) {
             $options->version = self::VERSION;
         }
-        if(!property_exists($options, 'limit')){
-            $options->limit = self::LIMIT;
-        }
         if(!property_exists($options, 'ramdisk')){
             $options->ramdisk = false;
         }
@@ -44,6 +41,18 @@ trait Similarity {
         }
         if(!property_exists($options, 'clear')){
             $options->clear = false;
+        }
+        if(!property_exists($options, 'similarity_count')){
+            $options->similarity_count = 4096;
+        }
+        if(!property_exists($options, 'threads')){
+            $options->threads = 8;
+        }
+        if(!property_exists($options, 'similarity')){
+            $options->similarity = 64;
+        }
+        if(!property_exists($options, 'amount')){
+            $options->amount = 100;
         }
 //        $part_size = ((1024 * 1024) * 4); // 4 MB = 220 Mbit/sec
         $part_size = ((1024 * 1024) * 1); // 1 MB =
@@ -274,7 +283,7 @@ trait Similarity {
                     }
                 }
                 $duration = microtime(true) - $object->config('time.start');
-                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Duration: ' . round($duration, 3) . PHP_EOL;
+//                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Duration: ' . round($duration, 3) . PHP_EOL;
                 $closures = [];
                 $data_list_y = [];
                 $word_dir = $dir_version . 'Words' . $object->config('ds');
@@ -325,6 +334,7 @@ trait Similarity {
                     $closures[] = function () use (
                         $object,
                         $embeddings,
+                        $options,
                         $file_y,
                         $data_y,
                         $data_data_y,
@@ -390,6 +400,7 @@ trait Similarity {
                                 $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
                                 $list[] = (object)[
                                     'id' => $data_x->get('id'),
+                                    'embedding' => $data_x->get('embedding'),
                                     'word' => $data_x->get('word'),
                                     'cos_similarity' => $cos_similarity,
                                 ];
@@ -419,7 +430,7 @@ trait Similarity {
                             $similarity_count = 0;
                             $list = [];
                             foreach ($similarity_list as $record) {
-                                if ($similarity_count > 1024) {
+                                if ($similarity_count > $options->similarity_count) {
                                     break;
                                 } else {
                                     $list[] = $record;
