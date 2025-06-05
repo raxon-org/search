@@ -278,88 +278,105 @@ trait Similarity {
             d($duration);
             $closures = [];
             $data_list_y = [];
+            $word_dir = $dir_version . 'Words' . $object->config('ds');
+            $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
+            $similarity_dir = $word_dir . 'Similarity' . $object->config('ds');
             foreach ($chunk_y as $y => $file_y) {
-                $word_dir = $dir_version . 'Words' . $object->config('ds');
-                $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
-                $similarity_dir = $word_dir . 'Similarity' . $object->config('ds');
                 $hash =  hash('sha256', $file_y->word);
-                $embedding_subdir = $similarity_dir .
+                $embedding_subdir_y = $embedding_dir .
                     substr($hash, 0, 3) .
                     $object->config('ds')
                 ;
-                $similarity_subdir = $similarity_dir .
+                $similarity_subdir_y = $similarity_dir .
                     substr($hash, 0, 3) .
                     $object->config('ds')
                 ;
-                $embedding_url =  $embedding_subdir .$hash . $object->config('extension.json');
-                if(!File::exist($embedding_url)){
+                $embedding_url_y =  $embedding_subdir_y .$hash . $object->config('extension.json');
+                if(!File::exist($embedding_url_y)){
                     if(property_exists($embeddings, $file_y->embedding)){
-                        Dir::create($embedding_subdir, Dir::CHMOD);
+                        Dir::create($embedding_subdir_y, Dir::CHMOD);
                         $data_data_y = new Data($embeddings->{$file_y->embedding});
-                        $data_data_y->write($embedding_url);
+                        $data_data_y->write($embedding_url_y);
                         File::permission($object, [
                             'embedding_dir' => $embedding_dir,
-                            'embedding_subdir' => $embedding_subdir,
-                            'url' => $embedding_url
+                            'embedding_subdir_y' => $embedding_subdir_y,
+                            'url' => $embedding_url_y
                         ]);
                     } else {
                         throw new Exception('Embedding not found for id:' . $file_y->embedding);
                     }
                 } else {
-                    $data_data_y = $object->data_read($embedding_url);
+                    $data_data_y = $object->data_read($embedding_url_y);
                 }
-                $similarity_url =  $similarity_subdir .$hash . $object->config('extension.json');
+                $similarity_url_y =  $similarity_subdir_y .$hash . $object->config('extension.json');
 //                $similarity_url = str_replace('/Embedding/', '/Similarity/', $file_y->url);
 //                $similarity_dir = Dir::name($similarity_url);
 //                $object->data('similarity.url', $similarity_url);
 //                $object->data('similarity.dir', $similarity_dir);
-                $data_y = $object->data_read($similarity_url);
+                $data_y = $object->data_read($similarity_url_y);
                 $closures[] = function () use (
                     $object,
+                    $embeddings,
                     $file_y,
                     $data_y,
                     $data_data_y,
                     $y,
                     $chunk_x,
+                    $embedding_dir,
                     $similarity_dir,
-                    $similarity_url
+                    $similarity_url_y
                 ) {
 //                            $data_y = $object->data_read($file_y->url, 'chunk-y-' . $y);
                     $embedding_y = $data_data_y->get('embedding');
                     $list = [];
                     $count_list = 0;
                     foreach ($chunk_x as $x => $file_x) {
-                        ddd($file_x);
-                        if ($file_x->url === $file_y->url) {
+                        $hash =  hash('sha256', $file_x->word);
+                        $embedding_subdir_x = $embedding_dir .
+                            substr($hash, 0, 3) .
+                            $object->config('ds')
+                        ;
+                        $similarity_subdir_x = $similarity_dir .
+                            substr($hash, 0, 3) .
+                            $object->config('ds')
+                        ;
+                        $embedding_url_x =  $embedding_subdir_x .$hash . $object->config('extension.json');
+                        if(!File::exist($embedding_url_x)){
+                            if(property_exists($embeddings, $file_x->embedding)){
+                                Dir::create($embedding_subdir_x, Dir::CHMOD);
+                                $data_data_x = new Data($embeddings->{$file_x->embedding});
+                                $data_data_x->write($embedding_url_x);
+                                File::permission($object, [
+                                    'embedding_dir' => $embedding_dir,
+                                    'embedding_subdir' => $embedding_subdir_x,
+                                    'url' => $embedding_url_x
+                                ]);
+                            } else {
+                                throw new Exception('Embedding not found for id:' . $file_x->embedding);
+                            }
+                        } else {
+                            $data_data_x = $object->data_read($embedding_url_x);
+                        }
+                        $similarity_url_x =  $similarity_subdir_x . $hash . $object->config('extension.json');
+                        if ($similarity_url_x === $similarity_url_y) {
                             continue;
                         }
-//                                $data_x = $object->data_read($file_x->url, 'chunk-x-' . $x);
-                        $data_x = $object->data_read($file_x->url);
+//                                $datax = $object->data_read($file_x->url, 'chunk-x-' . $x);
+                        $data_x = $object->data_read($similarity_url_x);
                         if ($data_x && $data_y) {
-                            $data_data_x = $data_x->get('data');
-                            if (
-                                is_array($data_data_x) &&
-                                array_key_exists(0, $data_data_x)
-                            ) {
-                                $object_x = $data_data_x[0];
-                                if (property_exists($object_x, 'embedding')) {
-                                    $embedding_x = $object_x->embedding;
-                                    if ($embedding_y) {
-                                        $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
-                                        $list[] = (object)[
-                                            'id' => $data_x->get('id'),
-                                            'text' => $data_x->get('text'),
-                                            'cos_similarity' => $cos_similarity,
-                                        ];
-                                        $count_list++;
-//                                                echo Cli::tput('el');
-//                                                echo 'Count: ' . $count_list . ' Embedding: ' . $data_y->get('id') . ', ' . $data_x->get('id') . ', Similarity: ' . round($cos_similarity * 100, 2) . '%' . PHP_EOL;
-//                                                echo Cli::tput('up', 1);
-                                    }
-                                }
+                            $embedding_x = $data_data_x->get('embedding');
+                            if ($embedding_y) {
+                                $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
+                                $list[] = (object)[
+                                    'id' => $data_x->get('id'),
+                                    'text' => $data_x->get('text'),
+                                    'cos_similarity' => $cos_similarity,
+                                ];
                             }
                         }
                     }
+                    ddd($list);
+
 
                     if (!Dir::is($similarity_dir)) {
                         Dir::create($similarity_dir, Dir::CHMOD);
