@@ -474,7 +474,7 @@ trait Similarity {
                     }
                     $duration = microtime(true) - $object->config('time.start');
                     $time_remaining = $duration / $count * ($amount - $count);
-                    Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $amount) * 100, 2) . '% time elapsed: ' . round($duration, 2) . ', time remaining: ' . round($time_remaining, 2) . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $amount) * 100, 2) . '% time elapsed: ' . round($duration, 2) . ', time remaining: ' . round($time_remaining, 2) . PHP_EOL;
                     if($duration >= 60 * 60){
                         exit();
                     }
