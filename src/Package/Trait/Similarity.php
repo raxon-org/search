@@ -429,6 +429,11 @@ trait Similarity {
                         }
                         $similarity->set('similarity', $list);
                         $similarity->write($similarity_url_y);
+                        File::permission($object, [
+                            'dir' => $similarity_dir,
+                            'subdir' => $similarity_subdir_y,
+                            'url' => $similarity_url_y
+                        ]);
                         return $similarity_url_y;
                     } else {
                         usort($list, function($a, $b){
@@ -439,6 +444,11 @@ trait Similarity {
                         $similarity->set('word', $data_y->get('word'));
                         $similarity->set('similarity', $list);
                         $similarity->write($similarity_url_y);
+                        File::permission($object, [
+                            'dir' => $similarity_dir,
+                            'subdir' => $similarity_subdir_y,
+                            'url' => $similarity_url_y
+                        ]);
                         return $similarity_url_y;
                     }
                 };
