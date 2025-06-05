@@ -11,6 +11,7 @@ use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
+use Raxon\Module\Parallel;
 use Raxon\Module\SharedMemory;
 
 trait Similarity {
@@ -278,7 +279,8 @@ trait Similarity {
                 $word_dir = $dir_version . 'Words' . $object->config('ds');
                 $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
                 $similarity_dir = $word_dir;
-                $similarity_url =  $similarity_dir . $file_y->id . $object->config('extension.json');
+                $similarity_url =  $similarity_dir . hash('sha256', $file_y->word) . $object->config('extension.json');
+                ddd($similarity_url);
 //                $similarity_url = str_replace('/Embedding/', '/Similarity/', $file_y->url);
 //                $similarity_dir = Dir::name($similarity_url);
 //                $object->data('similarity.url', $similarity_url);
