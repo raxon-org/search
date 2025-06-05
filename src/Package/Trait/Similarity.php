@@ -292,9 +292,20 @@ trait Similarity {
                 ;
                 $embedding_url =  $embedding_subdir .$hash . $object->config('extension.json');
                 if(!File::exist($embedding_url)){
-                    d($embedding_url);
-                    d($embeddings->{$file_y->embedding} ?? null);
-                    ddd($file_y);
+                    if(property_exists($embeddings, $file_y->embedding)){
+                        Dir::create($embedding_subdir, Dir::CHMOD);
+                        $data_data_y = new Data($embeddings->{$file_y->embedding});
+                        $data_data_y->write($embedding_url);
+                        File::permission($object, [
+                            'embedding_dir' => $embedding_dir,
+                            'embedding_subdir' => $embedding_subdir,
+                            'url' => $embedding_url
+                        ]);
+                    } else {
+                        throw new Exception('Embedding not found for id:' . $file_y->embedding);
+                    }
+                } else {
+                    $data_data_y = $object->data_read($embedding_url);
                 }
                 $similarity_url =  $similarity_subdir .$hash . $object->config('extension.json');
 //                $similarity_url = str_replace('/Embedding/', '/Similarity/', $file_y->url);
@@ -306,13 +317,13 @@ trait Similarity {
                     $object,
                     $file_y,
                     $data_y,
+                    $data_data_y,
                     $y,
                     $chunk_x,
                     $similarity_dir,
                     $similarity_url
                 ) {
 //                            $data_y = $object->data_read($file_y->url, 'chunk-y-' . $y);
-                    $data_data_y = $data_y->get('data');
                     ddd($data_data_y);
                     $embedding_y = false;
                     if (
@@ -406,6 +417,8 @@ trait Similarity {
                     }
                 };
             }
+            die('end test');
+            /*
             $closures = array_chunk($closures, $threads);
             foreach ($closures as $closure_nr => $execute) {
                 $list_parallel = Parallel::new()->execute($execute);
@@ -422,6 +435,7 @@ trait Similarity {
                     exit();
                 }
             }
+            */
         }
 
         /*
