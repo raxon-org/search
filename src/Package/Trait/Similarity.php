@@ -451,7 +451,7 @@ trait Similarity {
                 echo Cli::tput('el');
                 echo 'Percentage: ' . round(($count / $amount) * 100, 2) . '% time elapsed: ' . round($duration, 2) . ', time remaining: ' . round($time_remaining, 2) . PHP_EOL;
                 echo Cli::tput('up', 1);
-                if($duration >= 60){
+                if($duration >= 60 * 60){
                     exit();
                 }
             }
