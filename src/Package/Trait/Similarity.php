@@ -314,6 +314,14 @@ trait Similarity {
 //                $object->data('similarity.url', $similarity_url);
 //                $object->data('similarity.dir', $similarity_dir);
                 $data_y = $object->data_read($similarity_url_y);
+                if($data_y === false) {
+                    $node = (object) [
+                        'id' => $file_y->id,
+                        'embedding' => $file_y->embedding,
+                        'word' => $file_y->word
+                    ];
+                    $data_y = new Data($node);
+                }
                 $closures[] = function () use (
                     $object,
                     $embeddings,
@@ -363,21 +371,28 @@ trait Similarity {
                         }
 //                                $datax = $object->data_read($file_x->url, 'chunk-x-' . $x);
                         $data_x = $object->data_read($similarity_url_x);
-                        if ($data_x && $data_y) {
-                            $embedding_x = $data_data_x->get('embedding');
-                            if ($embedding_y) {
-                                $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
-                                $list[] = (object)[
-                                    'id' => $data_x->get('id'),
-                                    'text' => $data_x->get('text'),
-                                    'cos_similarity' => $cos_similarity,
-                                ];
-                            }
+                        if(!$data_x) {
+                            $node = (object) [
+                                'id' => $file_x->id,
+                                'embedding' => $file_x->embedding,
+                                'word' => $file_x->word
+                            ];
+                            $data_x = new Data($node);
+                        }
+                        $embedding_x = $data_data_x->get('embedding');
+                        if (
+                            $embedding_x &&
+                            $embedding_y
+                        ) {
+                            $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
+                            $list[] = (object)[
+                                'id' => $data_x->get('id'),
+                                'word' => $data_x->get('word'),
+                                'cos_similarity' => $cos_similarity,
+                            ];
                         }
                     }
                     ddd($list);
-
-
                     if (!Dir::is($similarity_dir)) {
                         Dir::create($similarity_dir, Dir::CHMOD);
                     }
