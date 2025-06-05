@@ -325,17 +325,7 @@ trait Similarity {
                     $similarity_url
                 ) {
 //                            $data_y = $object->data_read($file_y->url, 'chunk-y-' . $y);
-                    ddd($data_data_y);
-                    $embedding_y = false;
-                    if (
-                        is_array($data_data_y) &&
-                        array_key_exists(0, $data_data_y)
-                    ) {
-                        $object_y = $data_data_y[0];
-                        if (property_exists($object_y, 'embedding')) {
-                            $embedding_y = $object_y->embedding;
-                        }
-                    }
+                    $embedding_y = $data_data_y->get('embedding');
                     $list = [];
                     $count_list = 0;
                     foreach ($chunk_x as $x => $file_x) {
