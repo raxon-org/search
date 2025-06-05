@@ -484,6 +484,7 @@ trait Similarity {
                          * 15 seconds to close before the end of the hour.
                          * Removes high cpu usage (double process)
                          */
+
                         exit();
                     }
                 }
