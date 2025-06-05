@@ -280,7 +280,6 @@ trait Similarity {
                 $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
                 $similarity_dir = $word_dir;
                 $similarity_url =  $similarity_dir . hash('sha256', $file_y->word) . $object->config('extension.json');
-                ddd($similarity_url);
 //                $similarity_url = str_replace('/Embedding/', '/Similarity/', $file_y->url);
 //                $similarity_dir = Dir::name($similarity_url);
 //                $object->data('similarity.url', $similarity_url);
