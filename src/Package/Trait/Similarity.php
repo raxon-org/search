@@ -261,6 +261,7 @@ trait Similarity {
         $similarity = $options->similarity ?? 64;
         $amount = $options->amount ?? 100;
         $block_count = 0;
+        $duration_elapsed = 0;
         if ($words) {
             $chunks = array_chunk($word_list, $similarity);
             $chunk_count = count($chunks);
@@ -474,13 +475,14 @@ trait Similarity {
                         $count++;
                     }
                     $duration = microtime(true) - $object->config('time.start');
-                    $time_remaining = $duration / $count * ($amount - $count);
+                    $time_remaining = ($duration - $duration_elapsed) / $count * ($amount - $count);
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . ';  Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . round($duration, 2) . '; time remaining: ' . round($time_remaining, 2) . ';' . PHP_EOL;
                     if($duration >= 60 * 60){
                         exit();
                     }
                 }
                 $block_count++;
+                $duration_elapsed = microtime(true) - $object->config('time.start');
             }
         }
         if(property_exists($options, 'duration')){
