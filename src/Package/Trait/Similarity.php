@@ -260,7 +260,7 @@ trait Similarity {
         $threads = $options->threads ?? 2;
         $similarity = $options->similarity ?? 64;
         $amount = $options->amount ?? 100;
-        $count = 0;
+        $block_count = 0;
         if ($words) {
             $chunks = array_chunk($word_list, $similarity);
             $chunk_count = count($chunks);
@@ -466,6 +466,7 @@ trait Similarity {
                     };
                 }
                 $closures = array_chunk($closures, $threads);
+                $count = 0;
                 foreach ($closures as $closure_nr => $execute) {
                     $list_parallel = Parallel::new()->execute($execute);
                     foreach ($list_parallel as $parallel) {
@@ -474,11 +475,12 @@ trait Similarity {
                     }
                     $duration = microtime(true) - $object->config('time.start');
                     $time_remaining = $duration / $count * ($amount - $count);
-                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $amount) * 100, 2) . '% time elapsed: ' . round($duration, 2) . ', time remaining: ' . round($time_remaining, 2) . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . ';  Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . round($duration, 2) . '; time remaining: ' . round($time_remaining, 2) . ';' . PHP_EOL;
                     if($duration >= 60 * 60){
                         exit();
                     }
                 }
+                $block_count++;
             }
         }
         if(property_exists($options, 'duration')){
