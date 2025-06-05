@@ -25,6 +25,7 @@ trait Similarity {
     public function word(object $flags, object $options): void
     {
         $offset = 10;
+        echo 'Initialising...' . PHP_EOL;
         if (!property_exists($options, 'type')) {
             $options->type = 'word';
         }
@@ -221,7 +222,6 @@ trait Similarity {
             return;
         }
         $duration = microtime(true) - $object->config('time.start');
-        d($duration);
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
 //        $documents = $data->get('document');
 //        $paragraphs = $data->get('paragraph');
@@ -253,7 +253,6 @@ trait Similarity {
         $amount = $options->amount ?? 100;
         $count = 0;
         if ($words) {
-            echo 'Initialising...' . PHP_EOL;
             $chunks = array_chunk($word_list, $similarity);
             $chunk_count = count($chunks);
             while(true){
