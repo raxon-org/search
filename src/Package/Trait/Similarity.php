@@ -430,8 +430,9 @@ trait Similarity {
                         $similarity->set('similarity', $list);
                         $similarity->write($similarity_url_y);
                         File::permission($object, [
+                            'word_dir' => $word_dir,
                             'dir' => $similarity_dir,
-                            'subdir' => $similarity_subdir_y,
+                            'sub_dir' => $similarity_subdir_y,
                             'url' => $similarity_url_y
                         ]);
                         return $similarity_url_y;
@@ -445,8 +446,9 @@ trait Similarity {
                         $similarity->set('similarity', $list);
                         $similarity->write($similarity_url_y);
                         File::permission($object, [
+                            'word_dir' => $word_dir,
                             'dir' => $similarity_dir,
-                            'subdir' => $similarity_subdir_y,
+                            'sub_dir' => $similarity_subdir_y,
                             'url' => $similarity_url_y
                         ]);
                         return $similarity_url_y;
