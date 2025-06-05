@@ -392,22 +392,21 @@ trait Similarity {
                             ];
                         }
                     }
-                    ddd($list);
-                    if (!Dir::is($similarity_dir)) {
-                        Dir::create($similarity_dir, Dir::CHMOD);
+                    if (!Dir::is($similarity_subdir_y)) {
+                        Dir::create($similarity_subdir_y, Dir::CHMOD);
                     }
-                    if (File::exist($similarity_url)) {
-                        $similarity = $object->data_read($similarity_url);
+                    if (File::exist($similarity_url_y)) {
+                        $similarity = $object->data_read($similarity_url_y);
                         usort($list, function($a, $b){
                             return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
                         });
                         $similarity_list = $similarity->get('similarity');
-                        $index_text = [];
+                        $index_word = [];
                         foreach ($similarity_list as $nr => $record) {
-                            $index_text[] = $record->text;
+                            $index_word[] = $record->word;
                         }
                         foreach ($list as $nr => $record) {
-                            if (!in_array($record->text, $index_text, true)) {
+                            if (!in_array($record->word, $index_word, true)) {
                                 $similarity_list[] = $record;
                             }
                         }
@@ -425,18 +424,18 @@ trait Similarity {
                             }
                         }
                         $similarity->set('similarity', $list);
-                        $similarity->write($similarity_url);
-                        return $similarity_url;
+                        $similarity->write($similarity_url_y);
+                        return $similarity_url_y;
                     } else {
                         usort($list, function($a, $b){
                             return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
                         });
                         $similarity = new Data();
                         $similarity->set('id', $data_y->get('id'));
-                        $similarity->set('text', $data_y->get('text'));
+                        $similarity->set('word', $data_y->get('word'));
                         $similarity->set('similarity', $list);
-                        $similarity->write($similarity_url);
-                        return $similarity_url;
+                        $similarity->write($similarity_url_y);
+                        return $similarity_url_y;
                     }
                 };
             }
