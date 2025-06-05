@@ -417,8 +417,6 @@ trait Similarity {
                     }
                 };
             }
-            die('end test');
-            /*
             $closures = array_chunk($closures, $threads);
             foreach ($closures as $closure_nr => $execute) {
                 $list_parallel = Parallel::new()->execute($execute);
@@ -435,7 +433,6 @@ trait Similarity {
                     exit();
                 }
             }
-            */
         }
 
         /*
