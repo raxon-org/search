@@ -227,6 +227,8 @@ trait Similarity {
 //        $paragraphs = $data->get('paragraph');
 //        $sentences = $data->get('sentence');
         $words = $data->get('word');
+        $embeddings = $data_embedding_word->get('embedding');
+
 //        $sentences = [];
 //        $paragraphs = [];
 //        $words = [];
@@ -291,7 +293,7 @@ trait Similarity {
                 $embedding_url =  $embedding_subdir .$hash . $object->config('extension.json');
                 if(!File::exist($embedding_url)){
                     d($embedding_url);
-                    d($words->{$file_y->id});
+                    d($embeddings->{$file_y->embedding} ?? null);
                     ddd($file_y);
                 }
                 $similarity_url =  $similarity_subdir .$hash . $object->config('extension.json');
