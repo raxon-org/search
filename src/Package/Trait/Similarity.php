@@ -13,6 +13,7 @@ use Raxon\Module\Dir;
 use Raxon\Module\File;
 use Raxon\Module\Parallel;
 use Raxon\Module\SharedMemory;
+use Raxon\Module\Time;
 
 trait Similarity {
     const VERSION = '1.0.0';
