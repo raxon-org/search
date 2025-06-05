@@ -278,8 +278,22 @@ trait Similarity {
             foreach ($chunk_y as $y => $file_y) {
                 $word_dir = $dir_version . 'Words' . $object->config('ds');
                 $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
-                $similarity_dir = $word_dir;
-                $similarity_url =  $similarity_dir . hash('sha256', $file_y->word) . $object->config('extension.json');
+                $similarity_dir = $word_dir . 'Similarity' . $object->config('ds');
+                $hash =  hash('sha256', $file_y->word);
+                $embedding_subdir = $similarity_dir .
+                    substr($hash, 0, 3) .
+                    $object->config('ds')
+                ;
+                $similarity_subdir = $similarity_dir .
+                    substr($hash, 0, 3) .
+                    $object->config('ds')
+                ;
+                $embedding_url =  $embedding_subdir .$hash . $object->config('extension.json');
+                if(!File::exist($embedding_url)){
+                    d($embedding_url);
+                    ddd($file_y);
+                }
+                $similarity_url =  $similarity_subdir .$hash . $object->config('extension.json');
 //                $similarity_url = str_replace('/Embedding/', '/Similarity/', $file_y->url);
 //                $similarity_dir = Dir::name($similarity_url);
 //                $object->data('similarity.url', $similarity_url);
