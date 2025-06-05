@@ -253,303 +253,224 @@ trait Similarity {
         $amount = $options->amount ?? 100;
         $count = 0;
         if ($words) {
+            echo 'Initialising...' . PHP_EOL;
             $chunks = array_chunk($word_list, $similarity);
             $chunk_count = count($chunks);
-            for ($nr = 0; $nr < $amount; $nr++) {
-                $chunk_rand = rand(0, $chunk_count - 1);
-                $chunk_y[$nr] = $chunks[$chunk_rand][rand(0, count($chunks[$chunk_rand]) - 1)];
-            }
-            $chunk_x = [];
-            for ($i = 0; $i < $similarity; $i++) {
-                $temp = $chunks[rand(0, count($chunks) - 1)] ?? null;
-                if ($temp !== null) {
-                    while (true) {
-                        $similarity_rand = rand(0, count($temp) - 1);
-                        if (array_key_exists($similarity_rand, $temp)) {
-                            $chunk_x[$i] = $temp[$similarity_rand];
-                            break;
+            while(true){
+                for ($nr = 0; $nr < $amount; $nr++) {
+                    $chunk_rand = rand(0, $chunk_count - 1);
+                    $chunk_y[$nr] = $chunks[$chunk_rand][rand(0, count($chunks[$chunk_rand]) - 1)];
+                }
+                $chunk_x = [];
+                for ($i = 0; $i < $similarity; $i++) {
+                    $temp = $chunks[rand(0, count($chunks) - 1)] ?? null;
+                    if ($temp !== null) {
+                        while (true) {
+                            $similarity_rand = rand(0, count($temp) - 1);
+                            if (array_key_exists($similarity_rand, $temp)) {
+                                $chunk_x[$i] = $temp[$similarity_rand];
+                                break;
+                            }
                         }
                     }
                 }
-            }
-            d($chunk_x);
-            d($chunk_y);
-            $duration = microtime(true) - $object->config('time.start');
-            d($duration);
-            $closures = [];
-            $data_list_y = [];
-            $word_dir = $dir_version . 'Words' . $object->config('ds');
-            $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
-            $similarity_dir = $word_dir . 'Similarity' . $object->config('ds');
-            foreach ($chunk_y as $y => $file_y) {
-                $hash =  hash('sha256', $file_y->word);
-                $embedding_subdir_y = $embedding_dir .
-                    substr($hash, 0, 3) .
-                    $object->config('ds')
-                ;
-                $similarity_subdir_y = $similarity_dir .
-                    substr($hash, 0, 3) .
-                    $object->config('ds')
-                ;
-                $embedding_url_y =  $embedding_subdir_y .$hash . $object->config('extension.json');
-                if(!File::exist($embedding_url_y)){
-                    if(property_exists($embeddings, $file_y->embedding)){
-                        Dir::create($embedding_subdir_y, Dir::CHMOD);
-                        $data_data_y = new Data($embeddings->{$file_y->embedding});
-                        $data_data_y->write($embedding_url_y);
-                        File::permission($object, [
-                            'word_dir' => $word_dir,
-                            'embedding_dir' => $embedding_dir,
-                            'embedding_subdir_y' => $embedding_subdir_y,
-                            'url' => $embedding_url_y
-                        ]);
+                $duration = microtime(true) - $object->config('time.start');
+                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Duration: ' . round($duration, 3) . PHP_EOL;
+                $closures = [];
+                $data_list_y = [];
+                $word_dir = $dir_version . 'Words' . $object->config('ds');
+                $embedding_dir = $word_dir . 'Embedding' . $object->config('ds');
+                $similarity_dir = $word_dir . 'Similarity' . $object->config('ds');
+                foreach ($chunk_y as $y => $file_y) {
+                    $hash =  hash('sha256', $file_y->word);
+                    $embedding_subdir_y = $embedding_dir .
+                        substr($hash, 0, 3) .
+                        $object->config('ds')
+                    ;
+                    $similarity_subdir_y = $similarity_dir .
+                        substr($hash, 0, 3) .
+                        $object->config('ds')
+                    ;
+                    $embedding_url_y =  $embedding_subdir_y .$hash . $object->config('extension.json');
+                    if(!File::exist($embedding_url_y)){
+                        if(property_exists($embeddings, $file_y->embedding)){
+                            Dir::create($embedding_subdir_y, Dir::CHMOD);
+                            $data_data_y = new Data($embeddings->{$file_y->embedding});
+                            $data_data_y->write($embedding_url_y);
+                            File::permission($object, [
+                                'word_dir' => $word_dir,
+                                'embedding_dir' => $embedding_dir,
+                                'embedding_subdir_y' => $embedding_subdir_y,
+                                'url' => $embedding_url_y
+                            ]);
+                        } else {
+                            throw new Exception('Embedding not found for id:' . $file_y->embedding);
+                        }
                     } else {
-                        throw new Exception('Embedding not found for id:' . $file_y->embedding);
+                        $data_data_y = $object->data_read($embedding_url_y);
                     }
-                } else {
-                    $data_data_y = $object->data_read($embedding_url_y);
-                }
-                $similarity_url_y =  $similarity_subdir_y .$hash . $object->config('extension.json');
+                    $similarity_url_y =  $similarity_subdir_y .$hash . $object->config('extension.json');
 //                $similarity_url = str_replace('/Embedding/', '/Similarity/', $file_y->url);
 //                $similarity_dir = Dir::name($similarity_url);
 //                $object->data('similarity.url', $similarity_url);
 //                $object->data('similarity.dir', $similarity_dir);
-                $data_y = $object->data_read($similarity_url_y);
-                if($data_y === false) {
-                    $node = (object) [
-                        'id' => $file_y->id,
-                        'embedding' => $file_y->embedding,
-                        'word' => $file_y->word
-                    ];
-                    $data_y = new Data($node);
-                }
-                $closures[] = function () use (
-                    $object,
-                    $embeddings,
-                    $file_y,
-                    $data_y,
-                    $data_data_y,
-                    $y,
-                    $chunk_x,
-                    $word_dir,
-                    $embedding_dir,
-                    $similarity_dir,
-                    $similarity_url_y,
-                    $similarity_subdir_y
-                ) {
+                    $data_y = $object->data_read($similarity_url_y);
+                    if($data_y === false) {
+                        $node = (object) [
+                            'id' => $file_y->id,
+                            'embedding' => $file_y->embedding,
+                            'word' => $file_y->word
+                        ];
+                        $data_y = new Data($node);
+                    }
+                    $closures[] = function () use (
+                        $object,
+                        $embeddings,
+                        $file_y,
+                        $data_y,
+                        $data_data_y,
+                        $y,
+                        $chunk_x,
+                        $word_dir,
+                        $embedding_dir,
+                        $similarity_dir,
+                        $similarity_url_y,
+                        $similarity_subdir_y
+                    ) {
 //                            $data_y = $object->data_read($file_y->url, 'chunk-y-' . $y);
-                    $embedding_y = $data_data_y->get('embedding');
-                    $list = [];
-                    $count_list = 0;
-                    foreach ($chunk_x as $x => $file_x) {
-                        $hash =  hash('sha256', $file_x->word);
-                        $embedding_subdir_x = $embedding_dir .
-                            substr($hash, 0, 3) .
-                            $object->config('ds')
-                        ;
-                        $similarity_subdir_x = $similarity_dir .
-                            substr($hash, 0, 3) .
-                            $object->config('ds')
-                        ;
-                        $embedding_url_x =  $embedding_subdir_x .$hash . $object->config('extension.json');
-                        if(!File::exist($embedding_url_x)){
-                            if(property_exists($embeddings, $file_x->embedding)){
-                                Dir::create($embedding_subdir_x, Dir::CHMOD);
-                                $data_data_x = new Data($embeddings->{$file_x->embedding});
-                                $data_data_x->write($embedding_url_x);
-                                File::permission($object, [
-                                    'word_dir' => $word_dir,
-                                    'embedding_dir' => $embedding_dir,
-                                    'embedding_subdir' => $embedding_subdir_x,
-                                    'url' => $embedding_url_x
-                                ]);
-                            } else {
-                                throw new Exception('Embedding not found for id:' . $file_x->embedding);
-                            }
-                        } else {
-                            $data_data_x = $object->data_read($embedding_url_x);
-                        }
-                        $similarity_url_x =  $similarity_subdir_x . $hash . $object->config('extension.json');
-                        if ($similarity_url_x === $similarity_url_y) {
-                            continue;
-                        }
-//                                $datax = $object->data_read($file_x->url, 'chunk-x-' . $x);
-                        $data_x = $object->data_read($similarity_url_x);
-                        if(!$data_x) {
-                            $node = (object) [
-                                'id' => $file_x->id,
-                                'embedding' => $file_x->embedding,
-                                'word' => $file_x->word
-                            ];
-                            $data_x = new Data($node);
-                        }
-                        $embedding_x = $data_data_x->get('embedding');
-                        if (
-                            $embedding_x &&
-                            $embedding_y
-                        ) {
-                            $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
-                            $list[] = (object)[
-                                'id' => $data_x->get('id'),
-                                'word' => $data_x->get('word'),
-                                'cos_similarity' => $cos_similarity,
-                            ];
-                        }
-                    }
-                    if (!Dir::is($similarity_subdir_y)) {
-                        Dir::create($similarity_subdir_y, Dir::CHMOD);
-                    }
-                    if (File::exist($similarity_url_y)) {
-                        $similarity = $object->data_read($similarity_url_y);
-                        usort($list, function($a, $b){
-                            return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
-                        });
-                        $similarity_list = $similarity->get('similarity');
-                        $index_word = [];
-                        foreach ($similarity_list as $nr => $record) {
-                            $index_word[] = $record->word;
-                        }
-                        foreach ($list as $nr => $record) {
-                            if (!in_array($record->word, $index_word, true)) {
-                                $similarity_list[] = $record;
-                            }
-                        }
-                        usort($similarity_list, function($a, $b){
-                            return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
-                        });
-                        $similarity_count = 0;
+                        $embedding_y = $data_data_y->get('embedding');
                         $list = [];
-                        foreach ($similarity_list as $record) {
-                            if ($similarity_count > 1024) {
-                                break;
+                        $count_list = 0;
+                        foreach ($chunk_x as $x => $file_x) {
+                            $hash =  hash('sha256', $file_x->word);
+                            $embedding_subdir_x = $embedding_dir .
+                                substr($hash, 0, 3) .
+                                $object->config('ds')
+                            ;
+                            $similarity_subdir_x = $similarity_dir .
+                                substr($hash, 0, 3) .
+                                $object->config('ds')
+                            ;
+                            $embedding_url_x =  $embedding_subdir_x .$hash . $object->config('extension.json');
+                            if(!File::exist($embedding_url_x)){
+                                if(property_exists($embeddings, $file_x->embedding)){
+                                    Dir::create($embedding_subdir_x, Dir::CHMOD);
+                                    $data_data_x = new Data($embeddings->{$file_x->embedding});
+                                    $data_data_x->write($embedding_url_x);
+                                    File::permission($object, [
+                                        'word_dir' => $word_dir,
+                                        'embedding_dir' => $embedding_dir,
+                                        'embedding_subdir' => $embedding_subdir_x,
+                                        'url' => $embedding_url_x
+                                    ]);
+                                } else {
+                                    throw new Exception('Embedding not found for id:' . $file_x->embedding);
+                                }
                             } else {
-                                $list[] = $record;
-                                $similarity_count++;
+                                $data_data_x = $object->data_read($embedding_url_x);
+                            }
+                            $similarity_url_x =  $similarity_subdir_x . $hash . $object->config('extension.json');
+                            if ($similarity_url_x === $similarity_url_y) {
+                                continue;
+                            }
+//                                $datax = $object->data_read($file_x->url, 'chunk-x-' . $x);
+                            $data_x = $object->data_read($similarity_url_x);
+                            if(!$data_x) {
+                                $node = (object) [
+                                    'id' => $file_x->id,
+                                    'embedding' => $file_x->embedding,
+                                    'word' => $file_x->word
+                                ];
+                                $data_x = new Data($node);
+                            }
+                            $embedding_x = $data_data_x->get('embedding');
+                            if (
+                                $embedding_x &&
+                                $embedding_y
+                            ) {
+                                $cos_similarity = $this->cosine_similarity($embedding_x, $embedding_y);
+                                $list[] = (object)[
+                                    'id' => $data_x->get('id'),
+                                    'word' => $data_x->get('word'),
+                                    'cos_similarity' => $cos_similarity,
+                                ];
                             }
                         }
-                        $similarity->set('similarity', $list);
-                        $similarity->write($similarity_url_y);
-                        File::permission($object, [
-                            'word_dir' => $word_dir,
-                            'dir' => $similarity_dir,
-                            'sub_dir' => $similarity_subdir_y,
-                            'url' => $similarity_url_y
-                        ]);
-                        return $similarity_url_y;
-                    } else {
-                        usort($list, function($a, $b){
-                            return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
-                        });
-                        $similarity = new Data();
-                        $similarity->set('id', $data_y->get('id'));
-                        $similarity->set('word', $data_y->get('word'));
-                        $similarity->set('similarity', $list);
-                        $similarity->write($similarity_url_y);
-                        File::permission($object, [
-                            'word_dir' => $word_dir,
-                            'dir' => $similarity_dir,
-                            'sub_dir' => $similarity_subdir_y,
-                            'url' => $similarity_url_y
-                        ]);
-                        return $similarity_url_y;
-                    }
-                };
-            }
-            $closures = array_chunk($closures, $threads);
-            foreach ($closures as $closure_nr => $execute) {
-                $list_parallel = Parallel::new()->execute($execute);
-                foreach ($list_parallel as $parallel) {
+                        if (!Dir::is($similarity_subdir_y)) {
+                            Dir::create($similarity_subdir_y, Dir::CHMOD);
+                        }
+                        if (File::exist($similarity_url_y)) {
+                            $similarity = $object->data_read($similarity_url_y);
+                            usort($list, function($a, $b){
+                                return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
+                            });
+                            $similarity_list = $similarity->get('similarity');
+                            $index_word = [];
+                            foreach ($similarity_list as $nr => $record) {
+                                $index_word[] = $record->word;
+                            }
+                            foreach ($list as $nr => $record) {
+                                if (!in_array($record->word, $index_word, true)) {
+                                    $similarity_list[] = $record;
+                                }
+                            }
+                            usort($similarity_list, function($a, $b){
+                                return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
+                            });
+                            $similarity_count = 0;
+                            $list = [];
+                            foreach ($similarity_list as $record) {
+                                if ($similarity_count > 1024) {
+                                    break;
+                                } else {
+                                    $list[] = $record;
+                                    $similarity_count++;
+                                }
+                            }
+                            $similarity->set('similarity', $list);
+                            $similarity->write($similarity_url_y);
+                            File::permission($object, [
+                                'word_dir' => $word_dir,
+                                'dir' => $similarity_dir,
+                                'sub_dir' => $similarity_subdir_y,
+                                'url' => $similarity_url_y
+                            ]);
+                            return $similarity_url_y;
+                        } else {
+                            usort($list, function($a, $b){
+                                return $b->cos_similarity > $a->cos_similarity ? 1 : -1;
+                            });
+                            $similarity = new Data();
+                            $similarity->set('id', $data_y->get('id'));
+                            $similarity->set('word', $data_y->get('word'));
+                            $similarity->set('similarity', $list);
+                            $similarity->write($similarity_url_y);
+                            File::permission($object, [
+                                'word_dir' => $word_dir,
+                                'dir' => $similarity_dir,
+                                'sub_dir' => $similarity_subdir_y,
+                                'url' => $similarity_url_y
+                            ]);
+                            return $similarity_url_y;
+                        }
+                    };
+                }
+                $closures = array_chunk($closures, $threads);
+                foreach ($closures as $closure_nr => $execute) {
+                    $list_parallel = Parallel::new()->execute($execute);
+                    foreach ($list_parallel as $parallel) {
 //                    echo 'Parallel: ' . $parallel . PHP_EOL;
-                    $count++;
-                }
-                $duration = microtime(true) - $object->config('time.start');
-                $time_remaining = $duration / $count * ($amount - $count);
-                echo Cli::tput('el');
-                echo 'Percentage: ' . round(($count / $amount) * 100, 2) . '% time elapsed: ' . round($duration, 2) . ', time remaining: ' . round($time_remaining, 2) . PHP_EOL;
-                echo Cli::tput('up', 1);
-                if($duration >= 60 * 60){
-                    exit();
-                }
-            }
-        }
-
-        /*
-                    $average = $this->array_average($similarity, $options);
-                    $length = mb_strlen($average);
-                    $average = $average . str_repeat('0', 16 - $length);
-                    $word_text = [];
-                    foreach($embedding_sentence_piece->word as $word_id){
-                        $word_text[] = $words->{$word_id}->word ?? null;
+                        $count++;
                     }
-                    if(!array_key_exists("{$average}", $result)){
-                        $result["{$average}"] = [];
+                    $duration = microtime(true) - $object->config('time.start');
+                    $time_remaining = $duration / $count * ($amount - $count);
+                    Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $amount) * 100, 2) . '% time elapsed: ' . round($duration, 2) . ', time remaining: ' . round($time_remaining, 2) . PHP_EOL;
+                    if($duration >= 60 * 60){
+                        exit();
                     }
-                    $result["{$average}"][] = (object) [
-                        'id' => $embedding_sentence_piece->id,
-                        'word' => $embedding_sentence_piece->word ?? [],
-                        'sentence' => $embedding_sentence_piece->sentence ?? [],
-                        'tokens' => $embedding_sentence_piece->tokens ?? 0,
-                        'similarity' => $similarity,
-                        'average' => $average,
-                        'word_text' => $word_text,
-                        'memory' => File::size_format(memory_get_peak_usage(true))
-                    ];
                 }
-            }
-            /*
-            if(is_array($vector) && is_array($embedding_sentence_piece->embedding_decode)) {
-                $similarity = [];
-                foreach($embedding_sentence_piece->embedding_decode as $nr => $embedding){
-                  $similarity[] = $this->cosine_similarity($vector, $embedding);
-                }
-                rsort($similarity, SORT_NATURAL);
-                $similarity[] = $similarity[0];
-                $similarity[] = $similarity[0];
-                $similarity[] = $similarity[0];
-                $similarity[] = $similarity[1];
-                $similarity[] = $similarity[2];
-                $average = $this->array_average($similarity, $options);
-                $word_text = [];
-                foreach($embedding_sentence_piece->word as $word_id){
-                    $word_text[] = $words[$word_id]->word ?? null;
-                }
-                if(!array_key_exists("{$average}", $result)){
-                    $result["{$average}"] = [];
-                }
-                $result["{$average}"][] = (object)[
-                    'id' => $embedding_sentence_piece->id,
-                    'word' => $embedding_sentence_piece->word ?? [],
-                    'sentence' => $embedding_sentence_piece->sentence ?? [],
-                    'tokens' => $embedding_sentence_piece->tokens ?? 0,
-                    'similarity' => $similarity,
-                    'average' => $average,
-                    'word_text' => $word_text,
-                    'memory' => File::size_format(memory_get_peak_usage(true))
-                ];
-            }
-
-            unset($embedding_sentence_piece->embedding_decode);
-        }
-        krsort($result, SORT_NATURAL);
-        foreach($result as $average => $list){
-            foreach($list as $nr => $record){
-                echo $record->average . ' | ' . $record->id . ' ' . implode(' ', $record->word_text);
-                echo '; Memory: ' . $record->memory;
-                echo '; Similarity: ';
-                $output = [];
-                foreach($record->similarity as $similarity){
-                    $output[] = round($similarity, 4);
-
-                }
-                echo implode(' ', $output) . PHP_EOL;
-                $count++;
-                if($count > $options->limit){
-                    break 2;
-                }
-
             }
         }
-        */
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = round(($time - $object->config('time.start')) * 1000, 3);
