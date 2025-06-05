@@ -298,6 +298,7 @@ trait Similarity {
                         $data_data_y = new Data($embeddings->{$file_y->embedding});
                         $data_data_y->write($embedding_url_y);
                         File::permission($object, [
+                            'word_dir' => $word_dir,
                             'embedding_dir' => $embedding_dir,
                             'embedding_subdir_y' => $embedding_subdir_y,
                             'url' => $embedding_url_y
@@ -330,9 +331,11 @@ trait Similarity {
                     $data_data_y,
                     $y,
                     $chunk_x,
+                    $word_dir,
                     $embedding_dir,
                     $similarity_dir,
-                    $similarity_url_y
+                    $similarity_url_y,
+                    $similarity_subdir_y
                 ) {
 //                            $data_y = $object->data_read($file_y->url, 'chunk-y-' . $y);
                     $embedding_y = $data_data_y->get('embedding');
@@ -355,6 +358,7 @@ trait Similarity {
                                 $data_data_x = new Data($embeddings->{$file_x->embedding});
                                 $data_data_x->write($embedding_url_x);
                                 File::permission($object, [
+                                    'word_dir' => $word_dir,
                                     'embedding_dir' => $embedding_dir,
                                     'embedding_subdir' => $embedding_subdir_x,
                                     'url' => $embedding_url_x
