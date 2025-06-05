@@ -477,8 +477,12 @@ trait Similarity {
                     $duration = microtime(true) - $object->config('time.start');
                     $time_remaining = ($duration - $duration_elapsed) / $count * ($amount - $count);
                     $blocks_per_hour = ($block_count + round(($count / $amount), 3)) * (3600 / $duration);
-                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . round($duration, 2) . '; time remaining: ' . round($time_remaining, 2) . ';' . PHP_EOL;
-                    if($duration >= 60 * 60){
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2)) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
+                    if($duration >= 60 * 59.75){
+                        /*
+                         * 15 seconds to close before the end of the hour.
+                         * Removes high cpu usage (double process)
+                         */
                         exit();
                     }
                 }
@@ -489,7 +493,7 @@ trait Similarity {
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = round(($time - $object->config('time.start')) * 1000, 3);
-            echo "Duration: " . $duration . 'msec' . PHP_EOL;
+            echo "Duration: " . Time::format($duration . 'msec' . PHP_EOL;
         }
     }
 
