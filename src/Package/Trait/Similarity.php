@@ -478,7 +478,7 @@ trait Similarity {
                     $duration = microtime(true) - $object->config('time.start');
                     $time_remaining = ($duration - $duration_elapsed) / $count * ($amount - $count);
                     $blocks_per_hour = ($block_count + round(($count / $amount), 3)) * (3600 / $duration);
-                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2)) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                     if($duration >= 60 * 59.75){
                         /*
                          * 15 seconds to close before the end of the hour.
