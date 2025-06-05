@@ -291,6 +291,7 @@ trait Similarity {
                 $embedding_url =  $embedding_subdir .$hash . $object->config('extension.json');
                 if(!File::exist($embedding_url)){
                     d($embedding_url);
+                    d($words[$file_y->id]);
                     ddd($file_y);
                 }
                 $similarity_url =  $similarity_subdir .$hash . $object->config('extension.json');
