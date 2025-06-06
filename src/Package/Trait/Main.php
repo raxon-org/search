@@ -400,13 +400,51 @@ trait Main {
                     $counter = 0;
                     $block_size = $chunkSize * $counter;
                     $total += $block_size;
-                    $duration = microtime(true) - $object->config('time.start');
-                    $time_remaining = $duration / $size * ($total - $size);
+                    $duration = microtime(true) - $object->config('start');
+                    $duration_percentage = round($duration / ($block_size / $total), 3);
+                    $time_remaining = round($duration_percentage - $duration, 3);
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . '; Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                 }
             }
             fclose($handle);
         }
+        ddd($read);
+
+
+        /*
+
+
+        if(!property_exists($options, 'source')){
+            $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/php_manual_en/';
+        }
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $dir = new Dir();
+        $read = $dir->read($options->source);
+        $partition = Core::array_partition($read, 25);
+        $total = count($partition);
+        $count = 0;
+        foreach($partition as $nr => $chunk){
+            $import=[];
+            foreach($chunk as $file){
+                $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
+            }
+            $count++;
+            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version;
+            $output = shell_exec($command);
+            echo $output . PHP_EOL;
+            $time = microtime(true);
+            $duration = round($time - $object->config('time.start'), 3);
+            $duration_percentage = round($duration / ($count / $total), 3);
+            $duration_left = round($duration_percentage - $duration, 3);
+            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+        }
+        */
     }
 
     private function store_pages($pages=[], $target_dir=''): void
