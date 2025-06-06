@@ -403,7 +403,19 @@ trait Main {
         foreach($explode as $nr => $part){
             $temp = explode('<page>', $part, 2);
             if(array_key_exists(1, $temp)){
-                $page = $temp[1];
+                $page = '<page>' . PHP_EOL . str_replace(
+                    [
+                        "\r\n",
+                        "\n\r",
+                        "\r",
+                    ],
+                    [
+                        "\n",
+                        "\n",
+                        "\n"
+                    ],
+                    $temp[1]
+                ) . PHP_EOL . '</page>';
                 ddd($page);
             }
             ddd($part);
