@@ -330,7 +330,27 @@ trait Main {
         $source = $object->config('project.dir.data') . 'Wiki' . $object->config('ds');
         $dir = new Dir();
         $read = $dir->read($source);
+        $chunkSize = 8192; // 8 KB
+        $counter = 0;
+        foreach($read as $nr => $file){
 
+            $handle = fopen($file->url, 'rb');
+            if ($handle === false) {
+                die("Unable to open file.");
+            }
+
+            while (!feof($handle)) {
+                $chunk = fread($handle, $chunkSize);
+
+                // Do something with $chunk
+                echo $chunk; // or process/save it
+                $counter++;
+                if($counter > 2){
+                    break;
+                }
+            }
+            fclose($handle);
+        }
         ddd($read);
 
 
