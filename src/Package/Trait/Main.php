@@ -401,6 +401,11 @@ trait Main {
         $pages = [];
         $explode = explode('</page>', $string);
         foreach($explode as $nr => $part){
+            $temp = explode('<page>', $part, 2);
+            if(array_key_exists(1, $temp)){
+                $page = $temp[1];
+                ddd($page);
+            }
             ddd($part);
         }
         ddd(count($explode));
