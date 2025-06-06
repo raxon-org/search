@@ -5,6 +5,7 @@ use DOMDocument;
 use DOMXPath;
 use GuzzleHttp;
 use GuzzleHttp\Exception\GuzzleException;
+use Raxon\Config;
 use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
@@ -340,16 +341,30 @@ trait Main {
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $dir = new Dir();
         $read = $dir->read($options->source);
-        $partition = Core::array_partition($read, 150);
+        $partition = Core::array_partition($read, 25);
         $total = count($partition);
         $count = 0;
         foreach($partition as $nr => $chunk){
             $import=[];
+            $list = [];
             foreach($chunk as $file){
-                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
+                $list[] = 'https://raxon.local/wiki/en/' . $file->name;
+//                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
             }
+            $dir_list =
+                $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Search' .
+                $object->config('ds')
+            ;
+            $url_list = $dir_list . $nr . $object->config('extension.json');
+            $data = new Data($list);
+            $data->write($url_list);
+            $duration = round(microtime(true) - $object->config('time.start'), 3);
+            die($duration);
             $count++;
-            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version;
+            $command = Core::binary($object) . ' raxon/search import page -list=' . $url_list . ' -version='. $options->version;
             $output = shell_exec($command);
             echo $output . PHP_EOL;
             $time = microtime(true);
