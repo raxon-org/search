@@ -77,6 +77,7 @@ trait Main {
         $count_url = 0;
         $total_url = count($options->url);
         foreach($options->url as $url){
+            d($url);
             $client = new GuzzleHttp\Client();
             $res = $client->request('GET', $url, [
                 'verify' => false,  // Disable SSL certificate verification (localhost)
