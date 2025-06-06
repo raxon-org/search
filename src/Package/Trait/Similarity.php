@@ -482,7 +482,7 @@ trait Similarity {
                     $time_remaining = ($duration - $duration_elapsed) / $count * ($amount - $count);
                     $blocks_per_hour = ($block_count + round(($count / $amount), 3)) * (3600 / $duration);
                     if($blocks_per_hour > 0){
-                        echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ~' . round($block_count / $block_per_hour, 2) . '%; Percentage block: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
+                        echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ~' . round($block_count / $blocks_per_hour, 2) . '%; Percentage block: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                     }
                     if($duration >= 60 * 59.75){
                         Logger::info('Block count: ' . $block_count . '; Blocks/hour: ' . round($blocks_per_hour, 3) . '; Percentage: ' . round(($count / $amount) * 100, 2) . '%;  time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';', [], 'system');
