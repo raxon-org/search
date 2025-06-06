@@ -56,11 +56,18 @@ trait Similarity {
         if(!property_exists($options, 'amount')){
             $options->amount = 100;
         }
+        if(!property_exists($options, 'model_dir')){
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+        } else {
+            $dir_version = $options->model_dir;
+            if(substr($dir_version, -1, 1) !== $object->config('ds')){
+                $dir_version .= $object->config('ds');
+            }
+        }
 //        $part_size = ((1024 * 1024) * 4); // 4 MB = 220 Mbit/sec
         $part_size = ((1024 * 1024) * 1); // 1 MB =
-        $dir_data = $object->config('controller.dir.data');
-        $dir_search = $dir_data . 'Search' . $object->config('ds');
-        $dir_version = $dir_search . $options->version . $object->config('ds');
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $source_embedding_word = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
