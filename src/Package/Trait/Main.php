@@ -404,9 +404,9 @@ trait Main {
             libxml_clear_errors();
 
             // Get plain text content
-            $title = $doc->getElementsByTagName('title')->item(0);
-            $text = $doc->getElementsByTagName('text')->item(0);
-            $title_text = $text->textContent;
+            $title = $doc->getElementsByTagName('title')->item(0) ?? null;
+            $text = $doc->getElementsByTagName('text')->item(0) ?? null;
+            $title_text = $title->textContent;
             $plain_text = $text->textContent;
             d($title_text);
             ddd($plain_text);
