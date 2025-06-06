@@ -400,6 +400,9 @@ trait Main {
     {
         $pages = [];
         $explode = explode('</page>', $string);
+        foreach($explode as $nr => $part){
+            ddd($part);
+        }
         ddd(count($explode));
     }
 }
