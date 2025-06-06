@@ -343,7 +343,7 @@ trait Main {
         foreach($partition as $nr => $chunk){
             $import=[];
             foreach($chunk as $file){
-                $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
+                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
             }
             $count++;
             $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version;
