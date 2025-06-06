@@ -1,0 +1,1 @@
+{{Package.Raxon.Search:Main:generate.wiki(flags(), options())}}
