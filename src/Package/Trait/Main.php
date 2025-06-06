@@ -332,7 +332,7 @@ trait Main {
         Dir::create($target_wiki_en, Dir::CHMOD);
         $dir = new Dir();
         $read = $dir->read($source);
-        $chunkSize = 8192 * 16; // 128 KB
+        $chunkSize = 8192 * 128; // 1 MB (max page size is 1 MB)
         $counter = 0;
         foreach($read as $nr => $file){
             $handle = fopen($file->url, 'rb');
@@ -345,7 +345,7 @@ trait Main {
                 // Do something with $chunk
                 $data[] = $chunk; // or process/save it
                 $counter++;
-                if($counter > 1024){
+                if($counter > 32){  //32 MB at a time...
                     $string = implode('', $data);
                     $pages = $this->extract_pages($string);
                     $this->store_pages($pages, $target_wiki_en);
