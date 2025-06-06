@@ -406,8 +406,10 @@ trait Main {
             // Get plain text content
             $title = $doc->getElementsByTagName('title')->item(0);
             $text = $doc->getElementsByTagName('text')->item(0);
-            d($title);
-            ddd($text);
+            $title_text = $text->textContent;
+            $plain_text = $text->textContent;
+            d($title_text);
+            ddd($plain_text);
         }
     }
 
