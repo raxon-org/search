@@ -325,15 +325,15 @@ trait Main {
     {
         $object = $this->object();
         Core::interactive();
-
-
         $source = $object->config('project.dir.data') . 'Wiki' . $object->config('ds');
+        $target = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/wiki/en/';
+        File::permission($object, ['target' => $target]);
+        Dir::create($target, Dir::CHMOD);
         $dir = new Dir();
         $read = $dir->read($source);
-        $chunkSize = 8192; // 8 KB
+        $chunkSize = 8192 * 4; // 32 KB
         $counter = 0;
         foreach($read as $nr => $file){
-
             $handle = fopen($file->url, 'rb');
             if ($handle === false) {
                 die("Unable to open file.");
@@ -341,16 +341,16 @@ trait Main {
             $data = [];
             while (!feof($handle)) {
                 $chunk = fread($handle, $chunkSize);
-
                 // Do something with $chunk
                 $data[] = $chunk; // or process/save it
                 $counter++;
                 if($counter > 10){
                     $string = implode('', $data);
                     $pages = $this->extract_pages($string);
-                    $this->store_pages($pages);
+                    $this->store_pages($pages, $target);
                     $data = [];
                     $data[] = $chunk;
+                    $counter = 0;
                     die;
                 }
             }
@@ -395,8 +395,9 @@ trait Main {
         */
     }
 
-    private function store_pages($pages=[]): void
+    private function store_pages($pages=[], $target_dir=''): void
     {
+        $object = $this->object();
         foreach ($pages as $page) {
             $doc = new DOMDocument();
             libxml_use_internal_errors(true);
@@ -406,10 +407,26 @@ trait Main {
             // Get plain text content
             $title = $doc->getElementsByTagName('title')->item(0) ?? null;
             $text = $doc->getElementsByTagName('text')->item(0) ?? null;
-            $title_text = $title->textContent;
-            $plain_text = $text->textContent;
-            d($title_text);
-            ddd($plain_text);
+
+            $target_url = $target_dir . $title . hash('sha256', $text);
+            if($title && $text){
+                $title_text = $title->textContent;
+                $plain_text = $text->textContent;
+                $html = [];
+                $html[] = '<html>';
+                $html[] = '<head>';
+                $html[] = '<title>' . $title_text .'</title>';
+                $html[] = '</head>';
+                $html[] = '<body>';
+                $html[] = '<h1>' . $title_text . '</h1>';
+                $html[] = '<p>' . $plain_text . '</p>';
+                $html[] = '</body>';
+                $html[] = '</html>';
+
+                File::write($target_url, implode(PHP_EOL, $html));
+                File::permission($object, ['url' => $target_url]);
+
+            }
         }
     }
 
