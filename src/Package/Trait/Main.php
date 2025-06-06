@@ -5,12 +5,15 @@ use DOMDocument;
 use DOMXPath;
 use GuzzleHttp;
 use GuzzleHttp\Exception\GuzzleException;
+use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
 
 use Exception;
+use Raxon\Module\Time;
+
 trait Main {
     const VERSION = '1.0.0';
 
@@ -365,6 +368,7 @@ trait Main {
     {
         $object = $this->object();
         Core::interactive();
+        echo 'Initializing...' . PHP_EOL;
         $source = $object->config('project.dir.data') . 'Wiki' . $object->config('ds');
         $target_wiki = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/wiki/';
         $target_wiki_en = $target_wiki . 'en/';
@@ -374,66 +378,35 @@ trait Main {
         $read = $dir->read($source);
         $chunkSize = 8192 * 128; // 1 MB (max page size is 1 MB)
         $counter = 0;
+        $total = 0;
         foreach($read as $nr => $file){
             $handle = fopen($file->url, 'rb');
             if ($handle === false) {
                 die("Unable to open file.");
             }
+            $size = File::size($file->url);
             $data = [];
             while (!feof($handle)) {
                 $chunk = fread($handle, $chunkSize);
                 // Do something with $chunk
                 $data[] = $chunk; // or process/save it
                 $counter++;
-                if($counter > 32){  //32 MB at a time...
+                if($counter >= 32){  //32 MB at a time...
                     $string = implode('', $data);
                     $pages = $this->extract_pages($string);
                     $this->store_pages($pages, $target_wiki_en);
                     $data = [];
-                    $data[] = $chunk;
+                    $data[] = $chunk; //maybe incomplete the last block so we use it again...
                     $counter = 0;
-                    die;
+                    $block_size = $chunkSize * $counter;
+                    $total += $block_size;
+                    $duration = microtime(true) - $object->config('start');
+                    $time_remaining = $duration / $size * ($total - $size);
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . '; Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                 }
             }
             fclose($handle);
         }
-        ddd($read);
-
-
-        /*
-
-
-        if(!property_exists($options, 'source')){
-            $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/php_manual_en/';
-        }
-        if(!property_exists($options, 'version')){
-            $options->version = self::VERSION;
-        }
-        $dir_data = $object->config('controller.dir.data');
-        $dir_search = $dir_data . 'Search' . $object->config('ds');
-        $dir_version = $dir_search . $options->version . $object->config('ds');
-        $source = $dir_version . 'Search' . $object->config('extension.json');
-        $dir = new Dir();
-        $read = $dir->read($options->source);
-        $partition = Core::array_partition($read, 25);
-        $total = count($partition);
-        $count = 0;
-        foreach($partition as $nr => $chunk){
-            $import=[];
-            foreach($chunk as $file){
-                $import[] = '-url[]=https://raxon.local/php_manual_en/' . $file->name;
-            }
-            $count++;
-            $command = Core::binary($object) . ' raxon/search import page ' . implode(' ', $import) . ' -version='. $options->version;
-            $output = shell_exec($command);
-            echo $output . PHP_EOL;
-            $time = microtime(true);
-            $duration = round($time - $object->config('time.start'), 3);
-            $duration_percentage = round($duration / ($count / $total), 3);
-            $duration_left = round($duration_percentage - $duration, 3);
-            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
-        }
-        */
     }
 
     private function store_pages($pages=[], $target_dir=''): void
