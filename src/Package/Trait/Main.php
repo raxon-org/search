@@ -340,7 +340,7 @@ trait Main {
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $dir = new Dir();
         $read = $dir->read($options->source);
-        $partition = Core::array_partition($read, 25);
+        $partition = Core::array_partition($read, 15000);
         $total = count($partition);
         $count = 0;
         foreach($partition as $nr => $chunk){
@@ -354,9 +354,9 @@ trait Main {
             echo $output . PHP_EOL;
             $time = microtime(true);
             $duration = round($time - $object->config('time.start'), 3);
-            $duration_percentage = round($duration / ($count / $total), 3);
+            $duration_percentage = round($duration * ($count / $total), 3);
             $duration_left = round($duration_percentage - $duration, 3);
-            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . Time::format($duration, '', true) . '; total duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
     }
 
@@ -400,7 +400,7 @@ trait Main {
                     $block_size = $chunkSize * $counter;
                     $total += $block_size;
                     $duration = microtime(true) - $object->config('time.start');
-                    $duration_percentage = round($duration / ($block_size / $total), 3);
+                    $duration_percentage = round($duration * ($block_size / $total), 3);
                     $time_remaining = round($duration_percentage - $duration, 3);
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . '; Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                     $counter = 0;
