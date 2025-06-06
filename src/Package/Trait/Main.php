@@ -422,7 +422,7 @@ trait Main {
                 $html[] = '<p>' . $plain_text . '</p>';
                 $html[] = '</body>';
                 $html[] = '</html>';
-                $target_url = $target_dir . str_replace(['/'], ['_'], $title_text) . '_' . hash('sha256', $plain_text) . $object->config('extension.html');
+                $target_url = $target_dir . substr(str_replace(['/'], ['_'], $title_text), 0 , 64) . '_' . hash('sha256', $plain_text) . $object->config('extension.html');
                 File::write($target_url, implode(PHP_EOL, $html));
                 File::permission($object, ['url' => $target_url]);
 
