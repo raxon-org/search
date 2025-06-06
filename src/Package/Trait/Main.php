@@ -397,13 +397,13 @@ trait Main {
                     $this->store_pages($pages, $target_wiki_en);
                     $data = [];
                     $data[] = $chunk; //maybe incomplete the last block so we use it again...
-                    $counter = 0;
                     $block_size = $chunkSize * $counter;
                     $total += $block_size;
                     $duration = microtime(true) - $object->config('start');
                     $duration_percentage = round($duration / ($block_size / $total), 3);
                     $time_remaining = round($duration_percentage - $duration, 3);
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . '; Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
+                    $counter = 0;
                 }
             }
             fclose($handle);
