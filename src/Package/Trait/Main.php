@@ -85,12 +85,17 @@ trait Main {
         $count_url = 0;
         $total_url = count($options->url);
         foreach($options->url as $url){
-            $client = new GuzzleHttp\Client();
-            $res = $client->request('GET', $url, [
-                'verify' => false,  // Disable SSL certificate verification (localhost)
-            ]);
-            $html = $res->getBody();
-
+            try {
+                $client = new GuzzleHttp\Client();
+                $res = $client->request('GET', $url, [
+                    'verify' => false,  // Disable SSL certificate verification (localhost)
+                ]);
+                $html = $res->getBody();
+            }
+            catch(Exception $e){
+                echo (string) $e . PHP_EOL;
+                continue;
+            }
             $doc = new DOMDocument();
             libxml_use_internal_errors(true);
             $doc->loadHTML($html);
