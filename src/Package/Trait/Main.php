@@ -347,9 +347,8 @@ trait Main {
                 $counter++;
                 if($counter > 10){
                     $string = implode('', $data);
-                    $this->handleString($string);
-
-
+                    $pages = $this->extract_pages($string);
+                    $this->store_pages($pages);
                     $data = [];
                     $data[] = $chunk;
                     die;
@@ -396,7 +395,23 @@ trait Main {
         */
     }
 
-    private function handleString($string=''): array
+    private function store_pages($pages=[]): void
+    {
+        foreach ($pages as $page) {
+            $doc = new DOMDocument();
+            libxml_use_internal_errors(true);
+            $doc->loadXML($page);
+            libxml_clear_errors();
+
+            // Get plain text content
+            $title = $doc->getElementsByTagName('title')->item(0);
+            $text = $doc->getElementsByTagName('text')->item(0);
+            d($title);
+            ddd($text);
+        }
+    }
+
+    private function extract_pages($string=''): array
     {
         $pages = [];
         $explode = explode('</page>', $string);
@@ -416,11 +431,10 @@ trait Main {
                     ],
                     $temp[1]
                 ) . PHP_EOL . '</page>';
-                ddd($page);
+                $pages[] = $page;
             }
-            ddd($part);
         }
-        ddd(count($explode));
+        return $pages;
     }
 }
 
