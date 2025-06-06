@@ -354,7 +354,7 @@ trait Main {
             echo $output . PHP_EOL;
             $time = microtime(true);
             $duration = round($time - $object->config('time.start'), 3);
-            $duration_percentage = round($duration * ($count / $total), 3);
+            $duration_percentage = round($duration / ($count / $total), 3);
             $duration_left = round($duration_percentage - $duration, 3);
             echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . Time::format($duration, '', true) . '; total duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
