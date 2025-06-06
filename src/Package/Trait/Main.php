@@ -400,7 +400,7 @@ trait Main {
                     $counter = 0;
                     $block_size = $chunkSize * $counter;
                     $total += $block_size;
-                    $duration = microtime(true) - $object->config('start');
+                    $duration = microtime(true) - $object->config('time.start');
                     $time_remaining = $duration / $size * ($total - $size);
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . '; Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                 }
