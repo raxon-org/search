@@ -338,15 +338,21 @@ trait Main {
             if ($handle === false) {
                 die("Unable to open file.");
             }
-
+            $data = [];
             while (!feof($handle)) {
                 $chunk = fread($handle, $chunkSize);
 
                 // Do something with $chunk
-                echo $chunk; // or process/save it
+                $data[] = $chunk; // or process/save it
                 $counter++;
-                if($counter > 2){
-                    break;
+                if($counter > 10){
+                    $string = implode('', $data);
+                    $this->handleString($string);
+
+
+                    $data = [];
+                    $data[] = $chunk;
+                    die;
                 }
             }
             fclose($handle);
@@ -388,6 +394,13 @@ trait Main {
             echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
         */
+    }
+
+    private function handleString($string=''): array
+    {
+        $pages = [];
+        $explode = explode('</page>', $string);
+        ddd(count($explode));
     }
 }
 
