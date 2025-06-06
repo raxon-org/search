@@ -326,9 +326,10 @@ trait Main {
         $object = $this->object();
         Core::interactive();
         $source = $object->config('project.dir.data') . 'Wiki' . $object->config('ds');
-        $target = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/wiki/en/';
-        File::permission($object, ['target' => $target]);
-        Dir::create($target, Dir::CHMOD);
+        $target_wiki = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/wiki/';
+        $target_wiki_en = $target_wiki . 'en/';
+        File::permission($object, ['target_wiki' => $target_wiki, 'target_wiki_en' => $target_wiki_en]);
+        Dir::create($target_wiki_en, Dir::CHMOD);
         $dir = new Dir();
         $read = $dir->read($source);
         $chunkSize = 8192 * 4; // 32 KB
@@ -347,7 +348,7 @@ trait Main {
                 if($counter > 10){
                     $string = implode('', $data);
                     $pages = $this->extract_pages($string);
-                    $this->store_pages($pages, $target);
+                    $this->store_pages($pages, $target_wiki_en);
                     $data = [];
                     $data[] = $chunk;
                     $counter = 0;
