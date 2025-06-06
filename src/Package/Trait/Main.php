@@ -61,8 +61,8 @@ trait Main {
      */
     public function import_page(object $flags, object $options): void
     {
-        if(!property_exists($options, 'url')){
-            throw new Exception('Option URL not set');
+        if(!property_exists($options, 'url') && !property_exists($options, 'list')){
+            throw new Exception('Option URL/LIST not set');
         }
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
@@ -75,8 +75,12 @@ trait Main {
         Dir::create($dir_version, Dir::CHMOD);
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
-        if(!is_array($options->url)){
-            $options->url = [$options->url];
+        if(property_exists($options, 'list')){
+            $options->url = Core::object(File::read($options->list), Core::ARRAY);
+        } else {
+            if(!is_array($options->url)){
+                $options->url = [$options->url];
+            }
         }
         $count_url = 0;
         $total_url = count($options->url);
@@ -268,7 +272,7 @@ trait Main {
             $duration_percentage = round($duration / ($count_url / $total_url), 3);
             $duration_left = round($duration_percentage - $duration, 3);
             if($count_url % 10 === 0){
-                echo 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . $duration . '; Total Duration: ' . $duration_percentage . '; time left: ' . $duration_left  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . $duration . '; Total Duration: ' . $duration_percentage . '; time left: ' . $duration_left  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
             }
         }
         $data->write($source);
@@ -317,7 +321,7 @@ trait Main {
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count / $total), 3);
             $duration_left = round($duration_percentage - $duration, 3);
-            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
     }
 
@@ -361,8 +365,6 @@ trait Main {
             $url_list = $dir_list . $nr . $object->config('extension.json');
             $data = new Data($list);
             $data->write($url_list);
-            $duration = round(microtime(true) - $object->config('time.start'), 3);
-            die($duration);
             $count++;
             $command = Core::binary($object) . ' raxon/search import page -list=' . $url_list . ' -version='. $options->version;
             $output = shell_exec($command);
@@ -371,7 +373,7 @@ trait Main {
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count / $total), 3);
             $duration_left = round($duration_percentage - $duration, 3);
-            echo 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . Time::format($duration, '', true) . '; total duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . Time::format($duration, '', true) . '; total duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
     }
 
@@ -417,7 +419,7 @@ trait Main {
                     $duration = microtime(true) - $object->config('time.start');
                     $duration_percentage = round($duration * ($block_size / $total), 3);
                     $time_remaining = round($duration_percentage - $duration, 3);
-                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . '; Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ~' . round(($total / $size) * 100, 2) . '%; time elapsed: ' . Time::format(round($duration, 2), '', true) . '; time remaining: ' . Time::format(round($time_remaining, 2), '', true) . ';' . PHP_EOL;
                     $counter = 0;
                 }
             }
