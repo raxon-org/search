@@ -408,7 +408,6 @@ trait Main {
             $title = $doc->getElementsByTagName('title')->item(0) ?? null;
             $text = $doc->getElementsByTagName('text')->item(0) ?? null;
 
-            $target_url = $target_dir . $title . hash('sha256', $text);
             if($title && $text){
                 $title_text = $title->textContent;
                 $plain_text = $text->textContent;
@@ -422,7 +421,7 @@ trait Main {
                 $html[] = '<p>' . $plain_text . '</p>';
                 $html[] = '</body>';
                 $html[] = '</html>';
-
+                $target_url = $target_dir . $title_text . hash('sha256', $plain_text);
                 File::write($target_url, implode(PHP_EOL, $html));
                 File::permission($object, ['url' => $target_url]);
 
