@@ -332,7 +332,7 @@ trait Main {
         Dir::create($target_wiki_en, Dir::CHMOD);
         $dir = new Dir();
         $read = $dir->read($source);
-        $chunkSize = 8192 * 4; // 32 KB
+        $chunkSize = 8192 * 16; // 128 KB
         $counter = 0;
         foreach($read as $nr => $file){
             $handle = fopen($file->url, 'rb');
@@ -345,7 +345,7 @@ trait Main {
                 // Do something with $chunk
                 $data[] = $chunk; // or process/save it
                 $counter++;
-                if($counter > 10){
+                if($counter > 1024){
                     $string = implode('', $data);
                     $pages = $this->extract_pages($string);
                     $this->store_pages($pages, $target_wiki_en);
@@ -422,7 +422,7 @@ trait Main {
                 $html[] = '<p>' . $plain_text . '</p>';
                 $html[] = '</body>';
                 $html[] = '</html>';
-                $target_url = $target_dir . str_replace(['/'], ['_'], $title_text) . hash('sha256', $plain_text) . $object->config('extension.html');
+                $target_url = $target_dir . str_replace(['/'], ['_'], $title_text) . '_' . hash('sha256', $plain_text) . $object->config('extension.html');
                 File::write($target_url, implode(PHP_EOL, $html));
                 File::permission($object, ['url' => $target_url]);
 
