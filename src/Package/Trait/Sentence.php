@@ -44,13 +44,14 @@ trait Sentence {
         }
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
-        $dir_sentence_embedding = $dir_version . 'Sentence' . $object->config('ds') . 'Embedding' . $object->config('ds');
-        $dir_sentence_id = $dir_version . 'Sentence' . $object->config('ds') . 'Id' . $object->config('ds');
+        $dir_sentence = $dir_version . 'Sentence' . $object->config('ds');
+        $dir_sentence_embedding = $dir_sentence . 'Embedding' . $object->config('ds');
+        $dir_sentence_id = $dir_sentence . 'Id' . $object->config('ds');
 //        $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
 //        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
         Dir::create($dir_sentence_embedding, Dir::CHMOD);
         Dir::create($dir_sentence_id, Dir::CHMOD);
-        File::permission($object, ['dir1' => $dir_sentence_embedding, 'dir2' => $dir_sentence_id]);
+        File::permission($object, ['dir1' => $dir_sentence_embedding, 'dir2' => $dir_sentence_id, 'dir3' => $dir_sentence]);
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
         if($data){
