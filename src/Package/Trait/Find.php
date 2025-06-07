@@ -16,11 +16,47 @@ trait Find {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
 
+    public function input(object $flags, object $options): void
+    {
+        if (!property_exists($options, 'input')) {
+            throw new Exception('Option input not set');
+        }
+        if (!property_exists($options, 'type')) {
+            $options->type = 'word';
+        }
+        $object = $this->object();
+        if (!property_exists($options, 'version')) {
+            $options->version = self::VERSION;
+        }
+        if(!property_exists($options, 'limit')){
+            $options->limit = self::LIMIT;
+        }
+        if(!property_exists($options, 'model_dir')){
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+        } else {
+            $dir_version = $options->model_dir;
+            if(substr($dir_version, -1, 1) !== $object->config('ds')){
+                $dir_version .= $object->config('ds');
+            }
+        }
+        $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
+        $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
+        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+
+        if(!is_array($options->input)){
+            $options->input = [ $options->input ];
+        }
+        ddd($options->input);
+
+    }
+
     /**
      * @throws ObjectException
      * @throws Exception
      */
-    public function input(object $flags, object $options): void
+    public function all(object $flags, object $options): void
     {
         $offset = 10;
         if (!property_exists($options, 'input')) {
