@@ -84,7 +84,20 @@ trait Find {
             }
         }
         breakpoint(count($found));
-        d($found);
+        $result = [];
+        foreach($found as $sentence_piece_id => $record){
+            $result[$record['score']][] = $record['object'];
+        }
+        ksort($result, SORT_NATURAL);
+        foreach($result as $score => $list){
+            foreach($list as $nr => $record){
+                echo 'Score: ' . $score . ' ';
+                foreach($record->sentence as $sentence_id){
+                    echo $sentence_id . ' ';
+                }
+                echo PHP_EOL;
+            }
+        }
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = round(($time - $object->config('time.start')) * 1000, 3);
