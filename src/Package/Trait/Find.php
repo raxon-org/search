@@ -49,14 +49,18 @@ trait Find {
             $options->input = [ $options->input ];
         }
         $word_embedding_input = [];
+        $embeddings = [];
         foreach($options->input as $nr => $input){
             $hash = hash('sha256', $input);
             $subdir_word_embedding = $dir_word_embedding . substr($hash, 0, 3) . $object->config('ds');
             $source_word_embedding = $subdir_word_embedding . $hash . $object->config('extension.json');
             if(File::exist($source_word_embedding)){
-                $word_embedding_input[] = $object->data_read($source_word_embedding);
+                $word_embedding = $object->data_read($source_word_embedding);
+                $embeddings[$word_embedding->id] = $word_embedding;
+                $word_embedding_input[] = $word_embedding;
             }
         }
+        d($embeddings);
         ddd($word_embedding_input);
 
     }
