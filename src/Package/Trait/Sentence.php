@@ -85,9 +85,16 @@ trait Sentence {
                     $data_sentence = new Data($sentence);
                     $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
                     $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
+                    Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
                     $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
                     $data_sentence->write($source_sentence_hash);
                     File::write($source_sentence_id, $hash_sentence_text);
+                    File::permission($object, [
+                        'dir_sentence_id_hash'=>$dir_sentence_id_hash,
+                        'dir_sentence_embedding_hash'=>$dir_sentence_embedding_hash,
+                        'source_sentence_id' => $source_sentence_id,
+                        'source_sentence_hash' => $source_sentence_hash
+                    ]);
                     die('check');
                 }
             }
