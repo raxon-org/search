@@ -48,6 +48,7 @@ trait Sentence {
         if($data){
             $sentences = $data->get('sentence');
             foreach($sentences as $nr => $sentence){
+                $count_tokens = 0;
                 foreach($sentence->word as $word_id){
                     $hash_word_id = hash('sha256', $word_id);
                     $dir_word_id_hash = $dir_word_id . substr($hash_word_id, 0, 3) . $object->config('ds');
@@ -62,10 +63,12 @@ trait Sentence {
                         ;
                         if(File::exist($source_word_embedding)){
                             $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
-                            d($data_word);
+                            $sentence->text[] = $data_word->get('word');
+                            $count_tokens += $data_word->get('tokens');
                         }
                     }
                 }
+                $sentence->tokens = $count_tokens;
                 ddd($sentence);
             }
         }
