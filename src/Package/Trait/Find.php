@@ -60,8 +60,12 @@ trait Find {
                 $word_embedding_input[] = $word_embedding;
             }
         }
-        d($embeddings);
-        ddd($word_embedding_input);
+        $data = $object->data_read($source_embedding_sentence_piece);
+        if($data){
+            foreach($data->data() as $sentence_piece){
+                ddd($sentence_piece);
+            }
+        }
 
     }
 
