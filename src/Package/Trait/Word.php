@@ -60,10 +60,13 @@ trait Word {
                         foreach($read_subdir as $file){
                             if($file->type === File::TYPE){
                                 $data_word = $object->data_read($file->url);
-                                $url_word = $dir_word_id . $data_word->get('id');
+                                $hash = hash('sha256', $data_word->get('id'));
+                                $dir_word_id_hash = $dir_word_id . substr($hash, 0, 3); //split in 4096 parts
+                                Dir::create($dir_word_id_hash, Dir::CHMOD);
+                                $url_word = $dir_word_id_hash . $data_word->get('id');
                                 if(!File::exist($url_word)){
                                     File::write($url_word, hash('sha256', $data_word->get('word')));
-                                    File::permission($object, ['url_word' => $url_word]);
+                                    File::permission($object, ['dir_word' => $dir_word_id_hash, 'url_word' => $url_word]);
                                 }
                             }
                         }

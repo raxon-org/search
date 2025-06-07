@@ -40,6 +40,7 @@ trait Sentence {
             }
         }
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
+        $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
 //        $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
 //        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
         $source = $dir_version . 'Search' . $object->config('extension.json');
@@ -48,7 +49,21 @@ trait Sentence {
             $sentences = $data->get('sentence');
             foreach($sentences as $nr => $sentence){
                 foreach($sentence->word as $word_id){
-//                    $source_word = $dir_word_embedding
+                    $source_word_id = $dir_word_id . $word_id;
+                    if(File::exist($source_word_id)){
+                        $hash_word = File::read($source_word_id);
+                        $source_word_embedding = $dir_word_embedding .
+                            substr($hash_word, 0, 3) .
+                            $object->config('ds') .
+                            $hash_word .
+                            $object->config('extension.json')
+                        ;
+                        if(File::exist($source_word_embedding)){
+                            $data_word = $object->data_read($source_word_embedding, hash($source_word_embedding));
+
+                        }
+                    }
+
                 }
                 ddd($sentence);
             }
