@@ -5,6 +5,7 @@ use Error;
 use ErrorException;
 use Exception;
 use Raxon\Config;
+use Raxon\Exception\DirectoryCreateException;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
@@ -19,6 +20,8 @@ trait Sentence {
 
     /**
      * @throws ObjectException
+     * @throws DirectoryCreateException
+     * @throws Exception
      */
     public function extract(object $flags, object $options): void
     {
@@ -41,8 +44,13 @@ trait Sentence {
         }
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
+        $dir_sentence_embedding = $dir_version . 'Sentence' . $object->config('ds') . 'Embedding' . $object->config('ds');
+        $dir_sentence_id = $dir_version . 'Sentence' . $object->config('ds') . 'Id' . $object->config('ds');
 //        $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
 //        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
+        Dir::create($dir_sentence_embedding, Dir::CHMOD);
+        Dir::create($dir_sentence_id, Dir::CHMOD);
+        File::permission($object, ['dir1' => $dir_sentence_embedding, 'dir2' => $dir_sentence_id]);
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
         if($data){
@@ -68,12 +76,22 @@ trait Sentence {
                         }
                     }
                 }
+                $hash_sentence_id = hash('sha256', $sentence->id);
+                $dir_sentence_id_hash = $dir_sentence_id . substr($hash_sentence_id, 0, 3) . $object->config('ds');
                 $sentence->tokens = $count_tokens;
-                ddd($sentence);
+                $source_sentence_id = $dir_sentence_id_hash . $sentence->id;
+                if(!File::exist($source_sentence_id)){
+                    Dir::create($dir_sentence_id_hash, Dir::CHMOD);
+                    $data_sentence = new Data($sentence);
+                    $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
+                    $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
+                    $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
+                    $data_sentence->write($source_sentence_hash);
+                    File::write($source_sentence_id, $hash_sentence_text);
+                    die('check');
+                }
             }
         }
-
-
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = $time - $object->config('time.start');
