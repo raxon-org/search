@@ -56,7 +56,7 @@ trait Find {
             $source_word_embedding = $subdir_word_embedding . $hash . $object->config('extension.json');
             if(File::exist($source_word_embedding)){
                 $word_embedding = $object->data_read($source_word_embedding);
-                $embeddings[$word_embedding->id] = $word_embedding;
+                $embeddings[$word_embedding->get('id')] = $word_embedding;
                 $word_embedding_input[] = $word_embedding;
             }
         }
