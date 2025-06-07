@@ -48,6 +48,13 @@ trait Find {
         if(!is_array($options->input)){
             $options->input = [ $options->input ];
         }
+        foreach($options->input as $nr => $input){
+            $hash = crypt('sha256', $input);
+            $subdir_word_embedding = $dir_word_embedding . substr($hash, 0, 3) . $object->config('ds');
+            $source_word_embedding = $subdir_word_embedding . $hash . $object->config('extension.json');
+            d($source_word_embedding);
+            ddd(File::exist($source_word_embedding));
+        }
         ddd($options->input);
 
     }
