@@ -7,6 +7,7 @@ use Exception;
 use Raxon\Config;
 use Raxon\Exception\DirectoryCreateException;
 use Raxon\Exception\ObjectException;
+use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
@@ -42,6 +43,7 @@ trait Sentence {
                 $dir_version .= $object->config('ds');
             }
         }
+        echo 'Initializing...' . PHP_EOL;
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
         $dir_sentence = $dir_version . 'Sentence' . $object->config('ds');
@@ -56,6 +58,7 @@ trait Sentence {
         $data = $object->data_read($source);
         if($data){
             $sentences = $data->get('sentence');
+            $count = count($sentences);
             foreach($sentences as $nr => $sentence){
                 $count_tokens = 0;
                 foreach($sentence->word as $word_id){
@@ -96,7 +99,12 @@ trait Sentence {
                         'source_sentence_id' => $source_sentence_id,
                         'source_sentence_hash' => $source_sentence_hash
                     ]);
-                    die('check');
+                    $percentage =round((($nr + 1) / $count) * 100, 3);
+                    $time = microtime(true);
+                    $duration = $time - $object->config('time.start');
+                    $duration_percentage = round($duration / (($nr + 1) / $count), 3);
+                    $duration_left = round($duration_percentage - $duration, 3);
+                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . ' %; Duration: ' . Time::format($duration) . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                 }
             }
         }
