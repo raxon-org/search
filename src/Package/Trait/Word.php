@@ -43,6 +43,25 @@ trait Word {
 
         $dir = new Dir();
         $read = $dir->read($dir_word_embedding);
+        if($read){
+            $count = count($read);
+            d('Count:' . $count);
+            foreach($read as $subdir){
+                if($subdir->type === Dir::TYPE){
+                    $read_subdir = $dir->read($subdir->url);
+                    if($read_subdir){
+                        foreach($read_subdir as $file){
+                            if($file->type === File::TYPE){
+                                $data_word = $object->data_read($file->url);
+                                ddd($data_word);
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
         ddd($read);
         if(property_exists($options, 'duration')){
             $time = microtime(true);
