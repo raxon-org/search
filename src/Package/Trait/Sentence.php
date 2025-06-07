@@ -58,7 +58,7 @@ trait Sentence {
         $data = $object->data_read($source);
         if($data){
             $sentences = $data->get('sentence');
-            $count = count($sentences);
+            $count = $data->count('sentence');;
             foreach($sentences as $nr => $sentence){
                 $count_tokens = 0;
                 foreach($sentence->word as $word_id){
