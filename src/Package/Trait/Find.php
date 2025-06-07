@@ -67,7 +67,7 @@ trait Find {
         if($data){
             foreach($data->data('embedding') as $sentence_piece){
                 foreach($word_embedding_input as $word_embedding){
-                    if(in_array($word_embedding->id, $sentence_piece->word, true)){
+                    if(in_array($word_embedding->get('id'), $sentence_piece->word, true)){
                         breakpoint('found');
                         breakpoint($sentence_piece);
                     }
