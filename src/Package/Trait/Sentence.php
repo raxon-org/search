@@ -61,7 +61,7 @@ trait Sentence {
                             $object->config('extension.json')
                         ;
                         if(File::exist($source_word_embedding)){
-                            $data_word = $object->data_read($source_word_embedding, hash($source_word_embedding));
+                            $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
                             d($data_word);
                         }
                     }
