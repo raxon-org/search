@@ -1,0 +1,1 @@
+{{Package.Raxon.Search:Sentence:extract(flags(), options())}}
