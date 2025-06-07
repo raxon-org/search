@@ -5,6 +5,7 @@ use Error;
 use ErrorException;
 use Exception;
 use Raxon\Config;
+use Raxon\Exception\DirectoryCreateException;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
@@ -19,6 +20,8 @@ trait Word {
 
     /**
      * @throws ObjectException
+     * @throws DirectoryCreateException
+     * @throws Exception
      */
     public function extract(object $flags, object $options): void
     {
@@ -40,9 +43,12 @@ trait Word {
             }
         }
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
-
+        $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
+        Dir::create($dir_word_id, Dir::CHMOD);
+        File::permission($object, ['dir_word_id' => $dir_word_id]);
         $dir = new Dir();
         $read = $dir->read($dir_word_embedding);
+        $map = [];
         if($read){
             $count = count($read);
             d('Count:' . $count);
@@ -53,16 +59,15 @@ trait Word {
                         foreach($read_subdir as $file){
                             if($file->type === File::TYPE){
                                 $data_word = $object->data_read($file->url);
-                                ddd($data_word);
+                                $url_word = $dir_word_id . $data_word->get('id');
+                                File::write($url_word, hash('sha256', $data_word->get('word')));
+                                File::permission($object, ['url_word' => $url_word]);
                             }
                         }
                     }
                 }
-
             }
         }
-
-        ddd($read);
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = $time - $object->config('time.start');
