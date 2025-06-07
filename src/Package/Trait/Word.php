@@ -61,7 +61,7 @@ trait Word {
                             if($file->type === File::TYPE){
                                 $data_word = $object->data_read($file->url);
                                 $hash = hash('sha256', $data_word->get('id'));
-                                $dir_word_id_hash = $dir_word_id . substr($hash, 0, 3); //split in 4096 parts
+                                $dir_word_id_hash = $dir_word_id . substr($hash, 0, 3) . $object->config('ds'); //split in 4096 parts
                                 Dir::create($dir_word_id_hash, Dir::CHMOD);
                                 $url_word = $dir_word_id_hash . $data_word->get('id');
                                 if(!File::exist($url_word)){
