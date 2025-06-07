@@ -64,18 +64,25 @@ trait Find {
             }
         }
         $data = $object->data_read($source_embedding_sentence_piece);
+        $found = [];
         if($data){
             foreach($data->data('embedding') as $sentence_piece){
                 foreach($word_embedding_input as $word_embedding){
                     if(in_array($word_embedding->get('id'), $sentence_piece->word, true)){
-                        breakpoint('found');
-                        breakpoint($sentence_piece);
+                        if(!in_array($sentence_piece->id, $found, true)){
+                            $found[$sentence_piece->id] = [
+                                'score' => 1,
+                                'object' => $sentence_piece
+                            ];
+                        } else {
+                            $found[$sentence_piece->id]['score']++;
+                        }
                     }
                 }
-
             }
         }
-
+        breakpoint(count($found));
+        d($found);
     }
 
     /**
