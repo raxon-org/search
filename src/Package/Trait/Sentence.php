@@ -49,7 +49,9 @@ trait Sentence {
             $sentences = $data->get('sentence');
             foreach($sentences as $nr => $sentence){
                 foreach($sentence->word as $word_id){
-                    $source_word_id = $dir_word_id . $word_id;
+                    $hash_word_id = hash('sha256', $word_id);
+                    $dir_word_id_hash = $dir_word_id . substr($hash_word_id, 0, 3) . $object->config('ds');
+                    $source_word_id = $dir_word_id_hash . $word_id;
                     if(File::exist($source_word_id)){
                         $hash_word = File::read($source_word_id);
                         $source_word_embedding = $dir_word_embedding .
@@ -60,10 +62,9 @@ trait Sentence {
                         ;
                         if(File::exist($source_word_embedding)){
                             $data_word = $object->data_read($source_word_embedding, hash($source_word_embedding));
-
+                            d($data_word);
                         }
                     }
-
                 }
                 ddd($sentence);
             }
