@@ -86,7 +86,10 @@ trait Main {
         $total_url = count($options->url);
         foreach($options->url as $url){
             try {
-                $client = new GuzzleHttp\Client();
+                $client = new GuzzleHttp\Client([
+                    'timeout' => 30.0,        // Maximum time in seconds for the entire request
+                    'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
+                ]);
                 $res = $client->request('GET', $url, [
                     'verify' => false,  // Disable SSL certificate verification (localhost)
                 ]);
