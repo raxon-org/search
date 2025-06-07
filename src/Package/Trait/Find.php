@@ -83,7 +83,6 @@ trait Find {
                 }
             }
         }
-        breakpoint(count($found));
         $result = [];
         foreach($found as $sentence_piece_id => $record){
             $result[$record['score']][] = $record['object'];
