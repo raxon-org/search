@@ -100,8 +100,8 @@ trait Find {
         }
         if(property_exists($options, 'duration')){
             $time = microtime(true);
-            $duration = round(($time - $object->config('time.start')) * 1000, 3);
-            echo "Duration: " . Time::format($duration) . PHP_EOL;
+            $duration = $time - $object->config('time.start');
+            echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
         }
     }
 
