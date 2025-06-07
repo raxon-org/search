@@ -16,6 +16,9 @@ trait Find {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
 
+    /**
+     * @throws ObjectException
+     */
     public function input(object $flags, object $options): void
     {
         if (!property_exists($options, 'input')) {
@@ -64,8 +67,10 @@ trait Find {
         if($data){
             foreach($data->data('embedding') as $sentence_piece){
                 foreach($word_embedding_input as $word_embedding){
-                    d($word_embedding);
-                    ddd($sentence_piece);
+                    if(in_array($word_embedding->id, $sentence_piece->word, true)){
+                        breakpoint('found');
+                        breakpoint($sentence_piece);
+                    }
                 }
 
             }
