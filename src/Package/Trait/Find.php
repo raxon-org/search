@@ -88,7 +88,7 @@ trait Find {
         foreach($found as $sentence_piece_id => $record){
             $result[$record['score']][] = $record['object'];
         }
-        ksort($result, SORT_NATURAL);
+        krsort($result, SORT_NATURAL);
         foreach($result as $score => $list){
             foreach($list as $nr => $record){
                 echo 'Score: ' . $score . ' ';
