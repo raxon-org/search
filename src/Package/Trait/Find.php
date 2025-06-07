@@ -11,6 +11,7 @@ use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
 use Raxon\Module\SharedMemory;
+use Raxon\Module\Time;
 
 trait Find {
     const VERSION = '1.0.0';
@@ -84,6 +85,11 @@ trait Find {
         }
         breakpoint(count($found));
         d($found);
+        if(property_exists($options, 'duration')){
+            $time = microtime(true);
+            $duration = round(($time - $object->config('time.start')) * 1000, 3);
+            echo "Duration: " . Time::format($duration) . PHP_EOL;
+        }
     }
 
     /**
