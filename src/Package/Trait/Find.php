@@ -62,7 +62,7 @@ trait Find {
         }
         $data = $object->data_read($source_embedding_sentence_piece);
         if($data){
-            foreach($data->data() as $sentence_piece){
+            foreach($data->data('embedding') as $sentence_piece){
                 ddd($sentence_piece);
             }
         }
