@@ -63,7 +63,11 @@ trait Find {
         $data = $object->data_read($source_embedding_sentence_piece);
         if($data){
             foreach($data->data('embedding') as $sentence_piece){
-                ddd($sentence_piece);
+                foreach($word_embedding_input as $word_embedding){
+                    d($word_embedding);
+                    ddd($sentence_piece);
+                }
+
             }
         }
 
