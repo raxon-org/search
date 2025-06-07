@@ -13,7 +13,7 @@ use Raxon\Module\File;
 use Raxon\Module\SharedMemory;
 use Raxon\Module\Time;
 
-trait Sentence {
+trait Word {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
 
@@ -40,21 +40,10 @@ trait Sentence {
             }
         }
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
-//        $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
-//        $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
-        $source = $dir_version . 'Search' . $object->config('extension.json');
-        $data = $object->data_read($source);
-        if($data){
-            $sentences = $data->get('sentence');
-            foreach($sentences as $nr => $sentence){
-                foreach($sentence->word as $word_id){
-//                    $source_word = $dir_word_embedding
-                }
-                ddd($sentence);
-            }
-        }
 
-
+        $dir = new Dir();
+        $read = $dir->read($dir_word_embedding);
+        ddd($read);
         if(property_exists($options, 'duration')){
             $time = microtime(true);
             $duration = $time - $object->config('time.start');

@@ -1,0 +1,1 @@
+{{Package.Raxon.Search:Word:extract(flags(), options())}}
