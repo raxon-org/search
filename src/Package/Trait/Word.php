@@ -7,6 +7,7 @@ use Exception;
 use Raxon\Config;
 use Raxon\Exception\DirectoryCreateException;
 use Raxon\Exception\ObjectException;
+use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
@@ -42,6 +43,7 @@ trait Word {
                 $dir_version .= $object->config('ds');
             }
         }
+        echo 'Initializing...' . PHP_EOL;
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
         Dir::create($dir_word_id, Dir::CHMOD);
@@ -51,8 +53,7 @@ trait Word {
         $map = [];
         if($read){
             $count = count($read);
-            d('Count:' . $count);
-            foreach($read as $subdir){
+            foreach($read as $nr => $subdir){
                 if($subdir->type === Dir::TYPE){
                     $read_subdir = $dir->read($subdir->url);
                     if($read_subdir){
@@ -60,11 +61,15 @@ trait Word {
                             if($file->type === File::TYPE){
                                 $data_word = $object->data_read($file->url);
                                 $url_word = $dir_word_id . $data_word->get('id');
-                                File::write($url_word, hash('sha256', $data_word->get('word')));
-                                File::permission($object, ['url_word' => $url_word]);
+                                if(!File::exist($url_word)){
+                                    File::write($url_word, hash('sha256', $data_word->get('word')));
+                                    File::permission($object, ['url_word' => $url_word]);
+                                }
                             }
                         }
                     }
+                    $percentage =round((($nr + 1) / $count) * 100, 3);
+                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%' . PHP_EOL;
                 }
             }
         }
