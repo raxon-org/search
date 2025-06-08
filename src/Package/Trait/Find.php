@@ -46,6 +46,8 @@ trait Find {
             }
         }
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
+        $dir_sentence_embedding = $dir_version . 'Sentence' . $object->config('ds') . 'Embedding' . $object->config('ds');
+        $dir_sentence_id = $dir_version . 'Sentence' . $object->config('ds') . 'Id' . $object->config('ds');
         $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
 
@@ -92,6 +94,18 @@ trait Find {
             foreach($list as $nr => $record){
                 echo 'Score: ' . $score . ' ';
                 foreach($record->sentence as $sentence_id){
+                    $hash_id = hash('sha256', $sentence_id);
+                    $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
+                    $source_sentence_id = $subdir_sentence_id . $sentence_id;
+                    if(File::exist($source_sentence_id)){
+                        $hash_embedding = File::read($source_sentence_id);
+                        $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
+                        $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
+                        $data_sentence = $object->data_read($source_sentence_embedding);
+                        ddd($data_sentence);
+                    }
+
+
                     echo $sentence_id . ' ';
                 }
                 echo PHP_EOL;
