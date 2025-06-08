@@ -104,7 +104,7 @@ trait Sentence {
                     $duration = $time - $object->config('time.start');
                     $duration_percentage = round($duration / (($nr + 1) / $count), 3);
                     $duration_left = round($duration_percentage - $duration, 3);
-                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . ' %; Duration: ' . Time::format($duration) . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
+                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                 }
             }
         }
