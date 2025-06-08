@@ -93,6 +93,7 @@ trait Find {
         foreach($result as $score => $list){
             foreach($list as $nr => $record){
                 echo 'Score: ' . $score . ' ';
+                echo PHP_EOL;
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
@@ -102,11 +103,12 @@ trait Find {
                         $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
                         $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
                         $data_sentence = $object->data_read($source_sentence_embedding);
-                        ddd($data_sentence);
+                        if($data_sentence){
+                            $text = implode(' ', $data_sentence->get('text'));
+                        }
+                        echo "\t" . $text . PHP_EOL;
                     }
-
-
-                    echo $sentence_id . ' ';
+//                    echo $sentence_id . ' ';
                 }
                 echo PHP_EOL;
             }
