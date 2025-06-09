@@ -383,9 +383,11 @@ trait Main {
             $data = new Data($list);
             $data->write($url_list);
             $count++;
+            /*
             $command = Core::binary($object) . ' raxon/search import page -list=' . $url_list . ' -version='. $options->version;
             $output = shell_exec($command);
             echo $output . PHP_EOL;
+            */
             $time = microtime(true);
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count / $total), 3);
