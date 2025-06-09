@@ -191,7 +191,10 @@ trait Main {
                     $sentence = (object) [
                         'id' => $id_sentence,
                         'word' => [],
-                        'count' => 1
+                        'count' => 1,
+                        'paragraph' => [
+                            $id_paragraph
+                        ]
                     ];
                     $found = false;
                     foreach($word_line as $word_line_nr => $word){
@@ -224,6 +227,12 @@ trait Main {
                         if($sentence_list_item->word === $sentence->word){
                             $found = true;
                             $sentence->count++;
+                            if(
+                                is_array($sentence->paragraph) &&
+                                !in_array($id_paragraph, $sentence->paragraph)
+                            ){
+                                $sentence->paragraph[] = $id_paragraph;
+                            }
                             $sentence = $sentence_list_item;
                             break;
                         }
