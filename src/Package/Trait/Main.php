@@ -308,7 +308,7 @@ trait Main {
             $duration_percentage = round($duration / ($count_url / $total_url), 3);
             $duration_left = round($duration_percentage - $duration, 3);
             if($count_url % 10 === 0){
-                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . $duration . '; Total Duration: ' . $duration_percentage . '; time left: ' . $duration_left  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . Time::format($duration, '', true) . '; Total Duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
             }
         }
         $data->write($source);
