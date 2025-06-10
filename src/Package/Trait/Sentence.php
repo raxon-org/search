@@ -61,16 +61,22 @@ trait Sentence {
                 foreach($paragraph->sentence as $sentence_id){
                     if(property_exists($sentences, $sentence_id)) {
                         $sentence = $sentences->{$sentence_id};
-                        if (
-                            is_array($sentence->paragraph) &&
-                            !in_array($paragraph->id, $sentence->paragraph)
-                        ) {
-                            $sentence->paragraph[] = $paragraph->id;
-                        }
-                        elseif(!is_array($sentence->paragraph)){
+                        if(property_exists($sentence, 'paragraph')){
+                            if (
+                                is_array($sentence->paragraph) &&
+                                !in_array($paragraph->id, $sentence->paragraph)
+                            ) {
+                                $sentence->paragraph[] = $paragraph->id;
+                            }
+                            elseif(!is_array($sentence->paragraph)){
+                                $sentence->paragraph = [];
+                                $sentence->paragraph[] = $paragraph->id;
+                            }
+                        } else {
                             $sentence->paragraph = [];
                             $sentence->paragraph[] = $paragraph->id;
                         }
+
                     }
                 }
                 $count++;
