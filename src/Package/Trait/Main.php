@@ -67,13 +67,22 @@ trait Main {
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
-        Core::interactive();
         $object = $this->object();
-        $dir_data = $object->config('controller.dir.data');
-        $dir_search = $dir_data . 'Search' . $object->config('ds');
-        $dir_version = $dir_search . $options->version . $object->config('ds');
-        Dir::create($dir_version, Dir::CHMOD);
-        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $dir_search = false;
+        if(!property_exists($options, 'model_dir')){
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+            Dir::create($dir_version, Dir::CHMOD);
+            $source = $dir_version . 'Search' . $object->config('extension.json');
+        } else {
+            if(substr($options->model_dir, -1) !== $object->config('ds')){
+                $options->model_dir .= $object->config('ds');
+            }
+            Dir::create($options->model_dir, Dir::CHMOD);
+            $source = $options->model_dir . 'Search' . $object->config('extension.json');
+        }
+        Core::interactive();
         $data = $object->data_read($source);
         if(property_exists($options, 'list')){
             $options->url = Core::object(File::read($options->list), Core::ARRAY);
@@ -259,6 +268,9 @@ trait Main {
                     $paragraph_list->{$id_paragraph} = (object) [
                         'id' => $id_paragraph,
                         'sentence' => $sentence_paragraph_list,
+                        'document' => [
+                            $id_document
+                        ],
                         'count' => 1
                     ];
                     $document->paragraph[] = $id_paragraph;
@@ -266,6 +278,10 @@ trait Main {
                     $id_paragraph++;
                 } else {
                     $document->paragraph[] = $paragraph->id;
+                    $paragraph->count++;
+                    if(!in_array($id_document, $paragraph->document)){
+                        $paragraph->document[] = $id_document;
+                    }
                 }
             }
             if($is_put !== false){
@@ -293,12 +309,20 @@ trait Main {
             }
         }
         $data->write($source);
-        File::permission($object, [
-            'dir_data' => $dir_data,
-            'dir_version' => $dir_version,
-            'dir_search' => $dir_search,
-            'source' => $source
-        ]);
+        if($dir_search){
+            File::permission($object, [
+                'dir_data' => $dir_data,
+                'dir_version' => $dir_version,
+                'dir_search' => $dir_search,
+                'source' => $source
+            ]);
+        } else {
+            File::permission($object, [
+                'dir_model' => $options->model_dir,
+                'source' => $source
+            ]);
+        }
+
         echo 'File written: ' . $source . PHP_EOL;
     }
 
