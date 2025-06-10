@@ -106,6 +106,14 @@ trait Sentence {
         if(!property_exists($options, 'limit')){
             $options->limit = self::LIMIT;
         }
+        $patch = false;
+        if(property_exists($options, 'patch')){
+            $patch = $options->patch;
+        }
+        $force = false;
+        if(property_exists($options, 'force')){
+            $force = $options->force;
+        }
         if(!property_exists($options, 'model_dir')){
             $dir_data = $object->config('controller.dir.data');
             $dir_search = $dir_data . 'Search' . $object->config('ds');
@@ -157,7 +165,11 @@ trait Sentence {
                 $dir_sentence_id_hash = $dir_sentence_id . substr($hash_sentence_id, 0, 3) . $object->config('ds');
                 $sentence->tokens = $count_tokens;
                 $source_sentence_id = $dir_sentence_id_hash . $sentence->id;
-                if(!File::exist($source_sentence_id)){
+                if(
+                    !File::exist($source_sentence_id) ||
+                    $patch === true ||
+                    $force === true
+                ){
                     Dir::create($dir_sentence_id_hash, Dir::CHMOD);
                     $data_sentence = new Data($sentence);
                     $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
