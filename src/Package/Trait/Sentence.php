@@ -43,7 +43,8 @@ trait Sentence {
         $data = $object->data_read($source);
         if($data){
             $paragraphs = $data->get('paragraph');
-            ddd(count($paragraphs));
+            $count = $data->count('paragraph');
+            ddd($count);
         }
     }
 
