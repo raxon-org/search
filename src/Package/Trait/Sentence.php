@@ -79,6 +79,7 @@ trait Sentence {
                     echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round($percentage * 100) . '%' . PHP_EOL;
                 }
             }
+            $data->set('paragraph', $paragraphs);
             $data->set('sentence', $sentences);
             $data->write($source);
         }
