@@ -92,6 +92,7 @@ trait Main {
             }
         }
         $count_url = 0;
+        ddd($options->url);
         $total_url = count($options->url);
         foreach($options->url as $url){
             try {
