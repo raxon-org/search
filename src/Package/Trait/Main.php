@@ -362,7 +362,7 @@ trait Main {
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count / $total), 3);
             $duration_left = round($duration_percentage - $duration, 3);
-            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . $duration . '; total duration: ' . $duration_percentage . '; time left: ' . $duration_left  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . Time::format($duration ,'', true) . '; total duration: ' . time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
     }
 
