@@ -45,13 +45,19 @@ trait Sentence {
             $documents = $data->get('document');
             $paragraph_document = [];
             foreach($documents as $document){
-                ddd($document);
+                foreach($document->paragraph as $paragraph_id){
+                    if(!array_key_exists($paragraph_id, $paragraph_document)){
+                        $paragraph_document[$paragraph_id] = [];
+                    }
+                    $paragraph_document[$paragraph_id][] = $document->id;
+                }
             }
             $paragraphs = $data->get('paragraph');
             $sentences = $data->get('sentence');
             $amount = $data->count('paragraph');
             $count = 0;
             foreach($paragraphs as $paragraph){
+                $paragraph->document = $paragraph_document[$paragraph->id] ?? [];
                 foreach($paragraph->sentence as $sentence_id){
                     if(property_exists($sentences, $sentence_id)) {
                         $sentence = $sentences->{$sentence_id};
