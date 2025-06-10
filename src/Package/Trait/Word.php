@@ -18,6 +18,7 @@ use Raxon\Module\Time;
 trait Word {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
+    const THRESHOLD = 3; //minimum of count 3 words to keep the word
 
     /**
      * @throws ObjectException
@@ -32,6 +33,9 @@ trait Word {
         }
         if(!property_exists($options, 'limit')){
             $options->limit = self::LIMIT;
+        }
+        if(!property_exists($options, 'threshold')){
+            $options->limit = self::THRESHOLD;
         }
         if(!property_exists($options, 'model_dir')){
             $dir_data = $object->config('controller.dir.data');
@@ -48,13 +52,21 @@ trait Word {
         $data = $object->data_read($source);
         if($data){
             $words = $data->get('word');
+            $count = 0;
+            foreach($words as $id => $word){
+                if($word->count >= $options->threshold){
+                    $count++;
+                } else {
+                    unset($words->id);
+                }
+                if($count % 10 === 0){
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Keeping: ' . $count . ' words...' . PHP_EOL;
+                }
+            }
+            $data->set('word', $words);
+            $data->write($source);
+            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Keeping: ' . $count . ' words...' . PHP_EOL;
         }
-        foreach($words as $id => $word){
-            d($id);
-            ddd($word);
-        }
-
-
     }
 
 
