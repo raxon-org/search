@@ -86,13 +86,15 @@ trait Main {
         $data = $object->data_read($source);
         if(property_exists($options, 'list')){
             $options->url = Core::object(File::read($options->list), Core::ARRAY);
+            if(!is_array($options->url)){
+                $options->url = [$options->url];
+            }
         } else {
             if(!is_array($options->url)){
                 $options->url = [$options->url];
             }
         }
         $count_url = 0;
-        ddd($options->url);
         $total_url = count($options->url);
         foreach($options->url as $url){
             try {
