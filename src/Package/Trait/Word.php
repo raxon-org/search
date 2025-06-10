@@ -24,6 +24,45 @@ trait Word {
      * @throws DirectoryCreateException
      * @throws Exception
      */
+    public function cleanup(object $flags, object $options): void
+    {
+        $object = $this->object();
+        if (!property_exists($options, 'version')) {
+            $options->version = self::VERSION;
+        }
+        if(!property_exists($options, 'limit')){
+            $options->limit = self::LIMIT;
+        }
+        if(!property_exists($options, 'model_dir')){
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+        } else {
+            $dir_version = $options->model_dir;
+            if(substr($dir_version, -1, 1) !== $object->config('ds')){
+                $dir_version .= $object->config('ds');
+            }
+        }
+        echo 'Initializing...' . PHP_EOL;
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        if($data){
+            $words = $data->get('word');
+        }
+        foreach($words as $id => $word){
+            d($id);
+            ddd($word);
+        }
+
+
+    }
+
+
+    /**
+     * @throws ObjectException
+     * @throws DirectoryCreateException
+     * @throws Exception
+     */
     public function extract(object $flags, object $options): void
     {
         $object = $this->object();

@@ -1,0 +1,1 @@
+{{Package.Raxon.Search:Word:cleanup(flags(), options())}}
