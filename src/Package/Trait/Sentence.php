@@ -44,6 +44,9 @@ trait Sentence {
         if($data){
             $paragraphs = $data->get('paragraph');
             $count = $data->count('paragraph');
+            foreach($paragraphs as $paragraph){
+                ddd($paragraph);
+            }
             ddd($count);
         }
     }
