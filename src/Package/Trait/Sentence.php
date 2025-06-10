@@ -42,12 +42,38 @@ trait Sentence {
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
         if($data){
-            $paragraphs = $data->get('paragraph');
-            $count = $data->count('paragraph');
-            foreach($paragraphs as $paragraph){
-                ddd($paragraph);
+            $documents = $data->get('document');
+            foreach($documents as $document){
+                ddd($document);
             }
-            ddd($count);
+            $paragraphs = $data->get('paragraph');
+            $sentences = $data->get('sentence');
+            $amount = $data->count('paragraph');
+            $count = 0;
+            foreach($paragraphs as $paragraph){
+                foreach($paragraph->sentence as $sentence_id){
+                    if(property_exists($sentences, $sentence_id)) {
+                        $sentence = $sentences->{$sentence_id};
+                        if (
+                            is_array($sentence->paragraph) &&
+                            !in_array($paragraph->id, $sentence->paragraph)
+                        ) {
+                            $sentence->paragraph[] = $paragraph->id;
+                        }
+                        elseif(!is_array($sentence->paragraph)){
+                            $sentence->paragraph = [];
+                            $sentence->paragraph[] = $paragraph->id;
+                        }
+                    }
+                }
+                $count++;
+                $percentage = ($count / $amount);
+                if($count % 10 === 0){
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round($percentage * 100) . '%' . PHP_EOL;
+                }
+            }
+            $data->set('sentence', $sentences);
+            $data->write($source);
         }
     }
 
