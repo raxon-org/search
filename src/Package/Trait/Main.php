@@ -389,7 +389,7 @@ trait Main {
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $dir = new Dir();
         $read = $dir->read($options->source);
-        $partition = Core::array_partition($read, 1000); // (100 * 1 GB ? )
+        $partition = Core::array_partition($read, 500); // (100 * 1 GB ? )
         $total = count($partition);
         $count = 0;
         foreach($partition as $nr => $chunk){
