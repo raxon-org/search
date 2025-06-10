@@ -171,7 +171,6 @@ trait Sentence {
                     $force === true
                 ){
                     Dir::create($dir_sentence_id_hash, Dir::CHMOD);
-                    ddd($sentence);
                     $data_sentence = new Data($sentence);
                     $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
                     $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
