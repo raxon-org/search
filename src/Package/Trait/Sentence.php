@@ -43,6 +43,7 @@ trait Sentence {
         $data = $object->data_read($source);
         if($data){
             $documents = $data->get('document');
+            $paragraph_document = [];
             foreach($documents as $document){
                 ddd($document);
             }
