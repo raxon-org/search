@@ -19,6 +19,35 @@ trait Sentence {
     const VERSION = '1.0.0';
     const LIMIT = 10000;
 
+    public function fix(object $flags, object $options): void
+    {
+        $object = $this->object();
+        if (!property_exists($options, 'version')) {
+            $options->version = self::VERSION;
+        }
+        if (!property_exists($options, 'limit')) {
+            $options->limit = self::LIMIT;
+        }
+        if (!property_exists($options, 'model_dir')) {
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+        } else {
+            $dir_version = $options->model_dir;
+            if (substr($dir_version, -1, 1) !== $object->config('ds')) {
+                $dir_version .= $object->config('ds');
+            }
+        }
+        echo 'Initializing...' . PHP_EOL;
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $data = $object->data_read($source);
+        if($data){
+            $paragraphs = $data->get('paragraph');
+            ddd(count($paragraphs));
+        }
+    }
+
+
     /**
      * @throws ObjectException
      * @throws DirectoryCreateException
