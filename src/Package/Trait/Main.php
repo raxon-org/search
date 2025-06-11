@@ -394,6 +394,7 @@ trait Main {
     public function import_wiki(object $flags, object $options): void
     {
         $object = $this->object();
+        echo 'Initializing...' . PHP_EOL;
         Core::interactive();
         if(!property_exists($options, 'source')){
             $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/wiki/en/';
