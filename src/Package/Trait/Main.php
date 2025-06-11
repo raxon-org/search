@@ -101,16 +101,26 @@ trait Main {
             'timeout' => 30.0,        // Maximum time in seconds for the entire request
             'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
         ]);
-        foreach($partition as $chunk_nr => $chunk){
+        foreach($partition as $partition_nr => $chunk){
+            /*
             $promises = [
                 '0' => $client->getAsync($chunk[0]),
                 '1' => $client->getAsync($chunk[1]),
                 '2' => $client->getAsync($chunk[2]),
                 '3' => $client->getAsync($chunk[3])
             ];
-            $responses = GuzzleHttp\Promise\Utils::unwrap($promises);
-            $responses = GuzzleHttp\Promise\Utils::settle($promises)->wait();
-            ddd($responses);
+            */
+            foreach($chunk as $chunk_nr => $url){
+                $promise = $client->requestAsync('GET', $url, [
+                    'verify' => false
+                ]);
+                $promise->then(function ($response) {
+                    echo 'Got a response! ' . $response->getStatusCode();
+                    $html = $response->getBody();
+                    ddd($html);
+                });
+            }
+            die('endtest');
         }
         foreach($options->url as $url){
 
