@@ -117,7 +117,7 @@ trait Main {
                     array_key_exists('value', $response) &&
                     $response['state'] === 'fulfilled'
                 ){
-                    $html = $response['value']->getBody();
+                    $html = (string) $response['value']->getBody();
                     d($html);
                 }
             }
