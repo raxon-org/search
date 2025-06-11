@@ -102,7 +102,7 @@ trait Main {
             'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
         ]);
         foreach($partition as $partition_nr => $chunk){
-
+            d($chunk);
             $promises = [
                 '0' => $client->requestAsync('GET', $chunk[0], ['verify' => false]),
                 '1' => $client->requestAsync('GET', $chunk[1], ['verify' => false]),
