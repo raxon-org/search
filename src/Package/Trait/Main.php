@@ -97,8 +97,20 @@ trait Main {
         $count_url = 0;
         $total_url = count($options->url);
         $partition = array_chunk($options->url, 4);
+        $client = new GuzzleHttp\Client([
+            'timeout' => 30.0,        // Maximum time in seconds for the entire request
+            'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
+        ]);
         foreach($partition as $chunk_nr => $chunk){
-            ddd($chunk);
+            $promises = [
+                '0' => $client->getAsync($chunk[0]),
+                '1' => $client->getAsync($chunk[1]),
+                '2' => $client->getAsync($chunk[2]),
+                '3' => $client->getAsync($chunk[3])
+            ];
+            $responses = GuzzleHttp\Promise\Utils::unwrap($promises);
+            $responses = GuzzleHttp\Promise\Utils::settle($promises)->wait();
+            ddd($responses);
         }
         foreach($options->url as $url){
 
