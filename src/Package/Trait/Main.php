@@ -83,6 +83,7 @@ trait Main {
             $source = $options->model_dir . 'Search' . $object->config('extension.json');
         }
         Core::interactive();
+        echo 'Initializing...' . PHP_EOL;
         $data = $object->data_read($source);
         if(property_exists($options, 'list')){
             $options->url = Core::object(File::read($options->list), Core::ARRAY);
@@ -101,6 +102,8 @@ trait Main {
             'timeout' => 30.0,        // Maximum time in seconds for the entire request
             'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
         ]);
+        $doc = new DOMDocument();
+        libxml_use_internal_errors(true);
         foreach($partition as $partition_nr => $chunk){
             d($chunk);
             $promises = [
@@ -119,238 +122,204 @@ trait Main {
                 ){
                     $html = (string) $response['value']->getBody();
                     d($html);
-                }
-            }
-            ddd($responses);
-        }
-        foreach($options->url as $url){
+                    $doc->loadHTML($html);
+                    libxml_clear_errors();
 
-/*
-            $promises = [
-                'image' => $client->getAsync('/image'),
-                'png'   => $client->getAsync('/image/png'),
-                'jpeg'  => $client->getAsync('/image/jpeg'),
-                'webp'  => $client->getAsync('/image/webp')
-            ];
-
-// Wait for the requests to complete; throws a ConnectException
-// if any of the requests fail
-            $responses = Promise\Utils::unwrap($promises);
-*/
-
-            try {
-                $client = new GuzzleHttp\Client([
-                    'timeout' => 30.0,        // Maximum time in seconds for the entire request
-                    'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
-                ]);
-                $res = $client->request('GET', $url, [
-                    'verify' => false,  // Disable SSL certificate verification (localhost)
-                ]);
-                $html = $res->getBody();
-            }
-            catch(Exception $e){
-                echo (string) $e . PHP_EOL;
-                continue;
-            }
-            $doc = new DOMDocument();
-            libxml_use_internal_errors(true);
-            $doc->loadHTML($html);
-            libxml_clear_errors();
-
-            // Get plain text content
-            $body = $doc->getElementsByTagName('body')->item(0);
-            $plain_text = $body->textContent;
-            $plain_text = str_replace(
-                [
-                    "\r\n",
-                    "\n\r",
-                    "\r",
-                ],
-                [
-                    "\n",
-                    "\n",
-                    "\n",
-                ],
-                $plain_text
-            );
-            $list = explode(PHP_EOL, $plain_text);
-            $paragraph_nr = 0;
-            $paragraph = [];
-            foreach($list as $nr => $line){
-                $line = trim($line);
-                if (empty($line)) {
-                    $paragraph_nr++;
-                    continue;
-                }
-                if(!array_key_exists($paragraph_nr, $paragraph)){
-                    $paragraph[$paragraph_nr] = [];
-                }
-                $paragraph[$paragraph_nr][] = $line;
-            }
-            $paragraph = array_values($paragraph);
-            if($data){
-                $document_list = $data->get('document') ?? (object) [];
-                $id_document = $data->get('id.document') ?? 0;
-                $id_document++;
-                $count_document = $data->get('count.document') ?? 0;
-                $paragraph_list = $data->get('paragraph') ?? [];
-                $id_paragraph = $data->get('id.paragraph') ?? 0;
-                $id_paragraph++;
-                $count_paragraph = $data->get('count.paragraph') ?? 0;
-                $word_list = $data->get('word') ?? (object) [];
-                $id_word = $data->get('id.word') ?? 0;
-                $id_word++;
-                $count_word = $data->get('count.word') ?? 0;
-                $sentence_list = $data->get('sentence') ?? (object) [];
-                $id_sentence = $data->get('id.sentence') ?? 0;
-                $id_sentence++;
-                $count_sentence = $data->get('count.sentence') ?? 0;
-            } else {
-                $document_list = (object) [];
-                $id_document = 1;
-                $count_document = 0;
-                $paragraph_list = (object) [];
-                $id_paragraph = 1;
-                $count_paragraph = 0;
-                $word_list = (object) [];
-                $id_word = 1;
-                $count_word = 0;
-                $sentence_list = (object) [];
-                $id_sentence = 1;
-                $count_sentence = 0;
-                $data = new Data();
-            }
-            $document_list_nr = null;
-            $is_put = false;
-            if($document_list){
-                foreach($document_list as $document_list_nr => $document_list_item){
-                    if($document_list_item->url === $url){
-                        $id_document = $document_list_item->id;
-                        $is_put = $document_list_nr;
-                        break;
-                    }
-                }
-            }
-            $document = (object) [
-                'id' => $id_document,
-                'url' => $url,
-                'paragraph' => [],
-                'date' => date('Y-m-d H:i:s'),
-            ];
-            foreach($paragraph as $paragraph_nr => $lines){
-                $sentence_paragraph_list = [];
-                foreach($lines as $line){
-                    $word_line = explode(' ', $line);
-                    $sentence = (object) [
-                        'id' => $id_sentence,
-                        'word' => [],
-                        'count' => 1,
-                        'paragraph' => [
-                            $id_paragraph
-                        ]
-                    ];
-                    $found = false;
-                    foreach($word_line as $word_line_nr => $word){
-                        if($word === ''){
+                    // Get plain text content
+                    $body = $doc->getElementsByTagName('body')->item(0);
+                    $plain_text = $body->textContent;
+                    $plain_text = str_replace(
+                        [
+                            "\r\n",
+                            "\n\r",
+                            "\r",
+                        ],
+                        [
+                            "\n",
+                            "\n",
+                            "\n",
+                        ],
+                        $plain_text
+                    );
+                    $list = explode(PHP_EOL, $plain_text);
+                    $paragraph_nr = 0;
+                    $paragraph = [];
+                    foreach($list as $nr => $line){
+                        $line = trim($line);
+                        if (empty($line)) {
+                            $paragraph_nr++;
                             continue;
                         }
-                        $found = false;
-                        $count_word++;
-                        foreach($word_list as $word_list_nr => $word_list_item){
-                            if($word_list_item->word === $word){
-                                $word_list_item->count++;
-                                $found = true;
-                                $sentence->word[] = $word_list_item->id;
+                        if(!array_key_exists($paragraph_nr, $paragraph)){
+                            $paragraph[$paragraph_nr] = [];
+                        }
+                        $paragraph[$paragraph_nr][] = $line;
+                    }
+                    $paragraph = array_values($paragraph);
+                    if($data){
+                        $document_list = $data->get('document') ?? (object) [];
+                        $id_document = $data->get('id.document') ?? 0;
+                        $id_document++;
+                        $count_document = $data->get('count.document') ?? 0;
+                        $paragraph_list = $data->get('paragraph') ?? [];
+                        $id_paragraph = $data->get('id.paragraph') ?? 0;
+                        $id_paragraph++;
+                        $count_paragraph = $data->get('count.paragraph') ?? 0;
+                        $word_list = $data->get('word') ?? (object) [];
+                        $id_word = $data->get('id.word') ?? 0;
+                        $id_word++;
+                        $count_word = $data->get('count.word') ?? 0;
+                        $sentence_list = $data->get('sentence') ?? (object) [];
+                        $id_sentence = $data->get('id.sentence') ?? 0;
+                        $id_sentence++;
+                        $count_sentence = $data->get('count.sentence') ?? 0;
+                    } else {
+                        $document_list = (object) [];
+                        $id_document = 1;
+                        $count_document = 0;
+                        $paragraph_list = (object) [];
+                        $id_paragraph = 1;
+                        $count_paragraph = 0;
+                        $word_list = (object) [];
+                        $id_word = 1;
+                        $count_word = 0;
+                        $sentence_list = (object) [];
+                        $id_sentence = 1;
+                        $count_sentence = 0;
+                        $data = new Data();
+                    }
+                    $document_list_nr = null;
+                    $is_put = false;
+                    if($document_list){
+                        foreach($document_list as $document_list_nr => $document_list_item){
+                            if($document_list_item->url === $url){
+                                $id_document = $document_list_item->id;
+                                $is_put = $document_list_nr;
                                 break;
                             }
                         }
+                    }
+                    $document = (object) [
+                        'id' => $id_document,
+                        'url' => $url,
+                        'paragraph' => [],
+                        'date' => date('Y-m-d H:i:s'),
+                    ];
+                    foreach($paragraph as $paragraph_nr => $lines){
+                        $sentence_paragraph_list = [];
+                        foreach($lines as $line){
+                            $word_line = explode(' ', $line);
+                            $sentence = (object) [
+                                'id' => $id_sentence,
+                                'word' => [],
+                                'count' => 1,
+                                'paragraph' => [
+                                    $id_paragraph
+                                ]
+                            ];
+                            $found = false;
+                            foreach($word_line as $word_line_nr => $word){
+                                if($word === ''){
+                                    continue;
+                                }
+                                $found = false;
+                                $count_word++;
+                                foreach($word_list as $word_list_nr => $word_list_item){
+                                    if($word_list_item->word === $word){
+                                        $word_list_item->count++;
+                                        $found = true;
+                                        $sentence->word[] = $word_list_item->id;
+                                        break;
+                                    }
+                                }
+                                if(!$found){
+                                    $word_list->{$id_word} = (object) [
+                                        'id' => $id_word,
+                                        'word' => $word,
+                                        'count' => 1
+                                    ];
+                                    $sentence->word[] = $id_word;
+                                    $data->set('id.word', $id_word);
+                                    $id_word++;
+                                }
+                            }
+                            $found = false;
+                            foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
+                                if($sentence_list_item->word === $sentence->word){
+                                    $found = true;
+                                    $sentence->count++;
+                                    if(
+                                        is_array($sentence->paragraph) &&
+                                        !in_array($id_paragraph, $sentence->paragraph)
+                                    ){
+                                        $sentence->paragraph[] = $id_paragraph;
+                                    }
+                                    $sentence = $sentence_list_item;
+                                    break;
+                                }
+                            }
+                            if(!$found){
+                                $sentence_list->{$sentence->id} = $sentence;
+                                $data->set('id.sentence', $id_sentence);
+                                $id_sentence++;
+                            }
+                            $sentence_paragraph_list[] = $sentence->id;
+                            $count_sentence++;
+                        }
+                        $found = false;
+                        foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
+                            if($paragraph_list_item->sentence === $sentence_paragraph_list){
+                                $found = true;
+                                $paragraph_list_item->count++;
+                                $paragraph = $paragraph_list_item;
+                                break;
+                            }
+                        }
+                        $count_paragraph++;
                         if(!$found){
-                            $word_list->{$id_word} = (object) [
-                                'id' => $id_word,
-                                'word' => $word,
+                            $paragraph_list->{$id_paragraph} = (object) [
+                                'id' => $id_paragraph,
+                                'sentence' => $sentence_paragraph_list,
+                                'document' => [
+                                    $id_document
+                                ],
                                 'count' => 1
                             ];
-                            $sentence->word[] = $id_word;
-                            $data->set('id.word', $id_word);
-                            $id_word++;
-                        }
-                    }
-                    $found = false;
-                    foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
-                        if($sentence_list_item->word === $sentence->word){
-                            $found = true;
-                            $sentence->count++;
-                            if(
-                                is_array($sentence->paragraph) &&
-                                !in_array($id_paragraph, $sentence->paragraph)
-                            ){
-                                $sentence->paragraph[] = $id_paragraph;
+                            $document->paragraph[] = $id_paragraph;
+                            $data->set('id.paragraph', $id_paragraph);
+                            $id_paragraph++;
+                        } else {
+                            $document->paragraph[] = $paragraph->id;
+                            $paragraph->count++;
+                            if(!in_array($id_document, $paragraph->document)){
+                                $paragraph->document[] = $id_document;
                             }
-                            $sentence = $sentence_list_item;
-                            break;
                         }
                     }
-                    if(!$found){
-                        $sentence_list->{$sentence->id} = $sentence;
-                        $data->set('id.sentence', $id_sentence);
-                        $id_sentence++;
+                    if($is_put !== false){
+                        $document_list->{$document->id} = $document;
+                    } else {
+                        $document_list->{$document->id} = $document;
+                        $count_document++;
                     }
-                    $sentence_paragraph_list[] = $sentence->id;
-                    $count_sentence++;
-                }
-                $found = false;
-                foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
-                    if($paragraph_list_item->sentence === $sentence_paragraph_list){
-                        $found = true;
-                        $paragraph_list_item->count++;
-                        $paragraph = $paragraph_list_item;
-                        break;
-                    }
-                }
-                $count_paragraph++;
-                if(!$found){
-                    $paragraph_list->{$id_paragraph} = (object) [
-                        'id' => $id_paragraph,
-                        'sentence' => $sentence_paragraph_list,
-                        'document' => [
-                            $id_document
-                        ],
-                        'count' => 1
-                    ];
-                    $document->paragraph[] = $id_paragraph;
-                    $data->set('id.paragraph', $id_paragraph);
-                    $id_paragraph++;
-                } else {
-                    $document->paragraph[] = $paragraph->id;
-                    $paragraph->count++;
-                    if(!in_array($id_document, $paragraph->document)){
-                        $paragraph->document[] = $id_document;
-                    }
+                    $data->set('paragraph', $paragraph_list);
+                    $data->set('sentence', $sentence_list);
+                    $data->set('word', $word_list);
+                    $data->set('document', $document_list);
+                    $data->set('id.document', $id_document);
+                    $data->set('count.document', $count_document);
+                    $data->set('count.paragraph', $count_paragraph);
+                    $data->set('count.sentence', $count_sentence);
+                    $data->set('count.word', $count_word);
+                    $count_url++;
+                    $time = microtime(true);
+                    $duration = round($time - $object->config('time.start'), 3);
+                    $duration_percentage = round($duration / ($count_url / $total_url), 3);
+                    $duration_left = round($duration_percentage - $duration, 3);
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . Time::format($duration, '', true) . '; Total Duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                 }
             }
-            if($is_put !== false){
-                $document_list->{$document->id} = $document;
-            } else {
-                $document_list->{$document->id} = $document;
-                $count_document++;
-            }
-            $data->set('paragraph', $paragraph_list);
-            $data->set('sentence', $sentence_list);
-            $data->set('word', $word_list);
-            $data->set('document', $document_list);
-            $data->set('id.document', $id_document);
-            $data->set('count.document', $count_document);
-            $data->set('count.paragraph', $count_paragraph);
-            $data->set('count.sentence', $count_sentence);
-            $data->set('count.word', $count_word);
-            $count_url++;
-            $time = microtime(true);
-            $duration = round($time - $object->config('time.start'), 3);
-            $duration_percentage = round($duration / ($count_url / $total_url), 3);
-            $duration_left = round($duration_percentage - $duration, 3);
-            if($count_url % 10 === 0){
-                echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . Time::format($duration, '', true) . '; Total Duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
-            }
+            ddd($responses);
         }
         $data->write($source);
         if($dir_search){
