@@ -96,7 +96,25 @@ trait Main {
         }
         $count_url = 0;
         $total_url = count($options->url);
+        $partition = array_chunk($options->url, 4);
+        foreach($partition as $chunk_nr => $chunk){
+            ddd($chunk);
+        }
         foreach($options->url as $url){
+
+/*
+            $promises = [
+                'image' => $client->getAsync('/image'),
+                'png'   => $client->getAsync('/image/png'),
+                'jpeg'  => $client->getAsync('/image/jpeg'),
+                'webp'  => $client->getAsync('/image/webp')
+            ];
+
+// Wait for the requests to complete; throws a ConnectException
+// if any of the requests fail
+            $responses = Promise\Utils::unwrap($promises);
+*/
+
             try {
                 $client = new GuzzleHttp\Client([
                     'timeout' => 30.0,        // Maximum time in seconds for the entire request
