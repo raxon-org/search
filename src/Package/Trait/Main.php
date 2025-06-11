@@ -111,6 +111,16 @@ trait Main {
             ];
             $responses = GuzzleHttp\Promise\Utils::unwrap($promises);
             $responses = GuzzleHttp\Promise\Utils::settle($promises)->wait();
+            foreach($responses as $response){
+                if(
+                    array_key_exists('state', $response) &&
+                    array_key_exists('value', $response) &&
+                    $response['state'] === 'fulfilled'
+                ){
+                    $html = $response['value']->getBody();
+                    d($html);
+                }
+            }
             ddd($responses);
         }
         foreach($options->url as $url){
