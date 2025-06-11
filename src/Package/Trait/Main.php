@@ -69,6 +69,8 @@ trait Main {
         }
         $object = $this->object();
         $dir_search = false;
+        $dir_data = false;
+        $dir_version = false;
         if(!property_exists($options, 'model_dir')){
             $dir_data = $object->config('controller.dir.data');
             $dir_search = $dir_data . 'Search' . $object->config('ds');
@@ -114,7 +116,7 @@ trait Main {
             ];
             $responses = GuzzleHttp\Promise\Utils::unwrap($promises);
             $responses = GuzzleHttp\Promise\Utils::settle($promises)->wait();
-            foreach($responses as $response){
+            foreach($responses as $response_nr => $response){
                 if(
                     array_key_exists('state', $response) &&
                     array_key_exists('value', $response) &&
@@ -201,7 +203,7 @@ trait Main {
                     }
                     $document = (object) [
                         'id' => $id_document,
-                        'url' => $url,
+                        'url' => $chunk[$response_nr],
                         'paragraph' => [],
                         'date' => date('Y-m-d H:i:s'),
                     ];
