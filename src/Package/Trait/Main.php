@@ -406,6 +406,9 @@ trait Main {
             ;
         } else {
             $dir_list = $options->target;
+            if(substr($dir_list, -1) !== $object->config('ds')){
+                $dir_list .= $object->config('ds');
+            }
             Dir::create($dir_list, Dir::CHMOD);
             File::permission($object, ['dir_list' => $dir_list]);
         }
