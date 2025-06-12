@@ -123,7 +123,6 @@ trait Main {
                     $response['state'] === 'fulfilled'
                 ){
                     $html = (string) $response['value']->getBody();
-                    d($html);
                     $doc->loadHTML($html);
                     libxml_clear_errors();
 
@@ -143,6 +142,7 @@ trait Main {
                         ],
                         $plain_text
                     );
+                    d($plain_text);
                     $list = explode(PHP_EOL, $plain_text);
                     $paragraph_nr = 0;
                     $paragraph = [];
