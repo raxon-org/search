@@ -1,6 +1,7 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
+use Composer\Advisory\PartialSecurityAdvisory;
 use DOMDocument;
 use DOMXPath;
 use GuzzleHttp;
@@ -105,9 +106,9 @@ trait Main {
             'connect_timeout' => 10.0, // Maximum time in seconds to establish a connection
         ]);
         $doc = new DOMDocument();
+        $error = 0;
         libxml_use_internal_errors(true);
         foreach($partition as $partition_nr => $chunk){
-            d($chunk);
             $promises = [
                 '0' => $client->requestAsync('GET', $chunk[0], ['verify' => false]),
                 '1' => $client->requestAsync('GET', $chunk[1], ['verify' => false]),
@@ -142,7 +143,6 @@ trait Main {
                         ],
                         $plain_text
                     );
-                    d($plain_text);
                     $list = explode(PHP_EOL, $plain_text);
                     $paragraph_nr = 0;
                     $paragraph = [];
@@ -318,10 +318,11 @@ trait Main {
                     $duration = round($time - $object->config('time.start'), 3);
                     $duration_percentage = round($duration / ($count_url / $total_url), 3);
                     $duration_left = round($duration_percentage - $duration, 3);
-                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '% Duration: ' . Time::format($duration, '', true) . '; Total Duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                    echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count_url / $total_url) * 100, 2) . '%; Error: ' . $error . '; Duration: ' . Time::format($duration, '', true) . '; Total Duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . ' memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                } else {
+                    $error++;
                 }
             }
-            ddd($responses);
         }
         $data->write($source);
         if($dir_search){
@@ -337,7 +338,6 @@ trait Main {
                 'source' => $source
             ]);
         }
-
         echo 'File written: ' . $source . PHP_EOL;
     }
 
