@@ -396,6 +396,20 @@ trait Main {
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
+        if(!property_exists($options, 'target')){
+            $dir_list =
+                $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Search' .
+                $object->config('ds')
+            ;
+        } else {
+            $dir_list = $options->target;
+            Dir::create($dir_list, Dir::CHMOD);
+            File::permission($object, ['dir_list' => $dir_list]);
+        }
+
         $dir_data = $object->config('controller.dir.data');
         $dir_search = $dir_data . 'Search' . $object->config('ds');
         $dir_version = $dir_search . $options->version . $object->config('ds');
@@ -412,16 +426,10 @@ trait Main {
                 $list[] = 'https://raxon.local/wiki/en/' . $file->name;
 //                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
             }
-            $dir_list =
-                $object->config('ramdisk.url') .
-                $object->config(Config::POSIX_ID) .
-                $object->config('ds') .
-                'Search' .
-                $object->config('ds')
-            ;
             $url_list = $dir_list . $nr . $object->config('extension.json');
             $data = new Data($list);
             $data->write($url_list);
+            File::permission($object, ['url_list' => $url_list]);
             $count++;
             /*
             $command = Core::binary($object) . ' raxon/search import page -list=' . $url_list . ' -version='. $options->version;
