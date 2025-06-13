@@ -25,12 +25,17 @@ trait Embedding {
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
-        $dir_data = $object->config('controller.dir.data');
-        $dir_search = $dir_data . 'Search' . $object->config('ds');
-        $dir_version = $dir_search . $options->version . $object->config('ds');
-
+        if(!property_exists($options, 'model_dir')){
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+        } else {
+            $dir_version = $options->model_dir;
+            if(substr($dir_version, -1, 1) !== $object->config('ds')){
+                $dir_version .= $object->config('ds');
+            }
+        }
         Dir::create($dir_version, Dir::CHMOD);
-
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
 //        $source_float = $dir_version . 'Search.Float' . $object->config('extension.json');
