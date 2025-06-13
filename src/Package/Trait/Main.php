@@ -456,8 +456,7 @@ trait Main {
                 continue;
             }
         }
-        ddd(count($read));
-        $partition = Core::array_partition($read, 50); // (100 * 1 GB ? )
+        $partition = Core::array_partition($read, 4); // (100 * 1 GB ? )
         $total = count($partition);
         $count = 0;
         foreach($partition as $nr => $chunk){
