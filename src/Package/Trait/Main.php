@@ -463,7 +463,8 @@ trait Main {
             $import=[];
             $list = [];
             foreach($chunk as $file){
-                $list[] = 'https://raxon.local/wiki/en/' . $file->name;
+                ddd($file);
+                $list[] = 'https://raxon.local/doxygen/' . $file->name;
 //                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
             }
             $url_list = $dir_list . $nr . $object->config('extension.json');
