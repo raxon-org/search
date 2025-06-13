@@ -129,7 +129,7 @@ trait Main {
                 '2' => $client->requestAsync('GET', $chunk[2], ['verify' => false]),
                 '3' => $client->requestAsync('GET', $chunk[3], ['verify' => false])
             ];
-            */s
+            */
             $responses = GuzzleHttp\Promise\Utils::unwrap($promises);
             $responses = GuzzleHttp\Promise\Utils::settle($promises)->wait();
             foreach($responses as $response_nr => $response){
