@@ -467,20 +467,12 @@ trait Main {
                 if(array_key_exists(1, $temp)){
                     $list[] = 'https://raxon.local/' . $temp[1];
                 }
-                ddd($list);
-
-//                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
             }
             $url_list = $dir_list . $nr . $object->config('extension.json');
             $data = new Data($list);
             $data->write($url_list);
             File::permission($object, ['url_list' => $url_list]);
             $count++;
-            /*
-            $command = Core::binary($object) . ' raxon/search import page -list=' . $url_list . ' -version='. $options->version;
-            $output = shell_exec($command);
-            echo $output . PHP_EOL;
-            */
             $time = microtime(true);
             $duration = round($time - $object->config('time.start'), 3);
             $duration_percentage = round($duration / ($count / $total), 3);
