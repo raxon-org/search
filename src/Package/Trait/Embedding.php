@@ -9,6 +9,7 @@ use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
 use Raxon\Module\Sort;
+use Raxon\Module\Time;
 
 trait Embedding {
 
@@ -21,7 +22,7 @@ trait Embedding {
     public function word(object $flags, object $options): void
     {
         $object = $this->object();
-
+        echo 'Initializing...' . PHP_EOL;
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
@@ -147,9 +148,9 @@ trait Embedding {
                     if($count_words > 0){
                         $duration_percentage = round($duration / ($count / $count_words), 3);
                         $duration_left = round($duration_percentage - $duration, 3);
-                        echo 'Percentage: ' . round((($count / $count_words) * 100), 2) . '; Duration: ' . $duration . '; Total duration: ' . $duration_percentage . '; TIme left: ' . $duration_left . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                        echo 'Percentage: ' . round((($count / $count_words) * 100), 2) . '; Duration: ' . Time::format($duration , '', true). '; Total duration: ' . Time::format($duration_percentage, '', true) . '; Time left: ' . Time::format($duration_left, '', true) . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                     } else {
-                        echo 'Percentage: ' . round($count / 1, 2) . '; Duration: ' . $duration . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
+                        echo 'Percentage: ' . round($count / 1, 2) . '; Duration: ' . Time::format($duration, '', true) . '; Memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
                     }
 
                 }
