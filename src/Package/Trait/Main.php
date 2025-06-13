@@ -109,12 +109,27 @@ trait Main {
         $error = 0;
         libxml_use_internal_errors(true);
         foreach($partition as $partition_nr => $chunk){
+            $promises = [];
+            if(array_key_exists(0, $chunk)){
+                $promises[0] = $client->requestAsync('GET', $chunk[0], ['verify' => false]);
+            }
+            if(array_key_exists(1, $chunk)){
+                $promises[1] = $client->requestAsync('GET', $chunk[1], ['verify' => false]);
+            }
+            if(array_key_exists(2, $chunk)){
+                $promises[2] = $client->requestAsync('GET', $chunk[2], ['verify' => false]);
+            }
+            if(array_key_exists(3, $chunk)){
+                $promises[3] = $client->requestAsync('GET', $chunk[3], ['verify' => false]);
+            }
+            /*
             $promises = [
                 '0' => $client->requestAsync('GET', $chunk[0], ['verify' => false]),
                 '1' => $client->requestAsync('GET', $chunk[1], ['verify' => false]),
                 '2' => $client->requestAsync('GET', $chunk[2], ['verify' => false]),
                 '3' => $client->requestAsync('GET', $chunk[3], ['verify' => false])
             ];
+            */s
             $responses = GuzzleHttp\Promise\Utils::unwrap($promises);
             $responses = GuzzleHttp\Promise\Utils::settle($promises)->wait();
             foreach($responses as $response_nr => $response){
