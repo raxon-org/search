@@ -678,6 +678,9 @@ trait Embedding {
     {
         $model = $options->model ?? 'nomic-embed-text';
 
+        if(mb_strlen($text) > 2048){
+            return new Data();
+        }
         /*
         $ch = curl_init();
         // Set the URL of the localhost
