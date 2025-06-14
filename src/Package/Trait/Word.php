@@ -84,6 +84,8 @@ trait Word {
         if(!property_exists($options, 'limit')){
             $options->limit = self::LIMIT;
         }
+        $dir_data = false;
+        $dir_search = false;
         if(!property_exists($options, 'model_dir')){
             $dir_data = $object->config('controller.dir.data');
             $dir_search = $dir_data . 'Search' . $object->config('ds');
