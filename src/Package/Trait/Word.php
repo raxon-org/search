@@ -97,8 +97,26 @@ trait Word {
             }
         }
         echo 'Initializing...' . PHP_EOL;
+        $source_embedding = $dir_version . 'Search.Embedding.Word' . $object->config('extension.json');
+        $data_embedding = $object->data_read($source_embedding);
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
+        if($data_embedding){
+            foreach($data_embedding->get('embedding') as $word_embedding){
+                $word_hash = hash('sha256', $word_embedding->word);
+                $dir_word_embedding_subdir = $dir_word_embedding . substr($word_hash, 0, 3) . $object->config('ds');
+                $url_word_embedding = $dir_word_embedding_subdir . $word_hash . $object->config('extension.json');
+                d($dir_word_embedding_subdir);
+                d($word_embedding);
+                ddd($url_word_embedding);
+            }
+        }
+        ddd('end');
+
+
+
+
+
         Dir::create($dir_word_id, Dir::CHMOD);
         File::permission($object, ['dir_word_id' => $dir_word_id]);
         $dir = new Dir();
