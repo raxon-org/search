@@ -26,6 +26,8 @@ trait Embedding {
         if(!property_exists($options, 'version')){
             $options->version = self::VERSION;
         }
+        $dir_data = false;
+        $dir_search = false;
         if(!property_exists($options, 'model_dir')){
             $dir_data = $object->config('controller.dir.data');
             $dir_search = $dir_data . 'Search' . $object->config('ds');
