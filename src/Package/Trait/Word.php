@@ -102,21 +102,46 @@ trait Word {
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
         if($data_embedding){
+            $nr = 0;
+            $count = $data_embedding->count('embedding');
             foreach($data_embedding->get('embedding') as $word_embedding){
                 $word_hash = hash('sha256', $word_embedding->word);
-                $dir_word_embedding_subdir = $dir_word_embedding . substr($word_hash, 0, 3) . $object->config('ds');
+                $dir_word_embedding_subdir = $dir_word_embedding . substr($word_hash, 0, 3) . $object->config('ds'); //split in 4096 parts
                 $url_word_embedding = $dir_word_embedding_subdir . $word_hash . $object->config('extension.json');
-                d($dir_word_embedding_subdir);
-                d($word_embedding);
-                ddd($url_word_embedding);
+                if(!Dir::is($dir_word_embedding_subdir)){
+                    Dir::create($dir_word_embedding_subdir, Dir::CHMOD);
+                    File::permission($object, ['dir_word_embedding' => $dir_word_embedding, 'dir_word_embedding_subdir' => $dir_word_embedding_subdir]);
+                }
+                if(!File::exist($url_word_embedding)){
+                    File::write($url_word_embedding, Core::object($word_embedding, Core::JSON_LINE));
+                    File::permission($object, ['url' => $url_word_embedding]);
+                }
+                $hash = hash('sha256', $word_embedding->id);
+                $dir_word_id_hash = $dir_word_id . substr($hash, 0, 3) . $object->config('ds'); //split in 4096 parts
+                if(!Dir::is($dir_word_id_hash)){
+                    Dir::create($dir_word_id_hash, Dir::CHMOD);
+                    File::permission($object, ['dir_word' => $dir_word_id_hash]);
+                }
+                $url_word = $dir_word_id_hash . $word_embedding->id;
+                if(!File::exist($url_word)){
+                    File::write($url_word, $word_hash);
+                    File::permission($object, ['url_word' => $url_word]);
+                }
+                $percentage =round((($nr + 1) / $count) * 100, 3);
+                echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%' . PHP_EOL;
+                $nr++;
             }
         }
-        ddd('end');
+        if(property_exists($options, 'duration')){
+            $time = microtime(true);
+            $duration = $time - $object->config('time.start');
+            echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
+        }
 
 
 
 
-
+        /*
         Dir::create($dir_word_id, Dir::CHMOD);
         File::permission($object, ['dir_word_id' => $dir_word_id]);
         $dir = new Dir();
@@ -152,6 +177,7 @@ trait Word {
             $duration = $time - $object->config('time.start');
             echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
         }
+        */
     }
 }
 
