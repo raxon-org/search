@@ -154,11 +154,6 @@ trait Raxon {
         $html[] = '</body>';
         $html[] = '</html>';
         File::write($target, implode(PHP_EOL, $html));
-
-
-        d($file->url);
-        breakpoint($target);
-        ddd($read);
     }
 
     /**
