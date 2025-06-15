@@ -105,6 +105,7 @@ trait Find {
                         $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
                         $data_sentence = $object->data_read($source_sentence_embedding);
                         if($data_sentence){
+                            ddd($data_sentence);
                             $text = implode(' ', $data_sentence->get('text'));
                         }
                         echo "\t" . $text . PHP_EOL;
