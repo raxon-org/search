@@ -260,6 +260,7 @@ trait Main {
                                     $id_word++;
                                 }
                             }
+                            /* sentences are unique per paragraph, otherways we cannot search on it...
                             $found = false;
                             foreach($sentence_list as $sentence_list_nr => $sentence_list_item){
                                 if($sentence_list_item->word === $sentence->word){
@@ -275,14 +276,20 @@ trait Main {
                                     break;
                                 }
                             }
+
                             if(!$found){
                                 $sentence_list->{$sentence->id} = $sentence;
                                 $data->set('id.sentence', $id_sentence);
                                 $id_sentence++;
                             }
+                            */
+                            $sentence_list->{$sentence->id} = $sentence;
+                            $data->set('id.sentence', $id_sentence);
+                            $id_sentence++;
                             $sentence_paragraph_list[] = $sentence->id;
                             $count_sentence++;
                         }
+                        /*
                         $found = false;
                         foreach($paragraph_list as $paragraph_list_nr => $paragraph_list_item){
                             if($paragraph_list_item->sentence === $sentence_paragraph_list){
@@ -312,6 +319,19 @@ trait Main {
                                 $paragraph->document[] = $id_document;
                             }
                         }
+                        */
+                        $count_paragraph++;
+                        $paragraph_list->{$id_paragraph} = (object) [
+                            'id' => $id_paragraph,
+                            'sentence' => $sentence_paragraph_list,
+                            'document' => [
+                                $id_document
+                            ],
+                            'count' => 1
+                        ];
+                        $document->paragraph[] = $id_paragraph;
+                        $data->set('id.paragraph', $id_paragraph);
+                        $id_paragraph++;
                     }
                     if($is_put !== false){
                         $document_list->{$document->id} = $document;
