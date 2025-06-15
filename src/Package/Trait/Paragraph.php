@@ -95,7 +95,7 @@ trait Paragraph {
                 $hash_paragraph_id = hash('sha256', $paragraph->id);
                 $dir_paragraph_id_hash = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
 //                $sentence->tokens = $count_tokens;
-                $source_paragraph_id = $dir_paragraph_id_hash . $paragraph->id;
+                $source_paragraph_id = $dir_paragraph_id_hash . $paragraph->id . $object->config('extension.json');;
                 if(
                     !File::exist($source_paragraph_id) ||
                     $patch === true ||

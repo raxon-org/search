@@ -49,6 +49,7 @@ trait Find {
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_sentence_embedding = $dir_version . 'Sentence' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $dir_sentence_id = $dir_version . 'Sentence' . $object->config('ds') . 'Id' . $object->config('ds');
+        $dir_paragraph_id = $dir_version . 'Paragraph' . $object->config('ds') . 'Id' . $object->config('ds');
         $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
 
@@ -121,8 +122,12 @@ trait Find {
                     }
 //                    echo $sentence_id . ' ';
                 }
-                echo 'Paragraphs: ' . implode(' ', $result_paragraphs) . PHP_EOL;
-
+                echo 'Paragraphs ids: ' . implode(' ', $result_paragraphs) . PHP_EOL;
+                $random_paragraph = array_rand($result_paragraphs);
+                echo 'Random paragraph id: ' . $random_paragraph . PHP_EOL;
+                $hash_paragraph_id = hash('sha256', $random_paragraph);
+                $subdir_paragraph_id = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
+                $source_paragraph_id = $subdir_paragraph_id . $hash_paragraph_id . $object->config('extension.json');
 
 
                 echo PHP_EOL;
