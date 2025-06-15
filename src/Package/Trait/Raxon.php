@@ -135,7 +135,7 @@ trait Raxon {
         */
     }
 
-    private function create_page(object $file, array $options=[]){
+    private function create_page_html(object $file, array $options=[]){
         $read = File::read($file->url);
         breakpoint($options);
         ddd($read);
