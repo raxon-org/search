@@ -238,6 +238,7 @@ trait Embedding {
         */
         $words = $data->get('word') ?? [];
         if(!$words){
+            throw new Exception('Could not read words...');
             return;
         }
         $word_list_embedding = [];
@@ -246,6 +247,7 @@ trait Embedding {
         }
         $embeddings_word = $data_embedding_word->get('embedding') ?? [];
         if(!$embeddings_word){
+            throw new Exception('No word embeddings...');
             return;
         }
         $embeddings = $data_embedding_sentence_piece->get('embedding') ?? (object) [];
