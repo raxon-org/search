@@ -150,7 +150,7 @@ trait Raxon {
         $html[] = '</head>';
         $html[] = '<body>';
         $html[] = '<h1>' . $file->url . '</h1>';
-        $html[] = '<pre>' . $read . '</pre>';
+        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
         $html[] = '</body>';
         $html[] = '</html>';
         File::write($target, implode(PHP_EOL, $html));
