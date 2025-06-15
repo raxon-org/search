@@ -140,7 +140,8 @@ trait Sentence {
         if($data){
             $sentences = $data->get('sentence');
             $count = $data->count('sentence');;
-            foreach($sentences as $nr => $sentence){
+            $nr = 0;
+            foreach($sentences as $sentence_id => $sentence){
                 $count_tokens = 0;
                 foreach($sentence->word as $word_id){
                     $hash_word_id = hash('sha256', $word_id);
@@ -176,7 +177,9 @@ trait Sentence {
                     $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
                     Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
                     $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
-                    $data_sentence->write($source_sentence_hash);
+                    if(!File::exist($source_sentence_hash)){
+                        $data_sentence->write($source_sentence_hash);
+                    }
                     File::write($source_sentence_id, $hash_sentence_text);
                     File::permission($object, [
                         'dir_sentence_id_hash'=>$dir_sentence_id_hash,
@@ -184,20 +187,24 @@ trait Sentence {
                         'source_sentence_id' => $source_sentence_id,
                         'source_sentence_hash' => $source_sentence_hash
                     ]);
-                    $percentage =round((($nr + 1) / $count) * 100, 3);
-                    $time = microtime(true);
-                    $duration = $time - $object->config('time.start');
-                    $duration_percentage = round($duration / (($nr + 1) / $count), 3);
-                    $duration_left = round($duration_percentage - $duration, 3);
-                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
+                    if($nr % 10 === 0){
+                        $percentage =round((($nr + 1) / $count) * 100, 3);
+                        $time = microtime(true);
+                        $duration = $time - $object->config('time.start');
+                        $duration_percentage = round($duration / (($nr + 1) / $count), 3);
+                        $duration_left = round($duration_percentage - $duration, 3);
+                        echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
+                    }
+                    $nr++;
                 }
             }
         }
-        if(property_exists($options, 'duration')){
-            $time = microtime(true);
-            $duration = $time - $object->config('time.start');
-            echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
-        }
+        $percentage =round((($nr + 1) / $count) * 100, 3);
+        $time = microtime(true);
+        $duration = $time - $object->config('time.start');
+        $duration_percentage = round($duration / (($nr + 1) / $count), 3);
+        $duration_left = round($duration_percentage - $duration, 3);
+        echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
     }
 }
 
