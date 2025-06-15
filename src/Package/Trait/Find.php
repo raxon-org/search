@@ -19,6 +19,7 @@ trait Find {
 
     /**
      * @throws ObjectException
+     * @throws Exception
      */
     public function input(object $flags, object $options): void
     {
@@ -94,8 +95,6 @@ trait Find {
             foreach($list as $nr => $record){
                 echo 'Score: ' . $score . ' ';
                 echo PHP_EOL;
-                d($record->sentence ?? null);
-                /*
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
@@ -109,11 +108,12 @@ trait Find {
                             $text = implode(' ', $data_sentence->get('text'));
                         }
                         echo "\t" . $text . PHP_EOL;
+                    } else {
+                        throw new Exception('sentence file: ' . $source_sentence_id);
                     }
 //                    echo $sentence_id . ' ';
                 }
                 echo PHP_EOL;
-                */
             }
         }
         if(property_exists($options, 'duration')){
