@@ -128,7 +128,11 @@ trait Word {
                     File::permission($object, ['url_word' => $url_word]);
                 }
                 $percentage =round((($nr + 1) / $count) * 100, 3);
-                echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%' . PHP_EOL;
+                $time = microtime(true);
+                $duration = $time - $object->config('time.start');
+                $duration_percentage = round($duration / (($nr + 1) / $count), 3);
+                $duration_left = round($duration_percentage - $duration, 3);
+                echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                 $nr++;
             }
         }
