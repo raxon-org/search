@@ -96,6 +96,9 @@ trait Find {
                 echo 'Score: ' . $score . ' ';
                 echo PHP_EOL;
                 $result_paragraphs = [];
+                if(!property_exists($record, 'paragraph')){
+                    ddd($record);
+                }
                 foreach($record->paragraph as $record_paragraph){
                     if(!in_array($record_paragraph, $result_paragraphs, true)){
                         $result_paragraphs[] = $record_paragraph;
