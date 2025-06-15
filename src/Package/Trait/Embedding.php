@@ -388,7 +388,6 @@ trait Embedding {
                     }
                 }
                 */
-                ddd($embedding);
                 if(!property_exists($embeddings, $embedding->id)){
                     $embeddings->{$embedding->id} = $embedding;
                     $data->set('id.embedding.sentence_piece', $id_embedding);
