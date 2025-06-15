@@ -161,66 +161,71 @@ trait Raxon {
         ddd($read);
     }
 
-
-    private function store_pages($pages=[], $target_dir=''): void
+    /**
+     * @throws Exception
+     * @throws GuzzleException
+     */
+    public function import(object $flags, object $options): void
     {
         $object = $this->object();
-        foreach ($pages as $page) {
-            $doc = new DOMDocument();
-            libxml_use_internal_errors(true);
-            $doc->loadXML($page);
-            libxml_clear_errors();
-
-            // Get plain text content
-            $title = $doc->getElementsByTagName('title')->item(0) ?? null;
-            $text = $doc->getElementsByTagName('text')->item(0) ?? null;
-
-            if($title && $text){
-                $title_text = $title->textContent;
-                $plain_text = $text->textContent;
-                $html = [];
-                $html[] = '<html>';
-                $html[] = '<head>';
-                $html[] = '<title>' . $title_text .'</title>';
-                $html[] = '</head>';
-                $html[] = '<body>';
-                $html[] = '<h1>' . $title_text . '</h1>';
-                $html[] = '<p>' . $plain_text . '</p>';
-                $html[] = '</body>';
-                $html[] = '</html>';
-                $target_url = $target_dir . hash('sha256', $plain_text) . $object->config('extension.html');
-                if(!File::exist($target_url)){
-                    File::write($target_url, implode(PHP_EOL, $html));
-                    File::permission($object, ['url' => $target_url]);
-                }
+        echo 'Initializing...' . PHP_EOL;
+        Core::interactive();
+        if(!property_exists($options, 'source')){
+            $options->source = $object->config('project.dir.domain') . 'Www.Raxon.Org/Public/Source/';
+        }
+        if(!property_exists($options, 'version')){
+            $options->version = self::VERSION;
+        }
+        if(!property_exists($options, 'target')){
+            $dir_list =
+                $object->config('ramdisk.url') .
+                $object->config(Config::POSIX_ID) .
+                $object->config('ds') .
+                'Search' .
+                $object->config('ds')
+            ;
+        } else {
+            $dir_list = $options->target;
+            if(substr($dir_list, -1) !== $object->config('ds')){
+                $dir_list .= $object->config('ds');
             }
+            Dir::create($dir_list, Dir::CHMOD);
+            File::permission($object, ['dir_list' => $dir_list]);
+        }
+
+        $dir_data = $object->config('controller.dir.data');
+        $dir_search = $dir_data . 'Search' . $object->config('ds');
+        $dir_version = $dir_search . $options->version . $object->config('ds');
+        $source = $dir_version . 'Search' . $object->config('extension.json');
+        $dir = new Dir();
+        $read = $dir->read($options->source);
+        $partition = Core::array_partition($read, 500); // (100 * 1 GB ? )
+        $total = count($partition);
+        $count = 0;
+        foreach($partition as $nr => $chunk){
+            $import=[];
+            $list = [];
+            foreach($chunk as $file){
+                $list[] = 'https://raxon.local/Source/' . $file->name;
+//                $import[] = '-url[]=https://raxon.local/wiki/en/' . $file->name;
+            }
+            $url_list = $dir_list . $nr . $object->config('extension.json');
+            $data = new Data($list);
+            $data->write($url_list);
+            File::permission($object, ['url_list' => $url_list]);
+            $count++;
+            /*
+            $command = Core::binary($object) . ' raxon/search import page -list=' . $url_list . ' -version='. $options->version;
+            $output = shell_exec($command);
+            echo $output . PHP_EOL;
+            */
+            $time = microtime(true);
+            $duration = round($time - $object->config('time.start'), 3);
+            $duration_percentage = round($duration / ($count / $total), 3);
+            $duration_left = round($duration_percentage - $duration, 3);
+            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round(($count / $total) * 100, 2) . '% duration: ' . Time::format($duration, '', true) . '; total duration: ' . Time::format($duration_percentage, '', true) . '; time left: ' . Time::format($duration_left, '', true)  . '; memory: ' . File::size_format(memory_get_peak_usage(true)) . PHP_EOL;
         }
     }
 
-    private function extract_pages($string=''): array
-    {
-        $pages = [];
-        $explode = explode('</page>', $string);
-        foreach($explode as $nr => $part){
-            $temp = explode('<page>', $part, 2);
-            if(array_key_exists(1, $temp)){
-                $page = '<page>' . str_replace(
-                    [
-                        "\r\n",
-                        "\n\r",
-                        "\r",
-                    ],
-                    [
-                        "\n",
-                        "\n",
-                        "\n"
-                    ],
-                    $temp[1]
-                ) . PHP_EOL . '</page>';
-                $pages[] = $page;
-            }
-        }
-        return $pages;
-    }
 }
 
