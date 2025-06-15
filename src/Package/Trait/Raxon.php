@@ -136,9 +136,14 @@ trait Raxon {
     }
 
     private function create_page_html(object $file, array $options=[]){
+        $object = $this->object();
         $read = File::read($file->url);
+        $hash = hash('sha256', $file->url);
+        $target = $options['target'] . $hash . $object->config('extension.html');
+
+
         d($file->url);
-        breakpoint($options);
+        breakpoint($target);
         ddd($read);
     }
 
