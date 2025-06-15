@@ -99,12 +99,6 @@ trait Find {
                 if(!property_exists($record, 'paragraph')){
                     ddd($record);
                 }
-                foreach($record->paragraph as $record_paragraph){
-                    if(!in_array($record_paragraph, $result_paragraphs, true)){
-                        $result_paragraphs[] = $record_paragraph;
-                    }
-                }
-                echo 'Paragraphs: ' . implode(' ', $result_paragraphs) . PHP_EOL;
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
@@ -120,11 +114,17 @@ trait Find {
                             ddd($data_sentence);
                         }
                         echo "\t" . $text . PHP_EOL;
+                        foreach($data_sentence->get('paragraph') as $record_paragraph){
+                            if(!in_array($record_paragraph, $result_paragraphs, true)){
+                                $result_paragraphs[] = $record_paragraph;
+                            }
+                        }
                     } else {
                         throw new Exception('sentence file: ' . $source_sentence_id);
                     }
 //                    echo $sentence_id . ' ';
                 }
+                echo 'Paragraphs: ' . implode(' ', $result_paragraphs) . PHP_EOL;
                 echo PHP_EOL;
             }
         }
