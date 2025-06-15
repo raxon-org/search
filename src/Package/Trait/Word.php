@@ -138,52 +138,12 @@ trait Word {
                 $nr++;
             }
         }
-        if(property_exists($options, 'duration')){
-            $time = microtime(true);
-            $duration = $time - $object->config('time.start');
-            echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
-        }
-
-
-
-
-        /*
-        Dir::create($dir_word_id, Dir::CHMOD);
-        File::permission($object, ['dir_word_id' => $dir_word_id]);
-        $dir = new Dir();
-        $read = $dir->read($dir_word_embedding);
-        $map = [];
-        if($read){
-            $count = count($read);
-            foreach($read as $nr => $subdir){
-                if($subdir->type === Dir::TYPE){
-                    $read_subdir = $dir->read($subdir->url);
-                    if($read_subdir){
-                        foreach($read_subdir as $file){
-                            if($file->type === File::TYPE){
-                                $data_word = $object->data_read($file->url);
-                                $hash = hash('sha256', $data_word->get('id'));
-                                $dir_word_id_hash = $dir_word_id . substr($hash, 0, 3) . $object->config('ds'); //split in 4096 parts
-                                Dir::create($dir_word_id_hash, Dir::CHMOD);
-                                $url_word = $dir_word_id_hash . $data_word->get('id');
-                                if(!File::exist($url_word)){
-                                    File::write($url_word, hash('sha256', $data_word->get('word')));
-                                    File::permission($object, ['dir_word' => $dir_word_id_hash, 'url_word' => $url_word]);
-                                }
-                            }
-                        }
-                    }
-                    $percentage =round((($nr + 1) / $count) * 100, 3);
-                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%' . PHP_EOL;
-                }
-            }
-        }
-        if(property_exists($options, 'duration')){
-            $time = microtime(true);
-            $duration = $time - $object->config('time.start');
-            echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
-        }
-        */
+        $percentage =round((($nr + 1) / $count) * 100, 3);
+        $time = microtime(true);
+        $duration = $time - $object->config('time.start');
+        $duration_percentage = round($duration / (($nr + 1) / $count), 3);
+        $duration_left = round($duration_percentage - $duration, 3);
+        echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
     }
 }
 
