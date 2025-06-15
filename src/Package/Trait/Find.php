@@ -73,6 +73,7 @@ trait Find {
                 foreach($word_embedding_input as $word_embedding){
                     if(in_array($word_embedding->get('id'), $sentence_piece->word, true)){
                         $counts = array_count_values($sentence_piece->word);
+                        d($word_embedding->get('id'));
                         d($counts);
                         if(!array_key_exists($sentence_piece->id, $found)){
                             $found[$sentence_piece->id] = [
