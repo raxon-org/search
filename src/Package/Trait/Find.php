@@ -123,7 +123,7 @@ trait Find {
 //                    echo $sentence_id . ' ';
                 }
                 echo 'Paragraphs ids: ' . implode(' ', $result_paragraphs) . PHP_EOL;
-                $random_paragraph = array_rand($result_paragraphs);
+                $random_paragraph = $result_paragraphs[array_rand($result_paragraphs)];
                 echo 'Random paragraph id: ' . $random_paragraph . PHP_EOL;
                 $hash_paragraph_id = hash('sha256', $random_paragraph);
                 $subdir_paragraph_id = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
