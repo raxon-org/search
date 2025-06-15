@@ -292,6 +292,7 @@ trait Embedding {
                 }
             }
         }
+        ddd($pieces_count);
         for($i = 0; $i < $pieces_count; $i+=$options->amount){
             $piece = [];
             for($j=$i; $j < ($i + $options->amount); $j++){
