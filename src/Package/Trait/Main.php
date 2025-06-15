@@ -139,6 +139,7 @@ trait Main {
                     $response['state'] === 'fulfilled'
                 ){
                     $html = (string) $response['value']->getBody();
+                    ddd($html);
                     $doc->loadHTML($html);
                     libxml_clear_errors();
 
