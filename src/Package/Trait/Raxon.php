@@ -4,9 +4,9 @@ namespace Package\Raxon\Search\Trait;
 use Composer\Advisory\PartialSecurityAdvisory;
 use DOMDocument;
 use DOMXPath;
-use GuzzleHttp;
-use GuzzleHttp\Exception\GuzzleException;
 use Raxon\Config;
+use Raxon\Exception\FileWriteException;
+use Raxon\Exception\ObjectException;
 use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
@@ -21,7 +21,6 @@ trait Raxon {
 
     /**
      * @throws Exception
-     * @throws GuzzleException
      */
     public function generate(object $flags, object $options): void
     {
@@ -135,11 +134,26 @@ trait Raxon {
         */
     }
 
+    /**
+     * @throws FileWriteException
+     * @throws ObjectException
+     */
     private function create_page_html(object $file, array $options=[]){
         $object = $this->object();
         $read = File::read($file->url);
         $hash = hash('sha256', $file->url);
         $target = $options['target'] . $hash . $object->config('extension.html');
+        $html = [];
+        $html[] = '<html>';
+        $html[] = '<head>';
+        $html[] = '<title>' . $file->url .'</title>';
+        $html[] = '</head>';
+        $html[] = '<body>';
+        $html[] = '<h1>' . $file->url . '</h1>';
+        $html[] = '<pre>' . $read . '</pre>';
+        $html[] = '</body>';
+        $html[] = '</html>';
+        File::write($target, implode(PHP_EOL, $html));
 
 
         d($file->url);
