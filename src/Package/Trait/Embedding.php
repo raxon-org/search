@@ -270,6 +270,9 @@ trait Embedding {
         */
         $sentences = $data->get('sentence') ?? [];
         $sentence_pieces = $data->get('sentence_piece') ?? (object) [];
+        if(property_exists($options, 'force')){
+            $sentence_pieces = (object) [];
+        }
         $id_sentence_piece = $data->get('id.sentence_piece') ?? 0;
         $id_sentence_piece++;
         $sentence_pieces_ids = [];
