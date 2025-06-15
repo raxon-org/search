@@ -95,6 +95,13 @@ trait Find {
             foreach($list as $nr => $record){
                 echo 'Score: ' . $score . ' ';
                 echo PHP_EOL;
+                $result_paragraphs = [];
+                foreach($record->paragraph as $record_paragraph){
+                    if(!in_array($record_paragraph, $result_paragraphs, true)){
+                        $result_paragraphs[] = $record_paragraph;
+                    }
+                }
+                echo 'Paragraphs: ' . implode(' ', $result_paragraphs) . PHP_EOL;
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
@@ -105,8 +112,9 @@ trait Find {
                         $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
                         $data_sentence = $object->data_read($source_sentence_embedding);
                         if($data_sentence){
-                            ddd($data_sentence);
                             $text = implode(' ', $data_sentence->get('text'));
+                        } else {
+                            ddd($data_sentence);
                         }
                         echo "\t" . $text . PHP_EOL;
                     } else {
