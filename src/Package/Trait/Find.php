@@ -128,14 +128,10 @@ trait Find {
                 $hash_paragraph_id = hash('sha256', $random_paragraph);
                 $subdir_paragraph_id = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
                 $source_paragraph_id = $subdir_paragraph_id .$random_paragraph . $object->config('extension.json');
-                d($source_paragraph_id);
-                ddd(File::exist($source_paragraph_id));
                 if(File::exist($source_paragraph_id)){
                     $data_paragraph = $object->data_read($source_paragraph_id);
                     ddd($data_paragraph);
                 }
-
-
                 echo PHP_EOL;
             }
         }
