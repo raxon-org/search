@@ -107,7 +107,6 @@ trait Paragraph {
 //                    $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
 //                    Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
 //                    $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
-                    ddd($data_paragraph);
                     $data_paragraph->write($source_paragraph_id);
 //                    File::write($source_sentence_id, $hash_sentence_text);
                     File::permission($object, [
