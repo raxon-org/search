@@ -69,9 +69,9 @@ trait Paragraph {
         if($data){
             $paragraphs = $data->get('paragraph');
             $count = $data->count('paragraph');
-            ddd($count);
-            foreach($sentences as $nr => $sentence){
+            foreach($paragraphs as $nr => $paragraph){
                 $count_tokens = 0;
+                /*
                 foreach($sentence->word as $word_id){
                     $hash_word_id = hash('sha256', $word_id);
                     $dir_word_id_hash = $dir_word_id . substr($hash_word_id, 0, 3) . $object->config('ds');
@@ -91,28 +91,30 @@ trait Paragraph {
                         }
                     }
                 }
-                $hash_sentence_id = hash('sha256', $sentence->id);
-                $dir_sentence_id_hash = $dir_sentence_id . substr($hash_sentence_id, 0, 3) . $object->config('ds');
-                $sentence->tokens = $count_tokens;
-                $source_sentence_id = $dir_sentence_id_hash . $sentence->id;
+                */
+                $hash_paragraph_id = hash('sha256', $paragraph->id);
+                $dir_paragraph_id_hash = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
+//                $sentence->tokens = $count_tokens;
+                $source_paragraph_id = $dir_paragraph_id_hash . $paragraph->id;
                 if(
-                    !File::exist($source_sentence_id) ||
+                    !File::exist($source_paragraph_id) ||
                     $patch === true ||
                     $force === true
                 ){
-                    Dir::create($dir_sentence_id_hash, Dir::CHMOD);
-                    $data_sentence = new Data($sentence);
-                    $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
-                    $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
-                    Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
-                    $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
-                    $data_sentence->write($source_sentence_hash);
-                    File::write($source_sentence_id, $hash_sentence_text);
+                    Dir::create($dir_paragraph_id_hash, Dir::CHMOD);
+                    $data_paragraph = new Data($paragraph);
+//                    $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
+//                    $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
+//                    Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
+//                    $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
+                    ddd($data_paragraph);
+                    $data_paragraph->write($source_paragraph_id);
+//                    File::write($source_sentence_id, $hash_sentence_text);
                     File::permission($object, [
-                        'dir_sentence_id_hash'=>$dir_sentence_id_hash,
-                        'dir_sentence_embedding_hash'=>$dir_sentence_embedding_hash,
-                        'source_sentence_id' => $source_sentence_id,
-                        'source_sentence_hash' => $source_sentence_hash
+                        'dir_sentence_id_hash'=>$dir_paragraph_id_hash,
+//                        'dir_sentence_embedding_hash'=>$dir_sentence_embedding_hash,
+                        'source_sentence_id' => $source_paragraph_id,
+//                        'source_sentence_hash' => $source_sentence_hash
                     ]);
                     $percentage =round((($nr + 1) / $count) * 100, 3);
                     $time = microtime(true);
