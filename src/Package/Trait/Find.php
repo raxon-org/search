@@ -106,11 +106,11 @@ trait Find {
                         $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
                         $data_sentence = $object->data_read($source_sentence_embedding);
                         if($data_sentence){
-                            $text = implode(' ', $data_sentence->get('text'));
+//                            $text = implode(' ', $data_sentence->get('text'));
                         } else {
                             ddd($data_sentence);
                         }
-                        echo "\t" . $text . PHP_EOL;
+//                        echo "\t" . $text . PHP_EOL;
                         foreach($data_sentence->get('paragraph') as $record_paragraph){
                             if(!in_array($record_paragraph, $result_paragraphs, true)){
                                 $result_paragraphs[] = $record_paragraph;
@@ -122,6 +122,9 @@ trait Find {
 //                    echo $sentence_id . ' ';
                 }
                 echo 'Paragraphs: ' . implode(' ', $result_paragraphs) . PHP_EOL;
+
+
+
                 echo PHP_EOL;
             }
         }
