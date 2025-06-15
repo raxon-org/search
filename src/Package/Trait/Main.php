@@ -139,13 +139,13 @@ trait Main {
                     $response['state'] === 'fulfilled'
                 ){
                     $html = (string) $response['value']->getBody();
-                    ddd($html);
                     $doc->loadHTML($html);
                     libxml_clear_errors();
 
                     // Get plain text content
                     $body = $doc->getElementsByTagName('body')->item(0);
                     $plain_text = $body->textContent;
+                    ddd($plain_text);
                     $plain_text = str_replace(
                         [
                             "\r\n",
