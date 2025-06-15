@@ -68,13 +68,12 @@ trait Find {
         }
         $data = $object->data_read($source_embedding_sentence_piece);
         $found = [];
-        dd($word_embedding_input);
         if($data){
             foreach($data->data('embedding') as $sentence_piece){
                 foreach($word_embedding_input as $word_embedding){
                     if(in_array($word_embedding->get('id'), $sentence_piece->word, true)){
                         $counts = array_count_values($sentence_piece->word);
-                        if(!in_array($sentence_piece->id, $found, true)){
+                        if(!array_key_exists($sentence_piece->id, $found)){
                             $found[$sentence_piece->id] = [
                                 'score' => $counts[$word_embedding->get('id')],
                                 'object' => $sentence_piece
