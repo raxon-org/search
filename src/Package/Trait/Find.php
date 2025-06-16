@@ -97,6 +97,7 @@ trait Find {
                 echo 'Score: ' . $score . ' ';
                 echo PHP_EOL;
                 $result_paragraphs = [];
+                ddd($list);
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
