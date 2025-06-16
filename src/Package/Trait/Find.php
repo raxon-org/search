@@ -124,29 +124,29 @@ trait Find {
 //                    echo $sentence_id . ' ';
                 }
                 echo 'Paragraphs ids: ' . implode(' ', $result_paragraphs) . PHP_EOL;
-                $random_paragraph = $result_paragraphs[0];
-                echo 'First paragraph id: ' . $random_paragraph . PHP_EOL;
-                $hash_paragraph_id = hash('sha256', $random_paragraph);
-                $subdir_paragraph_id = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
-                $source_paragraph_id = $subdir_paragraph_id .$random_paragraph . $object->config('extension.json');
-                if(File::exist($source_paragraph_id)){
-                    $data_paragraph = $object->data_read($source_paragraph_id);
-                    echo 'Document ids: ' . implode(' ', $data_paragraph->get('document')) . PHP_EOL;
-                    $sentences = $data_paragraph->get('sentence');
-                    foreach($sentences as $sentence_id){
-                        $hash_sentence_id = hash('sha256', $sentence_id);
-                        $subdir_sentence_id = $dir_sentence_id . substr($hash_sentence_id, 0, 3) . $object->config('ds');
-                        $source_sentence_id = $subdir_sentence_id . $sentence_id;
-                        if(File::exist($source_sentence_id)) {
-                            $hash_sentence_embedding = File::read($source_sentence_id);
-                            $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_sentence_embedding, 0, 3) . $object->config('ds');
-                            $source_sentence_embedding = $subdir_sentence_embedding . $hash_sentence_embedding . $object->config('extension.json');
-                            $data_sentence = $object->data_read($source_sentence_embedding);
-                            if ($data_sentence) {
-                                $text = implode(' ', $data_sentence->get('text'));
-                                echo "\t" . $text . PHP_EOL;
-                            } else {
-                                ddd($data_sentence);
+                foreach($result_paragraphs as $paragraph_id){
+                    $hash_paragraph_id = hash('sha256', $paragraph_id);
+                    $subdir_paragraph_id = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
+                    $source_paragraph_id = $subdir_paragraph_id .$paragraph_id . $object->config('extension.json');
+                    if(File::exist($source_paragraph_id)){
+                        $data_paragraph = $object->data_read($source_paragraph_id);
+                        echo 'Document ids: ' . implode(' ', $data_paragraph->get('document')) . PHP_EOL;
+                        $sentences = $data_paragraph->get('sentence');
+                        foreach($sentences as $sentence_id){
+                            $hash_sentence_id = hash('sha256', $sentence_id);
+                            $subdir_sentence_id = $dir_sentence_id . substr($hash_sentence_id, 0, 3) . $object->config('ds');
+                            $source_sentence_id = $subdir_sentence_id . $sentence_id;
+                            if(File::exist($source_sentence_id)) {
+                                $hash_sentence_embedding = File::read($source_sentence_id);
+                                $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_sentence_embedding, 0, 3) . $object->config('ds');
+                                $source_sentence_embedding = $subdir_sentence_embedding . $hash_sentence_embedding . $object->config('extension.json');
+                                $data_sentence = $object->data_read($source_sentence_embedding);
+                                if ($data_sentence) {
+                                    $text = implode(' ', $data_sentence->get('text'));
+                                    echo "\t" . $text . PHP_EOL;
+                                } else {
+                                    ddd($data_sentence);
+                                }
                             }
                         }
                     }
