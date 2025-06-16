@@ -195,8 +195,8 @@ trait Sentence {
                         $duration_left = round($duration_percentage - $duration, 3);
                         echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                     }
-                    $nr++;
                 }
+                $nr++;
             }
         }
         $percentage =round((($nr + 1) / $count) * 100, 3);
