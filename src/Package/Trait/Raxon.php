@@ -153,6 +153,7 @@ trait Raxon {
         $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
         $search = [];
         $replace = [];
+        $search[] = '/';
         $search[] = '~';
         $search[] = '`';
         $search[] = '!';
@@ -184,7 +185,7 @@ trait Raxon {
         $search[] = '<';
         $search[] = '>';
         $search[] = '?';
-        $search[] = '/';
+        $replace[] = ' <backspace/>/';
         $replace[] = ' <backspace/>~';
         $replace[] = ' <backspace/>`';
         $replace[] = ' <backspace/>!';
@@ -216,7 +217,6 @@ trait Raxon {
         $replace[] = ' <backspace/><';
         $replace[] = ' <backspace/>>';
         $replace[] = ' <backspace/>?';
-        $replace[] = ' <backspace/>/';
         $special = str_replace($search, $replace, $read);
         $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
         $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
