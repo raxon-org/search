@@ -142,7 +142,12 @@ trait Find {
                                 $data_sentence = $object->data_read($source_sentence_embedding);
                                 if ($data_sentence) {
                                     $text = implode(' ', $data_sentence->get('text'));
-//                                    $text = str_replace([' <backspace/> ','<backspace/> '], '', $text);
+                                    $split = mb_str_split($text);
+                                    $backspace = '';
+                                    foreach($split as $nr => $char){
+                                        $backspace .= $char;
+                                    }
+                                    $text = str_replace([' <backspace/> ','<backspace/> '], '', $text);
                                     echo "\t" . $text . PHP_EOL;
                                 } else {
                                     ddd($data_sentence);
