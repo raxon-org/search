@@ -150,7 +150,7 @@ trait Raxon {
         $html[] = '</head>';
         $html[] = '<body>';
         $html[] = '<h1>' . $file->url . '</h1>';
-        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
+//        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
         $search = [];
         $replace = [];
         $search[] = '/';
@@ -218,8 +218,8 @@ trait Raxon {
         $replace[] = ' <backspace/>>';
         $replace[] = ' <backspace/>?';
         $special = str_replace($search, $replace, $read);
-        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
-        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
+//        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
+//        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
         $html[] = '<pre>' . htmlspecialchars($special) . '</pre>';
         $html[] = '</body>';
         $html[] = '</html>';
