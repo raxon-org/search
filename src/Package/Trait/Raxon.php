@@ -220,8 +220,6 @@ trait Raxon {
         $special = str_replace($search, $replace, $read);
         $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
         $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
-        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
-        $html[] = '<pre>' . htmlspecialchars($special) . '</pre>';
         $html[] = '<pre>' . htmlspecialchars($special) . '</pre>';
         $html[] = '</body>';
         $html[] = '</html>';
