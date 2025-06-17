@@ -223,8 +223,8 @@ trait Raxon {
         $split = mb_str_split($read);
         foreach($split as $nr => $char){
             if(in_array($char, $search, true)){
-//                $split[$nr] = ' <backspace/> ' . $char;
-                $split[$nr] = ' <backspace/> ' . $char . ' <backspace/> ';
+                $split[$nr] = ' <backspace/> ' . $char;
+//                $split[$nr] = ' <backspace/> ' . $char . ' <backspace/> ';
             }
         }
         $special = implode('', $split);
