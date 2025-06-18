@@ -165,7 +165,7 @@ trait Sentence {
                 $hash_sentence_id = hash('sha256', $sentence->id);
                 $dir_sentence_id_hash = $dir_sentence_id . substr($hash_sentence_id, 0, 3) . $object->config('ds');
                 $sentence->tokens = $count_tokens;
-                $source_sentence_id = $dir_sentence_id_hash . $sentence->id;
+                $source_sentence_id = $dir_sentence_id_hash . $sentence->id . $object->config('extension.json');
                 if(
                     !File::exist($source_sentence_id) ||
                     $patch === true ||
@@ -175,18 +175,19 @@ trait Sentence {
                     $data_sentence = new Data($sentence);
                     ddd($data_sentence);
 //                    $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
-                    $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
-                    Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
-                    $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
-                    if(!File::exist($source_sentence_hash)){
-                        $data_sentence->write($source_sentence_hash);
-                    }
-                    File::write($source_sentence_id, $hash_sentence_text);
+//                    $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
+//                    Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
+//                    $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
+//                    if(!File::exist($source_sentence_hash)){
+//                        $data_sentence->write($source_sentence_hash);
+//                    }
+                    $data_sentence->write($source_sentence_id);
+//                    File::write($source_sentence_id, $hash_sentence_text);
                     File::permission($object, [
                         'dir_sentence_id_hash'=>$dir_sentence_id_hash,
-                        'dir_sentence_embedding_hash'=>$dir_sentence_embedding_hash,
+//                        'dir_sentence_embedding_hash'=>$dir_sentence_embedding_hash,
                         'source_sentence_id' => $source_sentence_id,
-                        'source_sentence_hash' => $source_sentence_hash
+//                        'source_sentence_hash' => $source_sentence_hash
                     ]);
                     if($nr % 10 === 0){
                         $percentage =round((($nr + 1) / $count) * 100, 3);
