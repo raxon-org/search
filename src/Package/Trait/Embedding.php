@@ -349,7 +349,7 @@ trait Embedding {
                 $embedding = (object) [
                     'id' => $id_embedding,
 //                    'embedding' => base64_encode(gzencode(Core::object($sentence_piece->embedding, Core::JSON_LINE), 9)),
-                    'embedding' => $sentence_piece->embedding,
+//                    'embedding' => $sentence_piece->embedding,
                     'model' => 'average-words-' . $options->amount,
                     'tokens' => $tokens,
                     'word' => $sentence_piece->word,
