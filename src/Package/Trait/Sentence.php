@@ -157,7 +157,7 @@ trait Sentence {
                         ;
                         if(File::exist($source_word_embedding)){
                             $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
-                            $sentence->text[] = $data_word->get('word');
+//                            $sentence->text[] = $data_word->get('word');
                             $count_tokens += $data_word->get('tokens');
                         }
                     }
@@ -173,7 +173,8 @@ trait Sentence {
                 ){
                     Dir::create($dir_sentence_id_hash, Dir::CHMOD);
                     $data_sentence = new Data($sentence);
-                    $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
+                    ddd($data_sentence);
+//                    $hash_sentence_text = hash('sha256', implode(' ', $sentence->text));
                     $dir_sentence_embedding_hash = $dir_sentence_embedding . substr($hash_sentence_text, 0, 3) . $object->config('ds');
                     Dir::create($dir_sentence_embedding_hash, Dir::CHMOD);
                     $source_sentence_hash = $dir_sentence_embedding_hash . $hash_sentence_text . $object->config('extension.json');
