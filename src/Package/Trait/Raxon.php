@@ -227,6 +227,15 @@ trait Raxon {
 //                $split[$nr] = ' <backspace/> ' . $char . ' <backspace/> ';
             }
         }
+        $split = mb_str_split($read);
+        foreach($split as $nr => $char){
+            $next = $split[$nr + 1] ?? null;
+            $prev = $split[$nr - 1] ?? null;
+            if($char === ' ' && $next === ' '){
+                $split[$nr] = ' <2x-space/>' . $char;
+                $split[$next] = '';
+            }
+        }
         $special = implode('', $split);
 
 //        $html[] = '<pre>' . htmlspecialchars($read) . '</pre>';
