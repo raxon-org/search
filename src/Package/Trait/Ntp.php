@@ -68,11 +68,9 @@ trait Ntp {
 
                                         }
                                     }
-                                    ddd($sentence);
                                 }
                             }
                         }
-                        ddd($paragraph);
                     }
                 }
                 ddd($document);
