@@ -227,6 +227,7 @@ trait Raxon {
 //                $split[$nr] = ' <backspace/> ' . $char . ' <backspace/> ';
             }
         }
+        $read = implode('', $split);
         $split = mb_str_split($read);
         foreach($split as $nr => $char){
             $next = $split[$nr + 1] ?? null;
