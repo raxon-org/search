@@ -253,7 +253,6 @@ trait Find {
                             $last .= $text;
                         }
                         $options['result'][] = $last;
-                        ddd($options);
                         break;
                     default:
                         $options['result'][] = $word;
