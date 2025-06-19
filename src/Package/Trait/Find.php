@@ -195,13 +195,15 @@ trait Find {
                                     $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
                                     $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
                                     if($data_word){
-                                        $result_words[] = $data_word->get('word');
+                                        $word = $data_word->get('word');
+                                        breakpoint($word);
+                                        $result_words[] = $word;
                                     }
                                 }
                             }
                         }
-                        d($result_words);
-//                        echo implode(' ', $result_words) . PHP_EOL;
+//                        d($result_words);
+                        echo implode(' ', $result_words) . PHP_EOL;
                     }
                 }
                 echo PHP_EOL;
