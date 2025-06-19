@@ -245,6 +245,7 @@ trait Find {
                         ]);
                         ddd($get_word);
                         ddd($next);
+                        break;
                     default:
                         $options['result'][] = $word;
                 }
