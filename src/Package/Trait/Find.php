@@ -248,9 +248,12 @@ trait Find {
                         foreach($options['result'] as $nr => $unused){
                             unset($get_word['result'][$nr]);
                         }
-                        d($options['result']);
-                        ddd($get_word);
-                        ddd($next);
+                        $last = array_pop($options['result']);
+                        foreach($get_word as $text){
+                            $last .= $text;
+                        }
+                        $options['result'][] = $last;
+                        ddd($options);
                         break;
                     default:
                         $options['result'][] = $word;
