@@ -245,8 +245,9 @@ trait Find {
                             'sentence' => $options['sentence'],
                             'nr' => $next
                         ]);
-                        $diff = array_diff($options['result'], $get_word['result']);
-                        d($diff);
+                        foreach($options['result'] as $nr => $unused){
+                            unset($get_word[$nr]);
+                        }
                         d($options['result']);
                         ddd($get_word);
                         ddd($next);
