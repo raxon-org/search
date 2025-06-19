@@ -236,8 +236,8 @@ trait Find {
                         break;
                     case '<backspace/>':
                         $next = $options['nr'] + 1 ?? null;
-
-                        ddd($next);
+                        $next_id = $options['sentenec']->get('word.' . $next);
+                        ddd($next_id);
 
 
                         $get_word = $this->get_word([
