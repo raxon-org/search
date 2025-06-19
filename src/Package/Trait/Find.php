@@ -245,6 +245,7 @@ trait Find {
                             'sentence' => $options['sentence'],
                             'nr' => $next
                         ]);
+                        d($options['result']);
                         ddd($get_word);
                         ddd($next);
                         break;
