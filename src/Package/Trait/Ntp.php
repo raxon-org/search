@@ -48,7 +48,8 @@ trait Ntp {
         $data = $object->data_read($source);
         if($data){
             $documents = $data->get('document');
-            d(count($documents));
+            $count = $data->count('document');
+            d($count);
             ddd($documents);
         }
         if(property_exists($options, 'duration')){
