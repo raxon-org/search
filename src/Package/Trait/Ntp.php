@@ -60,6 +60,14 @@ trait Ntp {
                             foreach($paragraph->sentence as $sentence_id){
                                 if(property_exists($sentences, $sentence_id)){
                                     $sentence = $sentences->{$sentence_id};
+                                    foreach($sentence->word as $word_nr => $word_id){
+                                        $next_word = $sentence->word[$word_nr + 1] ?? null;
+                                        if($next_word){
+                                            d($next_word);
+                                            ddd($word_id);
+
+                                        }
+                                    }
                                     ddd($sentence);
                                 }
                             }
