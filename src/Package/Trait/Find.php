@@ -100,12 +100,12 @@ trait Find {
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
-                    $source_sentence_id = $subdir_sentence_id . $sentence_id;
+                    $source_sentence_id = $subdir_sentence_id . $sentence_id . $object->config('extension.json');
                     if(File::exist($source_sentence_id)){
-                        $hash_embedding = File::read($source_sentence_id);
-                        $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
-                        $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
-                        $data_sentence = $object->data_read($source_sentence_embedding);
+//                        $hash_embedding = File::read($source_sentence_id);
+//                        $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
+//                        $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
+                        $data_sentence = $object->data_read($source_sentence_id);
                         if($data_sentence){
 //                            $text = implode(' ', $data_sentence->get('text'));
                         } else {
