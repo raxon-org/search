@@ -55,7 +55,15 @@ trait Ntp {
             foreach($documents as $document_id => $document){
                 foreach($document->paragraph as $paragraph_id){
                     if(property_exists($paragraphs, $paragraph_id)){
-                        $paragraph = $paragraphs->$paragraph_id;
+                        $paragraph = $paragraphs->{$paragraph_id};
+                        if(property_exists($paragraph, 'sentence')){
+                            foreach($paragraph->sentence as $sentence_id){
+                                if(property_exists($sentences, $sentence_id)){
+                                    $sentence = $sentences->{$sentence_id};
+                                    ddd($sentence);
+                                }
+                            }
+                        }
                         ddd($paragraph);
                     }
                 }
