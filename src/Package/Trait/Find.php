@@ -51,6 +51,7 @@ trait Find {
         $dir_sentence_id = $dir_version . 'Sentence' . $object->config('ds') . 'Id' . $object->config('ds');
         $dir_paragraph_id = $dir_version . 'Paragraph' . $object->config('ds') . 'Id' . $object->config('ds');
         $dir_word_similarity = $dir_version . 'Words' . $object->config('ds') . 'Similarity' . $object->config('ds');
+        $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
         $source_embedding_sentence_piece = $dir_version . 'Search.Embedding.Sentence.Piece' . $object->config('extension.json');
 
         if(!is_array($options->input)){
@@ -184,7 +185,7 @@ trait Find {
                         $data_sentence = $object->data_read($source_sentence_id);
                         foreach($data_sentence->get('word') as $word_id){
                             $hash_id = hash('sha256', $word_id);
-                            $subdir_word_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
+                            $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
                             $source_word_id = $subdir_sentence_id . $word_id;// . $object->config('extension.json');
                             d(File::exist($source_word_id));
                             ddd($source_word_id);
