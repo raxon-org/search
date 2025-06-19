@@ -250,7 +250,7 @@ trait Find {
                         }
                         $last = array_pop($options['result']);
                         ddd($last);
-                        foreach($get_word as $text){
+                        foreach($get_word['result'] as $text){
                             $last .= $text;
                         }
                         $options['result'][] = $last;
