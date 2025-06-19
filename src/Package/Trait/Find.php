@@ -187,12 +187,10 @@ trait Find {
                         $get_word = false;
                         if($data_sentence){
                             foreach($data_sentence->get('word') as $word_nr => $word_id){
-                                $hash_id = hash('sha256', $word_id);
-                                $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
-                                $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
                                 $get_word = $this->get_word([
-                                    'source' => $source_word_id,
-                                    'dir' => $dir_word_embedding,
+                                    'id' => $id,
+                                    'dir_id' => $dir_word_id,
+                                    'dir_embedding' => $dir_word_embedding,
                                     'result' => $result_words,
                                     'sentence' => $data_sentence,
                                     'nr' => $word_nr
@@ -222,9 +220,12 @@ trait Find {
         if(!array_key_exists('result', $options)){
             $options['result'] = [];
         }
+        $hash_id = hash('sha256', $options['id']);
+        $subdir_word_id = $options['dir_id'] . substr($hash_id, 0, 3) . $object->config('ds');
+        $options['source'] = $subdir_word_id . $options['id'];// . $object->config('extension.json');
         if(File::exist($options['source'])){
             $hash_embedding = File::read($options['source']);
-            $subdir_word_embedding = $options['dir'] . substr($hash_embedding, 0, 3) . $object->config('ds');
+            $subdir_word_embedding = $options['dir_embedding'] . substr($hash_embedding, 0, 3) . $object->config('ds');
             $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
             $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
             if($data_word){
@@ -235,6 +236,7 @@ trait Find {
                         break;
                     case '<backspace/>':
                         $next = $options['nr'] + 1 ?? null;
+
                         ddd($next);
 
 
