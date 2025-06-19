@@ -89,9 +89,12 @@ trait Find {
             }
         }
         $result = [];
+        $total = 0;
         foreach($found as $sentence_piece_id => $record){
             $result[$record['score']][] = $record['object'];
+            $total++;
         }
+        echo 'Found items: ' . $total . PHP_EOL;
         krsort($result, SORT_NATURAL);
         foreach($result as $score => $list){
             foreach($list as $nr => $record){
@@ -215,6 +218,7 @@ trait Find {
                     }
                 }
                 echo PHP_EOL;
+                echo 'Found items: ' . $total . PHP_EOL;
             }
         }
         if(property_exists($options, 'duration')){
