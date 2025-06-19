@@ -97,17 +97,18 @@ trait Find {
                 echo 'Score: ' . $score . ' ';
                 echo PHP_EOL;
                 $result_paragraphs = [];
+                $result_sentences = [];
+                $result_documents = [];
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
                     $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
                     $source_sentence_id = $subdir_sentence_id . $sentence_id . $object->config('extension.json');
                     if(File::exist($source_sentence_id)){
-//                        $hash_embedding = File::read($source_sentence_id);
-//                        $subdir_sentence_embedding = $dir_sentence_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
-//                        $source_sentence_embedding = $subdir_sentence_embedding . $hash_embedding . $object->config('extension.json');
                         $data_sentence = $object->data_read($source_sentence_id);
                         if($data_sentence){
-                            ddd($data_sentence);
+                            if(!in_array($data_sentence->get('id'), $result_sentences, true)){
+//                                $result_sentences[] = $data_sentence->get('id');
+                            }
 //                            $text = implode(' ', $data_sentence->get('text'));
                         } else {
                             ddd($data_sentence);
@@ -130,6 +131,8 @@ trait Find {
                     $source_paragraph_id = $subdir_paragraph_id .$paragraph_id . $object->config('extension.json');
                     if(File::exist($source_paragraph_id)){
                         $data_paragraph = $object->data_read($source_paragraph_id);
+                        ddd($data_paragraph);
+                        /*
                         echo 'Document ids: ' . implode(' ', $data_paragraph->get('document')) . PHP_EOL;
                         $sentences = $data_paragraph->get('sentence');
                         foreach($sentences as $sentence_id){
@@ -155,6 +158,7 @@ trait Find {
                                 }
                             }
                         }
+                        */
                     }
                 }
                 echo PHP_EOL;
