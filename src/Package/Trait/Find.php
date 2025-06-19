@@ -197,6 +197,7 @@ trait Find {
                                     'sentence' => $data_sentence,
                                     'nr' => $word_nr
                                 ]);
+                                $result_words = $get_word['result'];
                             }
                         }
                         if($get_word){
