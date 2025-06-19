@@ -124,14 +124,22 @@ trait Find {
                     }
 //                    echo $sentence_id . ' ';
                 }
-                echo 'Paragraphs ids: ' . implode(' ', $result_paragraphs) . PHP_EOL;
                 foreach($result_paragraphs as $paragraph_id){
                     $hash_paragraph_id = hash('sha256', $paragraph_id);
                     $subdir_paragraph_id = $dir_paragraph_id . substr($hash_paragraph_id, 0, 3) . $object->config('ds');
                     $source_paragraph_id = $subdir_paragraph_id .$paragraph_id . $object->config('extension.json');
                     if(File::exist($source_paragraph_id)){
                         $data_paragraph = $object->data_read($source_paragraph_id);
-                        ddd($data_paragraph);
+                        foreach($data_paragraph->get('sentence') as $sentence_id){
+                            if(!in_array($sentence_id, $result_sentences, true)){
+                                $result_sentences[] = $sentence_id;
+                            }
+                        }
+                        foreach($data_paragraph->get('document') as $document_id){
+                            if(!in_array($document_id, $result_documents, true)){
+                                $result_documents[] = $document_id;
+                            }
+                        }
                         /*
                         echo 'Document ids: ' . implode(' ', $data_paragraph->get('document')) . PHP_EOL;
                         $sentences = $data_paragraph->get('sentence');
@@ -161,6 +169,9 @@ trait Find {
                         */
                     }
                 }
+                echo 'Paragraphs ids: ' . implode(' ', $result_paragraphs) . PHP_EOL;
+                echo 'Sentences ids: ' . implode(' ', $result_sentences) . PHP_EOL;
+                echo 'documents ids: ' . implode(' ', $result_documents) . PHP_EOL;
                 echo PHP_EOL;
             }
         }
