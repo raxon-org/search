@@ -246,7 +246,7 @@ trait Find {
                             'nr' => $next
                         ]);
                         foreach($options['result'] as $nr => $unused){
-                            unset($get_word[$nr]);
+                            unset($get_word['result'][$nr]);
                         }
                         d($options['result']);
                         ddd($get_word);
