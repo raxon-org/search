@@ -185,8 +185,13 @@ trait Find {
                         $data_sentence = $object->data_read($source_sentence_id);
                         $result_words = [];
                         $get_word = false;
+                        $skip = 0;
                         if($data_sentence){
                             foreach($data_sentence->get('word') as $word_nr => $word_id){
+                                if($skip > 0){
+                                    $skip--;
+                                    continue;
+                                }
                                 $get_word = $this->get_word([
                                     'id' => $word_id,
                                     'dir_id' => $dir_word_id,
@@ -196,6 +201,10 @@ trait Find {
                                     'nr' => $word_nr
                                 ]);
                                 $result_words = $get_word['result'];
+                                if(array_key_exists('skip', $get_word)){
+                                    $skip += $get_word['skip'];
+                                    unset($get_word['skip']);
+                                }
                             }
                         }
                         if($get_word){
@@ -253,6 +262,7 @@ trait Find {
                             $last .= $text;
                         }
                         $options['result'][] = $last;
+                        $options['skip'] = 1;
                         break;
                     default:
                         $options['result'][] = $word;
