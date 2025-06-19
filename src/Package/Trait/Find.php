@@ -249,6 +249,7 @@ trait Find {
                             unset($get_word['result'][$nr]);
                         }
                         $last = array_pop($options['result']);
+                        ddd($last);
                         foreach($get_word as $text){
                             $last .= $text;
                         }
