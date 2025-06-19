@@ -188,7 +188,7 @@ trait Find {
                         if($data_sentence){
                             foreach($data_sentence->get('word') as $word_nr => $word_id){
                                 $get_word = $this->get_word([
-                                    'id' => $id,
+                                    'id' => $word_id,
                                     'dir_id' => $dir_word_id,
                                     'dir_embedding' => $dir_word_embedding,
                                     'result' => $result_words,
