@@ -222,6 +222,7 @@ trait Find {
         if(!array_key_exists('result', $options)){
             $options['result'] = [];
         }
+        breakpoint($options);
         if(File::exist($options['source'])){
             $hash_embedding = File::read($options['source']);
             $subdir_word_embedding = $options['dir'] . substr($hash_embedding, 0, 3) . $object->config('ds');
