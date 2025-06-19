@@ -52,6 +52,9 @@ trait Ntp {
             $paragraphs = $data->get('paragraph');
             $sentences = $data->get('sentence');
             $words = $data->get('word');
+            foreach($documents as $document_id => $document){
+                ddd($document);
+            }
             d($sentences);
         }
         if(property_exists($options, 'duration')){
