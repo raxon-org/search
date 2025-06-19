@@ -189,7 +189,9 @@ trait Find {
                             $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
                             if(File::exist($source_word_id)){
                                 $hash_embedding = File::read($source_word_id);
-                                ddd($hash_embedding);
+                                $subdir_word_embedding = $dir_word_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
+                                $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
+                                ddd($source_word_embedding);
                             }
                             d(File::exist($source_word_id));
                             ddd($source_word_id);
