@@ -60,7 +60,8 @@ trait Find {
         $target = '/mnt/Disk2/Test/' . hash('sha256', Core::object($options->input, Core::OBJECT_JSON_LINE));
         $word_embedding_input = [];
         $embeddings = [];
-        ob_start();
+//        ob_start();
+        Core::interactive();
         foreach($options->input as $nr => $input){
             $hash = hash('sha256', $input);
             $subdir_word_embedding = $dir_word_embedding . substr($hash, 0, 3) . $object->config('ds');
@@ -228,8 +229,8 @@ trait Find {
             $duration = $time - $object->config('time.start');
             echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
         }
-        File::write($target, ob_get_clean());
-        File::permission($object, ['target' => $target]);
+//        File::write($target, ob_get_clean());
+//        File::permission($object, ['target' => $target]);
     }
 
     private function get_word(array $options = []): array
