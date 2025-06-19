@@ -231,14 +231,14 @@ trait Find {
                         break;
                     case '<backspace/>':
                         $next = $options['nr'] + 1 ?? null;
-                        $result_words = $this->get_word([
+                        $get_word = $this->get_word([
                             'source' => $options['source'],
                             'dir' => $options['dir'],
                             'result' => $options['result'],
                             'sentence' => $options['sentence'],
                             'nr' => $next
                         ]);
-                        ddd($result_words);
+                        ddd($get_word);
                         ddd($next);
                     default:
                         $options['result'][] = $word;
