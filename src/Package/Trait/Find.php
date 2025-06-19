@@ -237,12 +237,10 @@ trait Find {
                     case '<backspace/>':
                         $next = $options['nr'] + 1 ?? null;
                         $next_id = $options['sentence']->get('word.' . $next);
-                        ddd($next_id);
-
-
                         $get_word = $this->get_word([
-                            'source' => $options['source'],
-                            'dir' => $options['dir'],
+                            'id' => $next_id,
+                            'dir_id' => $options['dir_id'],
+                            'dir_embedding' => $options['dir_embedding'],
                             'result' => $options['result'],
                             'sentence' => $options['sentence'],
                             'nr' => $next
