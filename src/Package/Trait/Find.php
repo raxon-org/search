@@ -187,6 +187,10 @@ trait Find {
                             $hash_id = hash('sha256', $word_id);
                             $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
                             $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
+                            if(File::exist($source_word_id)){
+                                $hash_embedding = File::read($source_word_id);
+                                ddd($hash_embedding);
+                            }
                             d(File::exist($source_word_id));
                             ddd($source_word_id);
                         }
