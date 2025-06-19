@@ -185,7 +185,7 @@ trait Find {
                         $data_sentence = $object->data_read($source_sentence_id);
                         $result_words = [];
                         if($data_sentence){
-                            foreach($data_sentence->get('word') as $word_id){
+                            foreach($data_sentence->get('word') as $word_nr => $word_id){
                                 $hash_id = hash('sha256', $word_id);
                                 $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
                                 $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
@@ -200,6 +200,10 @@ trait Find {
                                             case '<2x-space/>':
                                                 $result_words[] = '';
                                                 break;
+                                            case '<backspace/>':
+                                                $next = $word_nr + 1 ?? null;
+                                                d($word_nr);
+                                                ddd($next);
                                             default:
                                                 breakpoint($word);
                                                 $result_words[] = $word;
