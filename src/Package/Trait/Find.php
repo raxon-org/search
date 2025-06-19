@@ -202,7 +202,22 @@ trait Find {
                                                 break;
                                             case '<backspace/>':
                                                 $next = $word_nr + 1 ?? null;
-                                                $next = $data_sentence->get('word.' . $next);
+                                                $next_id = $data_sentence->get('word.' . $next);
+                                                $next_hash_id = hash('sha256', $next_id);
+                                                $subdir_next_word_id = $dir_word_id . substr($next_hash_id, 0, 3) . $object->config('ds');
+                                                $source_next_word_id = $subdir_next_word_id . $next_id;// . $object->config('extension.json');
+                                                if(File::exist($source_next_word_id)) {
+                                                    $hash_next_embedding = File::read($source_next_word_id);
+                                                    $subdir_next_word_embedding = $dir_word_embedding . substr($hash_next_embedding, 0, 3) . $object->config('ds');
+                                                    $source_next_word_embedding = $subdir_next_word_embedding . $hash_next_embedding . $object->config('extension.json');
+                                                    $data_word = $object->data_read($source_next_word_embedding, hash('sha256', $source_next_word_embedding));
+                                                    if ($data_word) {
+                                                        $word = $data_word->get('word');
+                                                        d($result_words);
+                                                        ddd($word);
+                                                    }
+                                                }
+
                                                 d($result_words);
                                                 d($word_nr);
                                                 ddd($next);
