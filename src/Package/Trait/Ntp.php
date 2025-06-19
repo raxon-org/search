@@ -45,7 +45,7 @@ trait Ntp {
         }
         $dir_word_ntp = $dir_version . 'Words' . $object->config('ds') . 'Ntp' . $object->config('ds');
         $source = $dir_version . 'Search' . $object->config('extension.json');
-        $data = File::read($source);
+        $data = $object->data_read($source);
         if($data){
             $documents = $data->get('document');
             d(count($documents));
