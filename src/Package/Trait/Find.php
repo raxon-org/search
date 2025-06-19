@@ -196,8 +196,13 @@ trait Find {
                                     $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
                                     if($data_word){
                                         $word = $data_word->get('word');
-                                        breakpoint($word);
-                                        $result_words[] = $word;
+                                        switch($word){
+                                            case '<2x-space/>':
+                                                $result_words[] = '';
+                                            default:
+                                                breakpoint($word);
+                                                $result_words[] = $word;
+                                        }
                                     }
                                 }
                             }
