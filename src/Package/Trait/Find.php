@@ -200,7 +200,8 @@ trait Find {
                                 }
                             }
                         }
-                        echo implode(' ', $result_words) . PHP_EOL;
+                        d($result_words);
+//                        echo implode(' ', $result_words) . PHP_EOL;
                     }
                 }
                 echo PHP_EOL;
