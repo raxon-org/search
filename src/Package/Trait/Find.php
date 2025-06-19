@@ -99,6 +99,7 @@ trait Find {
                 $result_paragraphs = [];
                 $result_sentences = [];
                 $result_documents = [];
+                $result_sentences_selected = [];
                 echo 'Selected sentences: ';
                 foreach($record->sentence as $sentence_id){
                     $hash_id = hash('sha256', $sentence_id);
@@ -123,6 +124,7 @@ trait Find {
                     } else {
                         throw new Exception('sentence file: ' . $source_sentence_id);
                     }
+                    $result_sentences_selected[] = $sentence_id;
                     echo $sentence_id . ' ';
                 }
                 echo PHP_EOL;
@@ -174,6 +176,15 @@ trait Find {
                 echo 'Paragraphs ids: ' . implode(' ', $result_paragraphs) . PHP_EOL;
                 echo 'Sentences ids: ' . implode(' ', $result_sentences) . PHP_EOL;
                 echo 'documents ids: ' . implode(' ', $result_documents) . PHP_EOL;
+                foreach($result_sentences_selected as $sentence_id){
+                    $hash_id = hash('sha256', $sentence_id);
+                    $subdir_sentence_id = $dir_sentence_id . substr($hash_id, 0, 3) . $object->config('ds');
+                    $source_sentence_id = $subdir_sentence_id . $sentence_id . $object->config('extension.json');
+                    if(File::exist($source_sentence_id)) {
+                        $data_sentence = $object->data_read($source_sentence_id);
+                        ddd($data_sentence);
+                    }
+                }
                 echo PHP_EOL;
             }
         }
