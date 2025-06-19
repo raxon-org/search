@@ -236,7 +236,7 @@ trait Find {
                         break;
                     case '<backspace/>':
                         $next = $options['nr'] + 1 ?? null;
-                        $next_id = $options['sentenec']->get('word.' . $next);
+                        $next_id = $options['sentence']->get('word.' . $next);
                         ddd($next_id);
 
 
