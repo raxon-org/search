@@ -184,6 +184,7 @@ trait Find {
                     if(File::exist($source_sentence_id)) {
                         $data_sentence = $object->data_read($source_sentence_id);
                         $result_words = [];
+                        $get_word = false;
                         if($data_sentence){
                             foreach($data_sentence->get('word') as $word_nr => $word_id){
                                 $hash_id = hash('sha256', $word_id);
@@ -196,11 +197,13 @@ trait Find {
                                     'sentence' => $data_sentence,
                                     'nr' => $word_nr
                                 ]);
-                                ddd($get_word);
                             }
                         }
+                        if($get_word){
+                            echo implode(' ', $get_word['result']) . PHP_EOL;
+                        }
 //                        d($result_words);
-                        echo implode(' ', $result_words) . PHP_EOL;
+
                     }
                 }
                 echo PHP_EOL;
