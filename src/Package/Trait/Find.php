@@ -205,7 +205,6 @@ trait Find {
                                                 d($word_nr);
                                                 ddd($next);
                                             default:
-                                                breakpoint($word);
                                                 $result_words[] = $word;
                                         }
                                     }
