@@ -199,6 +199,7 @@ trait Find {
                                         switch($word){
                                             case '<2x-space/>':
                                                 $result_words[] = '';
+                                                break;
                                             default:
                                                 breakpoint($word);
                                                 $result_words[] = $word;
