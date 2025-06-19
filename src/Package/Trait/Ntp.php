@@ -48,9 +48,11 @@ trait Ntp {
         $data = $object->data_read($source);
         if($data){
             $documents = $data->get('document');
-            $count = $data->count('document');
-            d($count);
-            ddd($documents);
+            $document_count = $data->count('document');
+            $paragraphs = $data->get('paragraph');
+            $sentences = $data->get('sentence');
+            $words = $data->get('word');
+            d($sentences);
         }
         if(property_exists($options, 'duration')){
             $time = microtime(true);
