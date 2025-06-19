@@ -183,20 +183,25 @@ trait Find {
                     $source_sentence_id = $subdir_sentence_id . $sentence_id . $object->config('extension.json');
                     if(File::exist($source_sentence_id)) {
                         $data_sentence = $object->data_read($source_sentence_id);
-                        foreach($data_sentence->get('word') as $word_id){
-                            $hash_id = hash('sha256', $word_id);
-                            $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
-                            $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
-                            if(File::exist($source_word_id)){
-                                $hash_embedding = File::read($source_word_id);
-                                $subdir_word_embedding = $dir_word_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
-                                $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
-                                d(File::exist($source_word_embedding));
-                                ddd($source_word_embedding);
+                        if($data_sentence){
+                            foreach($data_sentence->get('word') as $word_id){
+                                $hash_id = hash('sha256', $word_id);
+                                $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
+                                $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
+                                if(File::exist($source_word_id)){
+                                    $hash_embedding = File::read($source_word_id);
+                                    $subdir_word_embedding = $dir_word_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
+                                    $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
+                                    $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
+                                    if($data_word){
+                                        ddd($data_word);
+                                    }
+                                }
+                                d(File::exist($source_word_id));
+                                ddd($source_word_id);
                             }
-                            d(File::exist($source_word_id));
-                            ddd($source_word_id);
                         }
+
                         ddd($data_sentence);
                     }
                 }
