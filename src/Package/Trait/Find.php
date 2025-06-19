@@ -232,7 +232,8 @@ trait Find {
         File::permission($object, ['target' => $target]);
     }
 
-    private function get_word(array $options = []){
+    private function get_word(array $options = []): array
+    {
         $object = $this->object();
         if(!array_key_exists('result', $options)){
             $options['result'] = [];
