@@ -202,6 +202,7 @@ trait Find {
                                                 break;
                                             case '<backspace/>':
                                                 $next = $word_nr + 1 ?? null;
+                                                $next = $data_sentence->get('word.' . $next);
                                                 d($word_nr);
                                                 ddd($next);
                                             default:
