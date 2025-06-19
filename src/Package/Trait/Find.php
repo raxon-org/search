@@ -235,6 +235,9 @@ trait Find {
                         break;
                     case '<backspace/>':
                         $next = $options['nr'] + 1 ?? null;
+                        ddd($next);
+
+
                         $get_word = $this->get_word([
                             'source' => $options['source'],
                             'dir' => $options['dir'],
