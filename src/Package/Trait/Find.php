@@ -189,43 +189,14 @@ trait Find {
                                 $hash_id = hash('sha256', $word_id);
                                 $subdir_word_id = $dir_word_id . substr($hash_id, 0, 3) . $object->config('ds');
                                 $source_word_id = $subdir_word_id . $word_id;// . $object->config('extension.json');
-                                if(File::exist($source_word_id)){
-                                    $hash_embedding = File::read($source_word_id);
-                                    $subdir_word_embedding = $dir_word_embedding . substr($hash_embedding, 0, 3) . $object->config('ds');
-                                    $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
-                                    $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
-                                    if($data_word){
-                                        $word = $data_word->get('word');
-                                        switch($word){
-                                            case '<2x-space/>':
-                                                $result_words[] = '';
-                                                break;
-                                            case '<backspace/>':
-                                                $next = $word_nr + 1 ?? null;
-                                                $next_id = $data_sentence->get('word.' . $next);
-                                                $next_hash_id = hash('sha256', $next_id);
-                                                $subdir_next_word_id = $dir_word_id . substr($next_hash_id, 0, 3) . $object->config('ds');
-                                                $source_next_word_id = $subdir_next_word_id . $next_id;// . $object->config('extension.json');
-                                                if(File::exist($source_next_word_id)) {
-                                                    $hash_next_embedding = File::read($source_next_word_id);
-                                                    $subdir_next_word_embedding = $dir_word_embedding . substr($hash_next_embedding, 0, 3) . $object->config('ds');
-                                                    $source_next_word_embedding = $subdir_next_word_embedding . $hash_next_embedding . $object->config('extension.json');
-                                                    $data_word = $object->data_read($source_next_word_embedding, hash('sha256', $source_next_word_embedding));
-                                                    if ($data_word) {
-                                                        $word = $data_word->get('word');
-                                                        d($result_words);
-                                                        ddd($word);
-                                                    }
-                                                }
-
-                                                d($result_words);
-                                                d($word_nr);
-                                                ddd($next);
-                                            default:
-                                                $result_words[] = $word;
-                                        }
-                                    }
-                                }
+                                $get_word = $this->get_word([
+                                    'source' => $source_word_id,
+                                    'dir' => $dir_word_embedding,
+                                    'result' => $result_words,
+                                    'sentence' => $data_sentence,
+                                    'nr' => $word_nr
+                                ]);
+                                ddd($get_word);
                             }
                         }
 //                        d($result_words);
@@ -239,6 +210,40 @@ trait Find {
             $time = microtime(true);
             $duration = $time - $object->config('time.start');
             echo "Duration: " . Time::format(round($duration, 3)) . PHP_EOL;
+        }
+    }
+
+    private function get_word(array $options = []){
+        $object = $this->object();
+        if(!array_key_exists('result', $options)){
+            $options['result'] = [];
+        }
+        if(File::exist($options['source'])){
+            $hash_embedding = File::read($options['source']);
+            $subdir_word_embedding = $options['dir'] . substr($hash_embedding, 0, 3) . $object->config('ds');
+            $source_word_embedding = $subdir_word_embedding . $hash_embedding . $object->config('extension.json');
+            $data_word = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
+            if($data_word){
+                $word = $data_word->get('word');
+                switch($word){
+                    case '<2x-space/>':
+                        $options['result'][] = '';
+                        break;
+                    case '<backspace/>':
+                        $next = $options['nr'] + 1 ?? null;
+                        $result_words = $this->get_word([
+                            'source' => $options['source'],
+                            'dir' => $options['dir'],
+                            'result' => $options['result'],
+                            'sentence' => $options['sentence'],
+                            'nr' => $next
+                        ]);
+                        ddd($result_words);
+                        ddd($next);
+                    default:
+                        $options['result'][] = $word;
+                }
+            }
         }
     }
 
