@@ -245,6 +245,7 @@ trait Find {
                 }
             }
         }
+        return $options;
     }
 
     /**
