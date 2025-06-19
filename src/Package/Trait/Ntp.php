@@ -53,7 +53,7 @@ trait Ntp {
             $sentences = $data->get('sentence');
             $words = $data->get('word');
             foreach($documents as $document_id => $document){
-                foreach($document->paragraph as $pragraph_id){
+                foreach($document->paragraph as $paragraph_id){
                     if(property_exists($paragraphs, $paragraph_id)){
                         $paragraph = $paragraphs->$paragraph_id;
                         ddd($paragraph);
