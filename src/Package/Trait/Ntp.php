@@ -63,6 +63,16 @@ trait Ntp {
                                     foreach($sentence->word as $word_nr => $word_id){
                                         $next_word = $sentence->word[$word_nr + 1] ?? null;
                                         if($next_word){
+                                            $hash_ntp_id = hash('sha256', $word_id);
+                                            $subdir_ntp_id = $dir_word_ntp .
+                                                substr($hash_ntp_id, 0, 3) .
+                                                $object->config('ds');
+                                            $source_ntp_id = $subdir_ntp_id .
+                                                $word_id .
+                                                $object->config('extension.json');
+                                            $data = new Data();
+                                            $data->set('ntp.word.id', $word_id);
+                                            $data->set('ntp.word.text', $word_id);
                                             d($next_word);
                                             ddd($word_id);
 
