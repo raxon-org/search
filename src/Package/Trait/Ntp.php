@@ -44,6 +44,8 @@ trait Ntp {
             }
         }
         $dir_word_ntp = $dir_version . 'Words' . $object->config('ds') . 'Ntp' . $object->config('ds');
+        $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
+        $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
         if($data){
@@ -70,9 +72,22 @@ trait Ntp {
                                             $source_ntp_id = $subdir_ntp_id .
                                                 $word_id .
                                                 $object->config('extension.json');
-                                            $data = new Data();
-                                            $data->set('ntp.word.id', $word_id);
-                                            $data->set('ntp.word.text', $word_id);
+                                            if(!File::exist($source_ntp_id)){
+                                                $subdir_word_id = $dir_word_id .
+                                                    substr($hash_ntp_id, 0, 3) .
+                                                    $object->config('ds');
+                                                $source_word_id =  $subdir_word_id .
+                                                    $word_id;
+                                                if(File::exist($source_word_id)){
+                                                    $hash_word_embedding = File::read($source_word_id);
+                                                    ddd($hash_word_embedding);
+                                                    $data = new Data();
+                                                    $data->set('ntp.word.id', $word_id);
+                                                    $data->set('ntp.word.text', $word_id);
+                                                }
+
+                                            }
+
                                             d($next_word);
                                             ddd($word_id);
 
