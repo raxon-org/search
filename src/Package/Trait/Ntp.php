@@ -151,7 +151,8 @@ trait Ntp {
                 }
                 $count++;
                 if($count % 100 === 0){
-                    ddd($cache_list);
+                    d($cache_list);
+                    break;
                 }
 
             }
