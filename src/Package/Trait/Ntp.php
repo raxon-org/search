@@ -56,6 +56,7 @@ trait Ntp {
             $sentences = $data->get('sentence');
             $words = $data->get('word');
             $cache_list = [];
+            $cache = $object->data(App::CACHE);
             foreach($documents as $document_id => $document){
                 foreach($document->paragraph as $paragraph_id){
                     if(property_exists($paragraphs, $paragraph_id)){
@@ -82,7 +83,6 @@ trait Ntp {
                                             $object->config('extension.json');
 
                                         $hash_ntp_id = hash('sha256', $source_ntp_id);
-                                        $cache = $object->data(App::CACHE);
                                         if($cache->has($hash_ntp_id)){
                                             $data_ntp = $cache->get($hash_ntp_id);
                                         } else {
@@ -149,7 +149,7 @@ trait Ntp {
                     }
                 }
                 d($cache_list);
-                ddd($document);
+                ddd($cache);
             }
             d($sentences);
         }
