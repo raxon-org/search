@@ -86,7 +86,7 @@ trait Ntp {
                                                     $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
                                                     $data_word_embedding = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
                                                     d($source_word_embedding);
-                                                    d($datas_word_embedding);
+                                                    d($data_word_embedding);
                                                     $data = new Data();
                                                     $data->set('ntp.word.id', $word_id);
                                                     $data->set('ntp.word.text', $word_id);
