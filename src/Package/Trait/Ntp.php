@@ -4,6 +4,7 @@ namespace Package\Raxon\Search\Trait;
 use Error;
 use ErrorException;
 use Exception;
+use Raxon\App;
 use Raxon\Config;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Core;
