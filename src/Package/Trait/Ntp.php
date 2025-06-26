@@ -111,17 +111,16 @@ trait Ntp {
                                                 $data_next_word_embedding = $object->data_read($source_next_word_embedding);
                                                 $list = $data_ntp->get('list') ?? [];
                                                 $found = false;
-                                                foreach($list as $list_nr => $record){
+                                                foreach($list as $list_word_id => $record){
                                                     if($record->word === $data_next_word_embedding->get('word')){
-                                                        $found = $list_nr;
+                                                        $found = $list_word_id;
                                                         break;
                                                     }
                                                 }
                                                 if($found){
                                                     $list[$found]->count++;
                                                 } else {
-                                                    $list[] = (object) [
-                                                        'id' => $next_word,
+                                                    $list[$next_word] = (object) [
                                                         'word' => $data_next_word_embedding->get('word'),
                                                         'count' => 1
                                                     ];
