@@ -102,10 +102,33 @@ trait Ntp {
                                                 $object->config('ds');
                                             $source_next_word_id =  $subdir_next_word_id .
                                                 $next_word;
-                                            ddd($source_next_word_id);
-
-
-
+                                            if(File::exist($source_next_word_id)) {
+                                                $hash_next_word_embedding = File::read($source_next_word_id);
+                                                $subdir_next_word_embedding = $dir_word_embedding .
+                                                    substr($hash_next_word_embedding, 0, 3) .
+                                                    $object->config('ds');
+                                                $source_next_word_embedding = $subdir_next_word_embedding . $hash_next_word_embedding . $object->config('extension.json');
+                                                $data_next_word_embedding = $object->data_read($source_next_word_embedding);
+                                                $list = $data_ntp->get('list') ?? [];
+                                                $found = false;
+                                                foreach($list as $list_nr => $record){
+                                                    if($record->word === $data_next_word_embedding->get('word')){
+                                                        $found = $list_nr;
+                                                        break;
+                                                    }
+                                                }
+                                                if($found){
+                                                    $list[$found]->count++;
+                                                } else {
+                                                    $list[] = (object) [
+                                                        'id' => $next_word,
+                                                        'word' => $data_next_word_embedding->get('word'),
+                                                        'count' => 1
+                                                    ];
+                                                }
+                                                $data_ntp->set('list', $list);
+                                            }
+                                            ddd($data_ntp);
                                             /*
                                             $hash_ntp_id = hash('sha256', $next_word);
                                             $subdir_ntp_id = $dir_word_ntp .
