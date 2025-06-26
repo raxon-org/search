@@ -160,15 +160,19 @@ trait Ntp {
                     $duration_left = round($duration_percentage - $duration, 3);
                     echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round($percentage, 3) . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                 }
-                if($count % 100 === 0){
+                if($count % 1000 === 0){
                     foreach($cache_list as $hash){
                         $data_ntp = $cache->get($hash);
-                        ddd($data_ntp);
+                        $data_ntp->write($data_ntp->get('url'));
+                        $cache->delete($hash);
                     }
-                    d(count($cache_list));
-                    break;
+                    $cache_list = [];
                 }
-
+            }
+            foreach($cache_list as $hash){
+                $data_ntp = $cache->get($hash);
+                $data_ntp->write($data_ntp->get('url'));
+                $cache->delete($hash);
             }
         }
         if(property_exists($options, 'duration')){
