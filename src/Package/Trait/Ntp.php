@@ -51,6 +51,7 @@ trait Ntp {
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
         $source = $dir_version . 'Search' . $object->config('extension.json');
         $data = $object->data_read($source);
+        File::permission($object, ['dir' => $dir_word_ntp]);
         if($data){
             $documents = $data->get('document');
             $document_count = $data->count('document');
@@ -170,6 +171,7 @@ trait Ntp {
             foreach($cache_list as $hash){
                 $data_ntp = $cache->get($hash);
                 $data_ntp->write($data_ntp->get('url'));
+                File::permission($object, ['url' => $data_ntp->get('url')]);
                 $cache->delete($hash);
             }
         }
