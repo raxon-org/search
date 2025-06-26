@@ -70,27 +70,52 @@ trait Ntp {
                                             $object->config('ds');
                                         $source_word_id =  $subdir_word_id .
                                             $word_id;
-                                        if(File::exist($source_word_id)) {
-                                            $hash_word_embedding = File::read($source_word_id);
-                                            $subdir_word_embedding = $dir_word_embedding .
-                                                substr($hash_word_embedding, 0, 3) .
-                                                $object->config('ds');
-                                            $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
-                                            $data_word_embedding = $object->data_read($source_word_embedding);
-                                            ddd($data_word_embedding);
+
+
+                                        $subdir_ntp_id = $dir_word_ntp .
+                                            substr($hash_word_id, 0, 3) .
+                                            $object->config('ds');
+                                        $source_ntp_id = $subdir_ntp_id .
+                                            $word_id .
+                                            $object->config('extension.json');
+                                        if(!File::exist($source_ntp_id)){
+                                            $data_word_embedding = false;
+                                            if(File::exist($source_word_id)) {
+                                                $hash_word_embedding = File::read($source_word_id);
+                                                $subdir_word_embedding = $dir_word_embedding .
+                                                    substr($hash_word_embedding, 0, 3) .
+                                                    $object->config('ds');
+                                                $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
+                                                $data_word_embedding = $object->data_read($source_word_embedding);
+                                            }
+                                            $data_ntp = new Data();
+                                            $data_ntp->set('id', $word_id);
+                                            $data_ntp->set('word', $data_word_embedding->get('word'));
+                                        } else {
+                                            $data_ntp = $object->data_read($source_ntp_id);
                                         }
-
-
-
                                         $next_word = $sentence->word[$word_nr + 1] ?? null;
                                         if($next_word){
-                                            $hash_ntp_id = hash('sha256', $word_id);
+                                            $hash_next_word_id = hash('sha256', $next_word);
+                                            $subdir_next_word_id = $dir_word_id .
+                                                substr($hash_next_word_id, 0, 3) .
+                                                $object->config('ds');
+                                            $source_next_word_id =  $subdir_next_word_id .
+                                                $next_word;
+                                            ddd($source_next_word_id);
+
+
+
+                                            /*
+                                            $hash_ntp_id = hash('sha256', $next_word);
                                             $subdir_ntp_id = $dir_word_ntp .
                                                 substr($hash_ntp_id, 0, 3) .
                                                 $object->config('ds');
                                             $source_ntp_id = $subdir_ntp_id .
                                                 $word_id .
                                                 $object->config('extension.json');
+                                            */
+                                            /*
                                             if(!File::exist($source_ntp_id)){
                                                 $subdir_word_id = $dir_word_id .
                                                     substr($hash_ntp_id, 0, 3) .
@@ -114,7 +139,7 @@ trait Ntp {
 
                                             d($next_word);
                                             ddd($word_id);
-
+                                            */
                                         }
                                     }
                                 }
