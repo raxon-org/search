@@ -63,6 +63,25 @@ trait Ntp {
                                 if(property_exists($sentences, $sentence_id)){
                                     $sentence = $sentences->{$sentence_id};
                                     foreach($sentence->word as $word_nr => $word_id){
+
+                                        $hash_word_id = hash('sha256', $word_id);
+                                        $subdir_word_id = $dir_word_id .
+                                            substr($hash_word_id, 0, 3) .
+                                            $object->config('ds');
+                                        $source_word_id =  $subdir_word_id .
+                                            $word_id;
+                                        if(File::exist($source_word_id)) {
+                                            $hash_word_embedding = File::read($source_word_id);
+                                            $subdir_word_embedding = $dir_word_embedding .
+                                                substr($hash_word_embedding, 0, 3) .
+                                                $object->config('ds');
+                                            $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
+                                            $data_word_embedding = $object->data_read($source_word_embedding);
+                                            ddd($data_word_embedding);
+                                        }
+
+
+
                                         $next_word = $sentence->word[$word_nr + 1] ?? null;
                                         if($next_word){
                                             $hash_ntp_id = hash('sha256', $word_id);
@@ -84,12 +103,10 @@ trait Ntp {
                                                         substr($hash_word_embedding, 0, 3) .
                                                         $object->config('ds');
                                                     $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
-                                                    $data_word_embedding = $object->data_read($source_word_embedding, hash('sha256', $source_word_embedding));
-                                                    d($source_word_embedding);
-                                                    d($data_word_embedding);
+                                                    $data_word_embedding = $object->data_read($source_word_embedding);
                                                     $data = new Data();
                                                     $data->set('ntp.word.id', $word_id);
-                                                    $data->set('ntp.word.text', $word_id);
+                                                    $data->set('ntp.word.text', $data_word_embedding->get('word'));
                                                     ddd($data);
                                                 }
 
