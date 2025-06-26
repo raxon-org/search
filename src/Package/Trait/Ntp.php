@@ -54,6 +54,7 @@ trait Ntp {
             $paragraphs = $data->get('paragraph');
             $sentences = $data->get('sentence');
             $words = $data->get('word');
+            $cache_list = [];
             foreach($documents as $document_id => $document){
                 foreach($document->paragraph as $paragraph_id){
                     if(property_exists($paragraphs, $paragraph_id)){
@@ -78,21 +79,29 @@ trait Ntp {
                                         $source_ntp_id = $subdir_ntp_id .
                                             $word_id .
                                             $object->config('extension.json');
-                                        if(!File::exist($source_ntp_id)){
-                                            $data_word_embedding = false;
-                                            if(File::exist($source_word_id)) {
-                                                $hash_word_embedding = File::read($source_word_id);
-                                                $subdir_word_embedding = $dir_word_embedding .
-                                                    substr($hash_word_embedding, 0, 3) .
-                                                    $object->config('ds');
-                                                $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
-                                                $data_word_embedding = $object->data_read($source_word_embedding);
-                                            }
-                                            $data_ntp = new Data();
-                                            $data_ntp->set('id', $word_id);
-                                            $data_ntp->set('word', $data_word_embedding->get('word'));
+
+                                        $hash_ntp_id = hash('sha256', $source_ntp_id);
+                                        $cache = $object->data(App::CACHE);
+                                        if($cache->has($hash_ntp_id)){
+                                            $data_ntp = $cache->get($hash_ntp_id);
                                         } else {
-                                            $data_ntp = $object->data_read($source_ntp_id);
+                                            if (!File::exist($source_ntp_id)) {
+                                                $data_word_embedding = false;
+                                                if (File::exist($source_word_id)) {
+                                                    $hash_word_embedding = File::read($source_word_id);
+                                                    $subdir_word_embedding = $dir_word_embedding .
+                                                        substr($hash_word_embedding, 0, 3) .
+                                                        $object->config('ds');
+                                                    $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
+                                                    $data_word_embedding = $object->data_read($source_word_embedding);
+                                                }
+                                                $data_ntp = new Data();
+                                                $data_ntp->set('id', $word_id);
+                                                $data_ntp->set('word', $data_word_embedding->get('word'));
+                                                $data_ntp->set('url', $source_ntp_id);
+                                            } else {
+                                                $data_ntp = $object->data_read($source_ntp_id);
+                                            }
                                         }
                                         $next_word = $sentence->word[$word_nr + 1] ?? null;
                                         if($next_word){
@@ -127,48 +136,18 @@ trait Ntp {
                                                 }
                                                 $data_ntp->set('list', $list);
                                             }
-                                            ddd($data_ntp);
-                                            /*
-                                            $hash_ntp_id = hash('sha256', $next_word);
-                                            $subdir_ntp_id = $dir_word_ntp .
-                                                substr($hash_ntp_id, 0, 3) .
-                                                $object->config('ds');
-                                            $source_ntp_id = $subdir_ntp_id .
-                                                $word_id .
-                                                $object->config('extension.json');
-                                            */
-                                            /*
-                                            if(!File::exist($source_ntp_id)){
-                                                $subdir_word_id = $dir_word_id .
-                                                    substr($hash_ntp_id, 0, 3) .
-                                                    $object->config('ds');
-                                                $source_word_id =  $subdir_word_id .
-                                                    $word_id;
-                                                if(File::exist($source_word_id)){
-                                                    $hash_word_embedding = File::read($source_word_id);
-                                                    $subdir_word_embedding = $dir_word_embedding .
-                                                        substr($hash_word_embedding, 0, 3) .
-                                                        $object->config('ds');
-                                                    $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
-                                                    $data_word_embedding = $object->data_read($source_word_embedding);
-                                                    $data = new Data();
-                                                    $data->set('ntp.word.id', $word_id);
-                                                    $data->set('ntp.word.text', $data_word_embedding->get('word'));
-                                                    ddd($data);
-                                                }
-
-                                            }
-
-                                            d($next_word);
-                                            ddd($word_id);
-                                            */
                                         }
+                                        if(!in_array($hash_ntp_id, $cache_list, true)){
+                                            $cache_list[] = $hash_ntp_id;
+                                        }
+                                        $cache->set($hash_ntp_id, $data_ntp);
                                     }
                                 }
                             }
                         }
                     }
                 }
+                d($cache_list);
                 ddd($document);
             }
             d($sentences);
