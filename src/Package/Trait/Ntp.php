@@ -161,6 +161,10 @@ trait Ntp {
                     echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round($percentage, 3) . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                 }
                 if($count % 100 === 0){
+                    foreach($cache_list as $hash){
+                        $data_ntp = $cache->get($hash);
+                        ddd($data_ntp);
+                    }
                     d(count($cache_list));
                     break;
                 }
