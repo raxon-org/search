@@ -158,9 +158,9 @@ trait Ntp {
                     $duration = $time - $object->config('time.start');
                     $duration_percentage = round($duration / (($count) / $document_count), 3);
                     $duration_left = round($duration_percentage - $duration, 3);
-                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
+                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . round($percentage, 3) . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
                 }
-                if($count % 1000 === 0){
+                if($count % 100 === 0){
                     d(count($cache_list));
                     break;
                 }
