@@ -80,10 +80,15 @@ trait Ntp {
                                                     $word_id;
                                                 if(File::exist($source_word_id)){
                                                     $hash_word_embedding = File::read($source_word_id);
-                                                    ddd($hash_word_embedding);
+                                                    $subdir_word_embedding = $dir_word_embedding .
+                                                        substr($hash_word_embedding, 0, 3) .
+                                                        $object->config('ds');
+                                                    $source_word_embedding = $subdir_word_embedding . $hash_word_embedding . $object->config('extension.json');
+                                                    d($source_word_embedding);
                                                     $data = new Data();
                                                     $data->set('ntp.word.id', $word_id);
                                                     $data->set('ntp.word.text', $word_id);
+                                                    ddd($data);
                                                 }
 
                                             }
