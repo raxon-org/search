@@ -7,6 +7,7 @@ use Exception;
 use Raxon\App;
 use Raxon\Config;
 use Raxon\Exception\ObjectException;
+use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
@@ -44,6 +45,7 @@ trait Ntp {
                 $dir_version .= $object->config('ds');
             }
         }
+        echo 'Initializing...' . PHP_EOL;
         $dir_word_ntp = $dir_version . 'Words' . $object->config('ds') . 'Ntp' . $object->config('ds');
         $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
         $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
@@ -150,8 +152,16 @@ trait Ntp {
                     }
                 }
                 $count++;
-                if($count % 100 === 0){
-                    d($cache_list);
+                if($count % 10 === 0){
+                    $percentage = ($count / $document_count) * 100;
+                    $time = microtime(true);
+                    $duration = $time - $object->config('time.start');
+                    $duration_percentage = round($duration / (($count) / $document_count), 3);
+                    $duration_left = round($duration_percentage - $duration, 3);
+                    echo  Cli::tput('cursor.up') . Cli::tput('erase.line') . 'Percentage: ' . $percentage . '%; Duration: ' . Time::format($duration, '') . '; Time left: ' . Time::format($duration_left) . '; ' . PHP_EOL;
+                }
+                if($count % 1000 === 0){
+                    d(count($cache_list));
                     break;
                 }
 
