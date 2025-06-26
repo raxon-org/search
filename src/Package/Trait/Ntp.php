@@ -57,6 +57,7 @@ trait Ntp {
             $words = $data->get('word');
             $cache_list = [];
             $cache = $object->data(App::CACHE);
+            $count = 0;
             foreach($documents as $document_id => $document){
                 foreach($document->paragraph as $paragraph_id){
                     if(property_exists($paragraphs, $paragraph_id)){
@@ -148,10 +149,12 @@ trait Ntp {
                         }
                     }
                 }
-                d($cache_list);
-                ddd($cache);
+                $count++;
+                if($count % 100 === 0){
+                    ddd($cache_list);
+                }
+
             }
-            d($sentences);
         }
         if(property_exists($options, 'duration')){
             $time = microtime(true);
