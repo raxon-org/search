@@ -109,7 +109,7 @@ trait Ntp {
                                                     $object->config('ds');
                                                 $source_next_word_embedding = $subdir_next_word_embedding . $hash_next_word_embedding . $object->config('extension.json');
                                                 $data_next_word_embedding = $object->data_read($source_next_word_embedding);
-                                                $list = $data_ntp->get('list') ?? [];
+                                                $list = $data_ntp->get('list') ?? (object) [];
                                                 $found = false;
                                                 foreach($list as $list_word_id => $record){
                                                     if($record->word === $data_next_word_embedding->get('word')){
@@ -118,9 +118,9 @@ trait Ntp {
                                                     }
                                                 }
                                                 if($found){
-                                                    $list[$found]->count++;
+                                                    $list->{$found}->count++;
                                                 } else {
-                                                    $list[$next_word] = (object) [
+                                                    $list->{$next_word} = (object) [
                                                         'word' => $data_next_word_embedding->get('word'),
                                                         'count' => 1
                                                     ];
