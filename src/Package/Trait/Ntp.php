@@ -23,6 +23,47 @@ trait Ntp {
      * @throws ObjectException
      * @throws Exception
      */
+    public function predict(object $flags, object $options): void
+    {
+        if (!property_exists($options, 'type')) {
+            $options->type = 'word';
+        }
+        $object = $this->object();
+        if (!property_exists($options, 'version')) {
+            $options->version = self::VERSION;
+        }
+        if (!property_exists($options, 'limit')) {
+            $options->limit = self::LIMIT;
+        }
+        if (!property_exists($options, 'model_dir')) {
+            $dir_data = $object->config('controller.dir.data');
+            $dir_search = $dir_data . 'Search' . $object->config('ds');
+            $dir_version = $dir_search . $options->version . $object->config('ds');
+        } else {
+            $dir_version = $options->model_dir;
+            if (substr($dir_version, -1, 1) !== $object->config('ds')) {
+                $dir_version .= $object->config('ds');
+            }
+        }
+        if (!property_exists($options, 'input')) {
+            throw new Exception('Option input required...');
+        }
+        $dir_word_ntp = $dir_version . 'Words' . $object->config('ds') . 'Ntp' . $object->config('ds');
+        $dir_word_id = $dir_version . 'Words' . $object->config('ds') . 'Id' . $object->config('ds');
+        $dir_word_embedding = $dir_version . 'Words' . $object->config('ds') . 'Embedding' . $object->config('ds');
+
+        $word_hash = hash('sha256', $options->input);
+        $dir_word_embedding_subdir = $dir_word_embedding . substr($word_hash, 0, 3) . $object->config('ds'); //split in 4096 parts
+        $url_word_embedding = $dir_word_embedding_subdir . $word_hash . $object->config('extension.json');
+        $data_word_embedding = $object->data_read($url_word_embedding);
+        ddd($data_word_embedding);
+    }
+
+
+    /**
+     * @throws ObjectException
+     * @throws Exception
+     */
     public function process(object $flags, object $options): void
     {
         if (!property_exists($options, 'type')) {
