@@ -59,7 +59,8 @@ trait Ntp {
         if($data_word_embedding){
             $data_word_next = false;
             $count = 0;
-            $output = [];
+            $output_id = [];
+            $output_text = [];
             $word_id = $data_word_embedding->get('id');
             while(true){
                 if($word_id){
@@ -80,7 +81,8 @@ trait Ntp {
                             $current += $record->count;
                             if($random <= $current){
                                 $selected = $word_id_next;
-                                $output[] = $word_id_next;
+                                $output_id[] = $word_id_next;
+                                $output_text[] = $record->word;
                                 break;
                             }
                         }
@@ -92,7 +94,8 @@ trait Ntp {
                     break;
                 }
             }
-            ddd($output);
+            d($output_id);
+            ddd($output_text);
         }
     }
 
