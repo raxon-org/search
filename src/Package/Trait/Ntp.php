@@ -57,16 +57,29 @@ trait Ntp {
         $url_word_embedding = $dir_word_embedding_subdir . $word_hash . $object->config('extension.json');
         $data_word_embedding = $object->data_read($url_word_embedding); //need different way to get the id of the word
         if($data_word_embedding){
-            $word_id = $data_word_embedding->get('id');
-            if($word_id){
-                $word_id_hash = hash('sha256', $word_id);
-                $dir_word_ntp_subdir = $dir_word_ntp . substr($word_id_hash, 0, 3) . $object->config('ds');
-                $url_word_ntp = $dir_word_ntp_subdir . $word_id . $object->config('extension.json');
-                $data_word_ntp = $object->data_read($url_word_ntp);
-                if($data_word_ntp){
-                    ddd($data_word_ntp);
+            $data_word_next = false;
+            while(true){
+                if($data_word_next){
+                    $word_id = $data_word_next->get('id');
+                } else {
+                    $word_id = $data_word_embedding->get('id');
+                }
+                if($word_id){
+                    $word_id_hash = hash('sha256', $word_id);
+                    $dir_word_ntp_subdir = $dir_word_ntp . substr($word_id_hash, 0, 3) . $object->config('ds');
+                    $url_word_ntp = $dir_word_ntp_subdir . $word_id . $object->config('extension.json');
+                    $data_word_ntp = $object->data_read($url_word_ntp);
+                    if($data_word_ntp){
+                        $total = 0;
+                        foreach($data_word_ntp->get('list') as $word_id_next => $record){
+                            $total += $record->count ?? 0;
+                        }
+
+                        ddd($total);
+                    }
                 }
             }
+
         }
     }
 
