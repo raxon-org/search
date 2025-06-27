@@ -55,8 +55,19 @@ trait Ntp {
         $word_hash = hash('sha256', $options->input);
         $dir_word_embedding_subdir = $dir_word_embedding . substr($word_hash, 0, 3) . $object->config('ds'); //split in 4096 parts
         $url_word_embedding = $dir_word_embedding_subdir . $word_hash . $object->config('extension.json');
-        $data_word_embedding = $object->data_read($url_word_embedding);
-        ddd($data_word_embedding);
+        $data_word_embedding = $object->data_read($url_word_embedding); //need different way to get the id of the word
+        if($data_word_embedding){
+            $word_id = $data_word_embedding->get('id');
+            if($word_id){
+                $word_id_hash = hash('sha256', $word_id);
+                $dir_word_ntp_subdir = $dir_word_ntp . substr($word_id_hash, 0, 3) . $object->config('ds');
+                $url_word_ntp = $dir_word_ntp_subdir . $word_id . $object->config('extension.json');
+                $data_word_ntp = $object->data_read($url_word_ntp);
+                if($data_word_ntp){
+                    ddd($data_word_ntp);
+                }
+            }
+        }
     }
 
 
