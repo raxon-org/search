@@ -58,6 +58,7 @@ trait Ntp {
         $data_word_embedding = $object->data_read($url_word_embedding); //need different way to get the id of the word
         if($data_word_embedding){
             $data_word_next = false;
+            $count = 0;
             while(true){
                 if($data_word_next){
                     $word_id = $data_word_next->get('id');
@@ -70,13 +71,27 @@ trait Ntp {
                     $url_word_ntp = $dir_word_ntp_subdir . $word_id . $object->config('extension.json');
                     $data_word_ntp = $object->data_read($url_word_ntp);
                     if($data_word_ntp){
-                        $total = 0;
+                        $max = 0;
                         foreach($data_word_ntp->get('list') as $word_id_next => $record){
-                            $total += $record->count ?? 0;
+                            $max += $record->count ?? 0;
                         }
-
-                        ddd($total);
+                        $min = 1;
+                        $random = random_int($min, $max);
+                        $current = 0;
+                        $selected = false;
+                        foreach($data_word_ntp->get('list') as $word_id_next => $record){
+                            $current += $record->count;
+                            if($random <= $current){
+                                $selected = $record;
+                                break;
+                            }
+                        }
+                        ddd($selected);
                     }
+                }
+                $count++;
+                if($count === 10){
+                    break;
                 }
             }
 
