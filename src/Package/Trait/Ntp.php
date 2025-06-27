@@ -59,12 +59,9 @@ trait Ntp {
         if($data_word_embedding){
             $data_word_next = false;
             $count = 0;
+            $output = [];
+            $word_id = $data_word_embedding->get('id');
             while(true){
-                if($data_word_next){
-                    $word_id = $data_word_next->get('id');
-                } else {
-                    $word_id = $data_word_embedding->get('id');
-                }
                 if($word_id){
                     $word_id_hash = hash('sha256', $word_id);
                     $dir_word_ntp_subdir = $dir_word_ntp . substr($word_id_hash, 0, 3) . $object->config('ds');
@@ -82,11 +79,12 @@ trait Ntp {
                         foreach($data_word_ntp->get('list') as $word_id_next => $record){
                             $current += $record->count;
                             if($random <= $current){
-                                $selected = $record;
+                                $selected = $word_id_next;
+                                $output[] = $word_id_next;
                                 break;
                             }
                         }
-                        ddd($selected);
+                        $word_id = $selected;
                     }
                 }
                 $count++;
@@ -94,7 +92,7 @@ trait Ntp {
                     break;
                 }
             }
-
+            ddd($output);
         }
     }
 
