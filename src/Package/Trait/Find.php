@@ -160,6 +160,8 @@ trait Find {
             exit(0);
         }
         $key_rand = array_rand($top);
+        d($key_rand);
+        d($top);
         $search[] = $char_to_key[$top[$key_rand]] ?? null;
         ddd($search);
         $text = '';
