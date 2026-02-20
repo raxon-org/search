@@ -95,7 +95,7 @@ trait Find {
         $pointer_min = null;
         $pointer_max = null;
         for($nr = $pointer_start; $nr < $model_count; $nr++){
-//            $token_id = $model[$nr];
+            $token_id = $model[$nr];
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
@@ -171,7 +171,6 @@ trait Find {
                 }
                 */
             }
-            /*
             elseif(
                 $start_fresh === false &&
                 $pointer_max > 0 &&
@@ -180,7 +179,6 @@ trait Find {
             ){
                 break;
             }
-            */
         }
         arsort($result, SORT_NATURAL);
         $nr = 0;
