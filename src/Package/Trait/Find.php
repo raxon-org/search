@@ -124,7 +124,6 @@ trait Find {
             }
             if($context_window === $search){
                 $is_found = true;
-                ddd('yes');
             }
             if($is_found){
                 $part = '';
