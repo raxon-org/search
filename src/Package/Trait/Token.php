@@ -209,13 +209,6 @@ trait Token {
         $transform[] = $char_to_key['<HEADER_END>'] ?? null;
         $split = mb_str_split($file->read);
         $skip = 0;
-        $block_2 = [];
-        $block_3 = [];
-        $block_4 = [];
-        $block_8 = [];
-        $block_16 = [];
-        $block_32 = [];
-        $block_64 = [];
         foreach($split as $nr => $char){
             if($skip > 0){
                 $skip--;
@@ -293,42 +286,25 @@ trait Token {
             $block_64[] = $split[$nr + 62] ?? null;
             $block_64[] = $split[$nr + 63] ?? null;
 
-            if(
-                $skip === 0 &&
-                $block_8[0] === ' ' &&
-                $block_8[1] === ' ' &&
-                $block_8[2] === ' ' &&
-                $block_8[3] === ' ' &&
-                $block_8[4] === ' ' &&
-                $block_8[5] === ' ' &&
-                $block_8[6] === ' ' &&
-                $block_8[7] === ' '
-            ){
-                $transform[] = $char_to_key['        '] ?? null;
+            $char_block_8 = implode('', $block_8);
+            $char_block_4 = implode('', $block_4);
+            $char_block_3 = implode('', $block_3);
+            $char_block_2 = implode('', $block_2);
+
+            if(array_key_exists($char_block_8, $char_to_key)){
+                $transform[] = $char_to_key[$char_block_8] ?? null;
                 $skip =+ 7;
             }
-            elseif(
-                $block_4[0] === ' ' &&
-                $block_4[1] === ' ' &&
-                $block_4[2] === ' ' &&
-                $block_4[3] === ' '
-            ){
-                $transform[] = $char_to_key['    '] ?? null;
+            elseif(array_key_exists($char_block_4, $char_to_key)){
+                $transform[] = $char_to_key[$char_block_4] ?? null;
                 $skip =+ 3;
             }
-            elseif(
-                $block_3[0] === ' ' &&
-                $block_3[1] === ' ' &&
-                $block_3[2] === ' '
-            ){
-                $transform[] = $char_to_key['   '] ?? null;
+            elseif(array_key_exists($char_block_3, $char_to_key)){
+                $transform[] = $char_to_key[$char_block_3] ?? null;
                 $skip += 2;
             }
-            elseif(
-                $block_2[0] === ' ' &&
-                $block_2[1] === ' '
-            ){
-                $transform[] = $char_to_key['  '] ?? null;
+            elseif(array_key_exists($char_block_2, $char_to_key)){
+                $transform[] = $char_to_key[$char_block_2] ?? null;
                 $skip++;
             }
             elseif(

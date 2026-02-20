@@ -77,41 +77,26 @@ trait Find {
                 $block_8[] = $split[$nr + 5] ?? null;
                 $block_8[] = $split[$nr + 6] ?? null;
                 $block_8[] = $split[$nr + 7] ?? null;
-                if(
-                    $block_8[0] === ' ' &&
-                    $block_8[1] === ' ' &&
-                    $block_8[2] === ' ' &&
-                    $block_8[3] === ' ' &&
-                    $block_8[4] === ' ' &&
-                    $block_8[5] === ' ' &&
-                    $block_8[6] === ' ' &&
-                    $block_8[7] === ' '
-                ){
-                    $search[] = $char_to_key['        '];
+
+                $char_block_8 = implode('', $block_8);
+                $char_block_4 = implode('', $block_4);
+                $char_block_3 = implode('', $block_3);
+                $char_block_2 = implode('', $block_2);
+
+                if(array_key_exists($char_block_8, $char_to_key)){
+                    $search[] = $char_to_key[$char_block_8];
                     $skip+=7;
                 }
-                elseif(
-                    $block_4[0] === ' ' &&
-                    $block_4[1] === ' ' &&
-                    $block_4[2] === ' ' &&
-                    $block_4[3] === ' '
-                ){
-                    $search[] = $char_to_key['    '];
+                elseif(array_key_exists($char_block_4, $char_to_key)){
+                    $search[] = $char_to_key[$char_block_4];
                     $skip+=3;
                 }
-                elseif(
-                    $block_3[0] === ' ' &&
-                    $block_3[1] === ' ' &&
-                    $block_3[2] === ' '
-                ){
-                    $search[] = $char_to_key['   '];
+                elseif(array_key_exists($char_block_3, $char_to_key)){
+                    $search[] = $char_to_key[$char_block_3];
                     $skip+=2;
                 }
-                elseif(
-                    $block_2[0] === ' ' &&
-                    $block_2[1] === ' '
-                ){
-                    $search[] = $char_to_key['  '];
+                elseif(array_key_exists($char_block_2, $char_to_key)){
+                    $search[] = $char_to_key[$char_block_2];
                     $skip++;
                 }
                 elseif(array_key_exists($char, $char_to_key)){
