@@ -34,7 +34,7 @@ trait Find {
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
-            foreach($spec as $nr => $char){
+            foreach($spec->data() as $nr => $char){
                 $char_to_key[$char] = $nr;
             }
             $object->config('char.to.key', $char_to_key);
