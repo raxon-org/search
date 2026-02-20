@@ -46,7 +46,7 @@ trait Find {
         $current_count = $options->result_count ?? 0;
         $current_pointer_min = $options->model_pointer_min ?? [0];
         $current_pointer_max = $options->model_pointer_max ?? [0];
-        d($text . ' ' . $current_count . ' ' . $current_pointer_min . ' ' . $current_pointer_max)  ;
+        d($text . ' ' . $current_count . ' ' . end($current_pointer_min) . ' ' . end($current_pointer_max));
         $search = [];
         if($text){
             $split = mb_str_split($text);
