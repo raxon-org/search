@@ -161,6 +161,7 @@ trait Find {
         }
         $key_rand = array_rand($top);
         $search[] = $char_to_key[$top[$key_rand]] ?? null;
+        ddd($search);
         $text = '';
         foreach($search as $nr => $key){
             if(array_key_exists($key, $key_to_char)){
