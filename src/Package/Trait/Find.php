@@ -87,7 +87,7 @@ trait Find {
                     $block_8[6] === ' ' &&
                     $block_8[7] === ' '
                 ){
-                    $search[] = $char_to_key['    '];
+                    $search[] = $char_to_key['        '];
                     $skip+=7;
                 }
                 elseif(

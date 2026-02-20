@@ -31,9 +31,9 @@ trait Token {
         $spec = [];
         $spec[] = ' ';
         $spec[] = '  ';
-//        $spec[] = '   ';
-//        $spec[] = '    ';
-//        $spec[] = '        ';
+        $spec[] = '   ';
+        $spec[] = '    ';
+        $spec[] = '        ';
         $spec[] = '<EOF>';
         $spec[] = '<HEADER_START>';
         $spec[] = '<HEADER_END>';
