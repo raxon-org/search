@@ -118,7 +118,7 @@ trait Find {
                     $result[$part]++;
                 } else {
                     $result[$part] = 1;
-                    $result_header[$part] = $header;
+                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
             }
@@ -129,7 +129,7 @@ trait Find {
         $max = 10;
         $response = [];
         foreach($result as $part => $appearance){
-            $response[] = $part . ' ' . ($appearance / $count * 100) . '%' . ' ' . $result_header[$part]->url . '';
+            $response[] = $part . ' ' . ($appearance / $count * 100) . '%' . ' ' . $result_header[$part] . '';
             $nr++;
             if($nr > $max){
                 break;
