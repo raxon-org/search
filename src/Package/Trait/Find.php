@@ -89,6 +89,7 @@ trait Find {
                 $is_found = true;
             }
             if($is_found){
+                /*
                 $header = [];
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["<HEADER_START>"]){
@@ -104,7 +105,9 @@ trait Find {
                     }
                 }
                 $header = Core::object(implode('', $header));
+                */
                 //grep line from the beginning of the line to the end line
+                /*
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["\n"]){
                         break; //found start of line (at +1)
@@ -121,6 +124,7 @@ trait Find {
                 for($i = $start; $i <= $end; $i++){
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
+                */
                 $end = $i + 1;
                 $part = '';
                 for($i = $nr + $search_count; $i <= $end; $i++){
