@@ -121,16 +121,17 @@ trait Find {
                 for($i = $start; $i <= $end; $i++){
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
+                $end = $i + 1;
                 $part = '';
                 for($i = $nr + $search_count; $i <= $end; $i++){
                     $part .= $key_to_char[$model[$i]] ?? '';
                 }
                 if(array_key_exists($part, $result)){
                     $result[$part]++;
-                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
+//                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 } else {
                     $result[$part] = 1;
-                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
+//                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
             }
