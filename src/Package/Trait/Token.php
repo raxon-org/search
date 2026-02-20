@@ -176,7 +176,7 @@ trait Token {
         }
         $header = [];
         $header['file'] = $file->name;
-        $header['mtime'] = $file->mtime;
+        $header['mtime'] = File::mtime($file->url);
         $header['size'] = File::size($file->url);
         $header['extension'] = $file->extension;;
         $header = Core::object($header, Core::JSON);
