@@ -221,6 +221,8 @@ trait Find {
             }
         }
         if(!array_key_exists(0, $top)){
+            d($context_window);
+            d($search);
             echo 'No results found' . PHP_EOL;
             exit(0);
         }
