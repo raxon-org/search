@@ -59,13 +59,18 @@ trait Find {
         }
         $count = 0;
         $max = 100;
-
         $key_to_char = $object->config('key.to.char');
-
         $model = $model->data();
-
-        $search_count = $object->config('search.count') ?? $object->config('search.count', count($search));
-        $model_count = $object->config('model.count') ?? $object->config('model.count', count($model));
+        $search_count = $object->config('search.count');
+        if($search_count === null){
+            $search_count = count($search);
+            $object->config('search.count', $search_count);
+        }
+        $model_count = $object->config('search.count');
+        if($model_count === null){
+            $model_count = count($model);
+            $object->config('model.count', $model_count);
+        }
         d($model_count);
         $result = [];
         $result_header = [];
