@@ -127,16 +127,17 @@ trait Find {
                 }
                 if(array_key_exists($part, $result)){
                     $result[$part]++;
-                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
+//                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 } else {
                     $result[$part] = 1;
                     $options->model_pointer = $nr;
-                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
+//                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
             }
         }
         arsort($result, SORT_NATURAL);
+        d($result);
         $nr = 0;
         $max = 10;
         $top_result = [];
