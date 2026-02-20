@@ -144,10 +144,15 @@ trait Find {
                 $top[] = $part;
             }
         }
-        d($top);
         $key_rand = array_rand($top);
-        d($top[$key_rand]);
         $search[] = $char_to_key[$top[$key_rand]] ?? null;
+        $text = '';
+        foreach($search as $nr => $key){
+            if(array_key_exists($key, $key_to_char)){
+                $text .= $key_to_char;
+            }
+        }
+        ddd($text);
         d('count: ' . $count);
     }
 
