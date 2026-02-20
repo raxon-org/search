@@ -149,7 +149,7 @@ trait Find {
         $text = '';
         foreach($search as $nr => $key){
             if(array_key_exists($key, $key_to_char)){
-                $text .= $key_to_char;
+                $text .= $key_to_char[$key];
             }
         }
         ddd($text);
