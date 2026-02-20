@@ -130,7 +130,7 @@ trait Find {
         $max = 10;
         $top_result = [];
         foreach($result as $part => $appearance){
-            $top_result[$part] = $appearance / $count;
+            $top_result[$part] = round(($appearance / $count) * 100, 2);
             $nr++;
             if($nr > $max){
                 break;
@@ -138,7 +138,7 @@ trait Find {
         }
         $top = [];
         foreach($top_result as $part => $appearance){
-            $multiplier = (int) $appearance * 100;
+            $multiplier = (int) $appearance;
             d($multiplier);
             for($i=0; $i < $multiplier; $i++){
                 $top[] = $part;
