@@ -63,22 +63,16 @@ trait Find {
 
         $key_to_char = $object->config('key.to.char');
 
-        foreach($model->data() as $nr => $token_id){
-            $is_found = true;
-            foreach($search as $search_token_id){
-                if($token_id !== $search_token_id){
-                    $is_found = false;
-                    break;
-                } else {
-                    d($key_to_char[$token_id]);
-                    d($key_to_char[$token_id + 1]);
-                    d($key_to_char[$token_id + 2]);
-                    d($key_to_char[$token_id + 3]);
-                    breakpoint($nr);
-                }
+        $model = $model->data();
+        $search_count = count($search);
+        foreach($model as $nr => $token_id){
+            $is_found = false;
+            $context_window = [];
+            for($i = 0; $i < $search_count; $i++){
+                $context_window[] = $model[$nr + $i];
             }
-            if($is_found){
-                d($key_to_char[$token_id]);
+            if($context_window === $search){
+                $is_found = true;
                 breakpoint($nr);
             }
         }
