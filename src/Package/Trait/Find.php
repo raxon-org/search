@@ -71,7 +71,6 @@ trait Find {
             $model_count = count($model);
             $object->config('model.count', $model_count);
         }
-        d($model_count);
         $result = [];
         $result_header = [];
         $pointer = $options->model_pointer ?? 0;
@@ -145,7 +144,6 @@ trait Find {
             }
         }
         arsort($result, SORT_NATURAL);
-        d($result);
         $nr = 0;
         $max = 10;
         $top_result = [];
