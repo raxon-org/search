@@ -47,7 +47,6 @@ trait Find {
         $current_count = $options->result_count ?? 0;
         $current_pointer_min = $options->model_pointer_min ?? [0];
         $current_pointer_max = $options->model_pointer_max ?? [0];
-        d($text . ' ' . $current_count . ' ' . end($current_pointer_min) . ' ' . end($current_pointer_max));
         $search = [];
         if($text){
             $split = mb_str_split($text);
@@ -207,6 +206,8 @@ trait Find {
             $options->iteration_count = 1;
         }
         if($options->iteration_count > $options->iterations){
+            echo $text . PHP_EOL;
+            d($options);
             exit(0);
         }
         $options->text = $text;
