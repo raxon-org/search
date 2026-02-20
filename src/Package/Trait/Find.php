@@ -103,8 +103,8 @@ trait Find {
                 $count++;
             }
         }
-        breakpoint($count);
-        ddd($result);
+        d('count: ' . $count);
+        d($result);
 
     }
 
