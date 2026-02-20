@@ -135,7 +135,7 @@ trait Find {
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 } else {
                     $result[$part] = 1;
-                    $options->model_pointer = $nr;
+//                    $options->model_pointer = $nr;
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
