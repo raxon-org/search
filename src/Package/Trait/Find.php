@@ -158,7 +158,10 @@ trait Find {
                     break;
                 }
             }
-            elseif($nr > $pointer_max){
+            elseif(
+                $pointer_max > 0 &&
+                $nr > $pointer_max
+            ){
                 break;
             }
         }
