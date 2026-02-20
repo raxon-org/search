@@ -70,9 +70,10 @@ trait Find {
         }
         $result = [];
         $result_header = [];
-        $pointer = $options->model_pointer ?? 0;
-        $pointer_new = null;
-        for($nr = $pointer; $nr < $model_count; $nr++){
+        $pointer_start = $options->model_pointer_min ?? 0;
+        $pointer_min = null;
+        $pointer_max = null;
+        for($nr = $pointer_start; $nr < $model_count; $nr++){
             $token_id = $model[$nr];
             $is_found = false;
             $context_window = [];
@@ -83,8 +84,8 @@ trait Find {
                 $is_found = true;
             }
             if($is_found){
-                if($pointer_new === null){
-                    $pointer_new = $nr;
+                if($pointer_min === null){
+                    $pointer_min = $nr;
                 }
                 /*
                 $header = [];
@@ -143,6 +144,7 @@ trait Find {
                     break;
                 }
                 if($count >= $result_max){
+                    $pointer_max = $nr;
                     break;
                 }
             }
@@ -190,7 +192,8 @@ trait Find {
             exit(0);
         }
         $options->text = $text;
-        $options->model_pointer = $pointer_new;
+        $options->model_pointer_min = $pointer_min;
+        $options->model_pointer_max = $pointer_max;
         $options->result_count = $count;
         $this->find($flags, $options);
     }
