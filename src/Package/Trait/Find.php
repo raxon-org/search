@@ -73,9 +73,12 @@ trait Find {
             }
             if($context_window === $search){
                 $is_found = true;
-                breakpoint($nr);
+            }
+            if($is_found){
+                $count++;
             }
         }
+        breakpoint($count);
         ddd($search);
 
     }
