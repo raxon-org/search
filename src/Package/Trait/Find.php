@@ -65,6 +65,8 @@ trait Find {
 
         $model = $model->data();
         $search_count = count($search);
+        $model_count = count($model);
+        $result = [];
         foreach($model as $nr => $token_id){
             $is_found = false;
             $context_window = [];
@@ -75,11 +77,29 @@ trait Find {
                 $is_found = true;
             }
             if($is_found){
+                //grep line from beginning of line to the end line
+                for($i = $nr; $i >= 0; $i--){
+                    if( $model[$nr + $i] === $char_to_key["\n"]){
+                        break; //found start of line (at +1)
+                    }
+                }
+                $start = $i + 1;
+                for($i = $nr; $i < $model_count;  $i++){
+                    if( $model[$nr + $i] === $char_to_key["\n"]){
+                        break;
+                    }
+                }
+                $end = $i;
+                $line = '';
+                for($i = $start; $i <= $end; $i++){
+                    $line .= $key_to_char[$model[$i]] ?? '';
+                }
+                $result[] = $line;
                 $count++;
             }
         }
         breakpoint($count);
-        ddd($search);
+        ddd($result);
 
     }
 
