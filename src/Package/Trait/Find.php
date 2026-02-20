@@ -169,7 +169,7 @@ trait Find {
                 }
                 */
             }
-            if($pointer_min > $pointer_max){
+            if($is_found === false && $pointer_min > $pointer_max){
                 $pointer_max = $pointer_min;
             }
             if(
