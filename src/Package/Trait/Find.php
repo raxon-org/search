@@ -69,6 +69,9 @@ trait Find {
                 if($token_id !== $search_token_id){
                     $is_found = false;
                     break;
+                } else {
+                    d($key_to_char[$token_id]);
+                    breakpoint($nr);
                 }
             }
             if($is_found){
