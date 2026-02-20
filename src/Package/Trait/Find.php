@@ -130,11 +130,11 @@ trait Find {
                     $top_result[$part] = $appearance / $count;
                     $nr++;
                     if($nr > $max){
+                        ddd($top_result);
+                        $search[] = $char_to_key[$char];
                         break;
                     }
                 }
-                ddd($top_result);
-                $search[] = $char_to_key[$char];
             }
         }
         d('count: ' . $count);
