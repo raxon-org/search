@@ -41,6 +41,7 @@ trait Find {
             $object->config('key.to.char', $spec);
         }
         $text = $options->text ?? null;
+        d($text);
         $search = [];
         if($text){
             $split = mb_str_split($text);
