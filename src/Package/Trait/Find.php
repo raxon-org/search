@@ -61,11 +61,7 @@ trait Find {
         $max = 100;
         $key_to_char = $object->config('key.to.char');
         $model = $model->data();
-        $search_count = $object->config('search.count');
-        if($search_count === null){
-            $search_count = count($search);
-            $object->config('search.count', $search_count);
-        }
+        $search_count = count($search);
         $model_count = $object->config('model.count');
         if($model_count === null){
             $model_count = count($model);
