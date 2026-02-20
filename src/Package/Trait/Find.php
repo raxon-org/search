@@ -79,13 +79,13 @@ trait Find {
             if($is_found){
                 //grep line from beginning of line to the end line
                 for($i = $nr; $i >= 0; $i--){
-                    if( $model[$nr + $i] === $char_to_key["\n"]){
+                    if($model[$i] === $char_to_key["\n"]){
                         break; //found start of line (at +1)
                     }
                 }
                 $start = $i + 1;
                 for($i = $nr; $i < $model_count;  $i++){
-                    if( $model[$nr + $i] === $char_to_key["\n"]){
+                    if( $model[$i] === $char_to_key["\n"]){
                         break;
                     }
                 }
