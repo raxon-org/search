@@ -127,6 +127,10 @@ trait Token {
         $spec[] = '/';
         $spec[] = '?';
 
+        $url_spec = $object->config('controller.dir.data') . 'Spec.json';
+        File::write($url_spec, Core::object($spec, Core::JSON));
+
+
         $dir = new Dir();
         $read = $dir->read('/Application', true);
         if($read){
