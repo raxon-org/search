@@ -144,6 +144,7 @@ trait Find {
                 $top[] = $part;
             }
         }
+        d($top);
         $key_rand = array_rand($top);
         d($top[$key_rand]);
         $search[] = $char_to_key[$top[$key_rand]] ?? null;
