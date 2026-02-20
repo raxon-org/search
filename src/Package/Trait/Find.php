@@ -157,7 +157,7 @@ trait Find {
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
-                $pointer_max = $nr;
+                $pointer_max = $nr + $search_count;
                 /*
                 if(
                     property_exists($options, 'result_count') &&
@@ -171,7 +171,6 @@ trait Find {
                 }
                 */
             }
-            /*
             elseif(
                 $start_fresh === false &&
                 $pointer_max > 0 &&
@@ -180,7 +179,6 @@ trait Find {
             ){
                 break;
             }
-            */
         }
         arsort($result, SORT_NATURAL);
         $nr = 0;
@@ -268,7 +266,7 @@ trait Find {
         if(strlen($text) > 80){
             $text = substr($text, -80);
         }
-        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . 'min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
+        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
         $this->find($flags, $options);
     }
