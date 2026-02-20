@@ -75,7 +75,7 @@ trait Find {
                     $search[] = $char_to_key[$char];
                     $skip++;
                 }
-                if(array_key_exists($char, $char_to_key)){
+                elseif(array_key_exists($char, $char_to_key)){
                     $search[] = $char_to_key[$char];
                 }
             }
