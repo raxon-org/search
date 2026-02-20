@@ -260,8 +260,7 @@ trait Find {
             }
         }
         if(!array_key_exists(0, $top)){
-            d($context_window);
-            d($search);
+
             echo 'No results found' . PHP_EOL;
             exit(0);
         }
@@ -325,7 +324,7 @@ trait Find {
 
         $options->model_pointer_max[] = end($pointer_max[$top[$key_rand]]);
         $options->result_count[] = $count;
-//        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
+        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
         if(strlen($text) > 80){
             $text = substr($text, -80);
         }
