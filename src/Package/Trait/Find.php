@@ -150,7 +150,11 @@ trait Find {
                 $text .= $key_to_char[$key];
             }
         }
-        $options->iteration_count++;
+        if(property_exists($options, 'iteration_count')){
+            $options->iteration_count++;
+        } else {
+            $options->iteration_count = 1;
+        }
         if($options->iteration_count > $options->iterations){
             exit(0);
         }
