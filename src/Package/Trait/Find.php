@@ -25,11 +25,10 @@ trait Find {
     public function find(object $flags, object $options): void
     {
         $object = $this->object();
+        $options->iterations = $options->iterations ?? 128;
 //        $encoded = htmlentities($string, ENT_QUOTES, 'UTF-8');
-
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
         $url_model = $object->config('controller.dir.data') . 'Model.json';
-
         $spec = $object->data_read($url_spec);
         if(!$spec){
             throw new ErrorException('Spec file not found');
@@ -139,7 +138,6 @@ trait Find {
         $top = [];
         foreach($top_result as $part => $appearance){
             $multiplier = (int) $appearance;
-            d($multiplier);
             for($i=0; $i < $multiplier; $i++){
                 $top[] = $part;
             }
@@ -152,8 +150,11 @@ trait Find {
                 $text .= $key_to_char[$key];
             }
         }
-        ddd($text);
-        d('count: ' . $count);
+        $options->iteration_count++;
+        if($options->iteration_count > $options->iterations){
+            exit(0);
+        }
+        $this->find($flags, $options);
     }
 
     /**
