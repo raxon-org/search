@@ -31,6 +31,9 @@ trait Find {
         $url_model = $object->config('controller.dir.data') . 'Model.json';
 
         $spec = $object->data_read($url_spec);
+        if(!$spec){
+            throw new ErrorException('Spec file not found');
+        }
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
@@ -50,6 +53,13 @@ trait Find {
                     $search[] = $char_to_key[$char];
                 }
             }
+        }
+        $model = $object->data_read($url_model);
+        if(!$model){
+            throw new ErrorException('Model file not found');
+        }
+        foreach($model->data() as $token_id){
+            breakpoint($token_id);
         }
         ddd($search);
 
