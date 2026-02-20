@@ -228,6 +228,7 @@ trait Find {
         $options->result_count = $count;
         echo Cli::tput('cursor.up') . Cli::tput('erase.line');
         echo 'Found: ' . $count . ' results' . PHP_EOL;
+        usleep(500);
         $this->find($flags, $options);
     }
 
