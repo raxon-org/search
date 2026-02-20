@@ -169,16 +169,11 @@ trait Find {
                 }
                 */
             }
-            /*
-            if($is_found === false && $pointer_min > $pointer_max){
-                $pointer_max = $pointer_min;
-            }
-            */
-            if(
+            elseif(
                 $start_fresh === false &&
                 $pointer_max > 0 &&
                 $nr > $pointer_max &&
-                $pointer_max >= $pointer_min  // * 1.02      //minimal growth of 2%
+                $pointer_max > $pointer_min // * 1.02      //minimal growth of 2%
             ){
                 break;
             }
