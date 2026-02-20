@@ -98,12 +98,16 @@ trait Find {
                 for($i = $nr + $search_count; $i <= $end; $i++){
                     $part .= $key_to_char[$model[$i]] ?? '';
                 }
-                //line whole line nr...
-                $result[] = $part;
+                if(array_key_exists($part, $result)){
+                    $result[$part]++;
+                } else {
+                    $result[$part] = 1;
+                }
                 $count++;
             }
         }
         d('count: ' . $count);
+        arsort($result, SORT_NATURAL);
         d($result);
 
     }
