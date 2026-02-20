@@ -70,6 +70,7 @@ trait Find {
         $result = [];
         $result_header = [];
         $pointer = $options->model_pointer ?? 0;
+        $pointer_new = null;
         for($nr = $pointer; $nr < $model_count; $nr++){
             $token_id = $model[$nr];
             $is_found = false;
@@ -81,6 +82,9 @@ trait Find {
                 $is_found = true;
             }
             if($is_found){
+                if($pointer_new === null){
+                    $pointer_new = $nr;
+                }
                 /*
                 $header = [];
                 for($i = $nr; $i >= 0; $i--){
@@ -175,6 +179,7 @@ trait Find {
             exit(0);
         }
         $options->text = $text;
+        $options->model_pointer = $pointer_new;
         $this->find($flags, $options);
     }
 
