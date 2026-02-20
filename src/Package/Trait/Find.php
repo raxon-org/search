@@ -108,8 +108,17 @@ trait Find {
         }
         d('count: ' . $count);
         arsort($result, SORT_NATURAL);
-        d($result);
-
+        $nr = 0;
+        $max = 10;
+        $response = [];
+        foreach($result as $part => $appearance){
+            $response[] = $part . ' ' . ($appearance / $count * 100) . '%';;
+            $nr++;
+            if($nr > $max){
+                break;
+            }
+        }
+        d($response);
     }
 
     /**
