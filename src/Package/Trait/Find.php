@@ -66,6 +66,7 @@ trait Find {
 
         $search_count = $object->config('search.count') ?? $object->config('search.count', count($search));
         $model_count = $object->config('model.count') ?? $object->config('model.count', count($model));
+        d($model_count);
         $result = [];
         $result_header = [];
         $pointer = $options->model_pointer ?? 0;
