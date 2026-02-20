@@ -31,7 +31,26 @@ trait Find {
         $url_model = $object->config('controller.dir.data') . 'Model.json';
 
         $spec = $object->data_read($url_spec);
-        ddd($spec);
+        $char_to_key = $object->config('char.to.key');
+        if($char_to_key === null){
+            $char_to_key = [];
+            foreach($spec as $nr => $char){
+                $char_to_key[$char] = $nr;
+            }
+            $object->config('char.to.key', $char_to_key);
+            $object->config('key.to.char', $spec);
+        }
+        $text = $options->text ?? null;
+        $search = [];
+        if($text){
+            $split = mb_str_split($text);
+            foreach($split as $nr => $char){
+                if(array_key_exists($char, $char_to_key)){
+                    $search[] = $char_to_key[$char];
+                }
+            }
+        }
+        ddd($search);
 
     }
 
