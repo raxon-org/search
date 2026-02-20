@@ -128,6 +128,7 @@ trait Token {
         $spec[] = '?';
 
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
+        ddd($url_spec);
         File::write($url_spec, Core::object($spec, Core::JSON));
 
 
