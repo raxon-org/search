@@ -63,11 +63,16 @@ trait Find {
         $key_to_char = $object->config('key.to.char');
 
         $model = $model->data();
-        $search_count = count($search);
-        $model_count = count($model);
+
+        $search_count = $object->config('search.count') ?? $object->config('search.count', count($search));
+        $model_count = $object->config('model.count') ?? $object->config('model.count', count($model));
         $result = [];
         $result_header = [];
+        $pointer = $options->model_pointer ?? 0;
         foreach($model as $nr => $token_id){
+            if($nr < $pointer){
+                continue;
+            }
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
@@ -78,6 +83,7 @@ trait Find {
             }
             if($is_found){
                 $header = [];
+                /*
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["<HEADER_START>"]){
                         break;
@@ -92,7 +98,9 @@ trait Find {
                     }
                 }
                 $header = Core::object(implode('', $header));
+                */
                 //grep line from the beginning of the line to the end line
+                /*
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["\n"]){
                         break; //found start of line (at +1)
@@ -109,8 +117,9 @@ trait Find {
                 for($i = $start; $i <= $end; $i++){
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
+                */
                 $part = '';
-                for($i = $nr + $search_count; $i <= $end; $i++){
+                for($i = $nr + $search_count; $i <= $model_count; $i++){
                     $part .= $key_to_char[$model[$i]] ?? '';
                     break;
                 }
@@ -119,6 +128,7 @@ trait Find {
                     $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 } else {
                     $result[$part] = 1;
+                    $options->model_pointer = $nr;
                     $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
