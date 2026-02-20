@@ -41,7 +41,7 @@ trait Find {
                 $char_to_key[$char] = $nr;
             }
             $object->config('char.to.key', $char_to_key);
-            $object->config('key.to.char', $spec);
+            $object->config('key.to.char', $spec->data());
         }
         $text = $options->text ?? null;
         d($text);
@@ -58,8 +58,23 @@ trait Find {
         if(!$model){
             throw new ErrorException('Model file not found');
         }
-        foreach($model->data() as $token_id){
-            breakpoint($token_id);
+        $count = 0;
+        $max = 100;
+
+        $key_to_char = $object->config('key.to.char');
+
+        foreach($model->data() as $nr => $token_id){
+            $is_found = true;
+            foreach($search as $search_token_id){
+                if($token_id !== $search_token_id){
+                    $is_found = false;
+                    break;
+                }
+            }
+            if($is_found){
+                d($key_to_char[$token_id]);
+                breakpoint($nr);
+            }
         }
         ddd($search);
 
