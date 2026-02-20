@@ -183,7 +183,9 @@ trait Token {
             $object->config('key.to.char', $spec);
         }
         $header = [];
-        $header['file'] = $file->name;
+        $header['file'] = $file->url;
+        $header['name'] = $file->name;
+        $header['type'] = $file->type;
         $header['mtime'] = File::mtime($file->url);
         $header['size'] = File::size($file->url);
         $header['extension'] = $file->extension;;
