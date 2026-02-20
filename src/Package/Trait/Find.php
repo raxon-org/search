@@ -90,7 +90,6 @@ trait Find {
             }
             if($is_found){
                 $header = [];
-                /*
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["<HEADER_START>"]){
                         break;
@@ -105,9 +104,7 @@ trait Find {
                     }
                 }
                 $header = Core::object(implode('', $header));
-                */
                 //grep line from the beginning of the line to the end line
-                /*
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["\n"]){
                         break; //found start of line (at +1)
@@ -124,19 +121,16 @@ trait Find {
                 for($i = $start; $i <= $end; $i++){
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
-                */
                 $part = '';
-                for($i = $nr + $search_count; $i <= $model_count; $i++){
+                for($i = $nr + $search_count; $i <= $end; $i++){
                     $part .= $key_to_char[$model[$i]] ?? '';
-                    break;
                 }
                 if(array_key_exists($part, $result)){
                     $result[$part]++;
-//                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
+                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 } else {
                     $result[$part] = 1;
-//                    $options->model_pointer = $nr;
-//                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
+                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
             }
