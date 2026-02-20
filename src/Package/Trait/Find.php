@@ -122,10 +122,9 @@ trait Find {
                 }
 
             }
-            d($context_window);
-            d($search);
             if($context_window === $search){
                 $is_found = true;
+                ddd('yes');
             }
             if($is_found){
                 $part = '';
