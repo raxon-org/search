@@ -29,7 +29,7 @@ trait Find {
 //        $encoded = htmlentities($string, ENT_QUOTES, 'UTF-8');
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
         $url_model = $object->config('controller.dir.data') . 'Model.json';
-        $spec = $object->data_read($url_spec);
+        $spec = $object->data_read($url_spec, 'spec');
         if(!$spec){
             throw new ErrorException('Spec file not found');
         }
@@ -53,7 +53,7 @@ trait Find {
                 }
             }
         }
-        $model = $object->data_read($url_model);
+        $model = $object->data_read($url_model, 'model');
         if(!$model){
             throw new ErrorException('Model file not found');
         }
