@@ -157,7 +157,7 @@ trait Find {
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
-                $pointer_max = $nr + $search_count;
+                $pointer_max = $nr;
                 /*
                 if(
                     property_exists($options, 'result_count') &&
@@ -171,6 +171,7 @@ trait Find {
                 }
                 */
             }
+            /*
             elseif(
                 $start_fresh === false &&
                 $pointer_max > 0 &&
@@ -179,6 +180,7 @@ trait Find {
             ){
                 break;
             }
+            */
         }
         arsort($result, SORT_NATURAL);
         $nr = 0;
