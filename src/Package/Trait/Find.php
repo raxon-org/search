@@ -66,7 +66,7 @@ trait Find {
             $search_count = count($search);
             $object->config('search.count', $search_count);
         }
-        $model_count = $object->config('search.count');
+        $model_count = $object->config('model.count');
         if($model_count === null){
             $model_count = count($model);
             $object->config('model.count', $model_count);
