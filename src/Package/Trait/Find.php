@@ -77,6 +77,21 @@ trait Find {
                 $is_found = true;
             }
             if($is_found){
+                $header = [];
+                for($i = $nr; $i >= 0; $i--){
+                    if($model[$i] === $char_to_key["<HEADER_START>"]){
+                        break;
+                    }
+                }
+                $start_header = $i + 1;
+                for($i = $start_header; $i < $model_count;  $i++){
+                    if( $model[$i] === $char_to_key["<HEADER_END>"]){
+                        break;
+                    } else {
+                        $header[] = $key_to_char[$model[$i]] ?? '';
+                    }
+                }
+                ddd($header);
                 //grep line from beginning of line to the end line
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["\n"]){
