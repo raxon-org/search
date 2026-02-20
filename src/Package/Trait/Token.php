@@ -202,93 +202,127 @@ trait Token {
         $transform[] = $char_to_key['<HEADER_START>'] ?? null;
         $split = mb_str_split($header);
         foreach($split as $nr => $char){
-            $block_2 = [];
-            $block_2[] = $char;
-            $block_2[] = $split[$nr + 1] ?? null;
-            $block_3 = $block_2;
-            $block_3[] = $split[$nr + 2] ?? null;
-            $block_4 = $block_3;
-            $block_4[] = $split[$nr + 3] ?? null;
-            $block_8 = $block_4;
-            $block_8[] = $split[$nr + 4] ?? null;
-            $block_8[] = $split[$nr + 5] ?? null;
-            $block_8[] = $split[$nr + 6] ?? null;
-            $block_8[] = $split[$nr + 7] ?? null;
-            $block_16 = $block_8;
-            $block_16[] = $split[$nr + 8] ?? null;
-            $block_16[] = $split[$nr + 9] ?? null;
-            $block_16[] = $split[$nr + 10] ?? null;
-            $block_16[] = $split[$nr + 11] ?? null;
-            $block_16[] = $split[$nr + 12] ?? null;
-            $block_16[] = $split[$nr + 13] ?? null;
-            $block_16[] = $split[$nr + 14] ?? null;
-            $block_16[] = $split[$nr + 15] ?? null;
-            $block_32 = $block_16;
-            $block_32[] = $split[$nr + 16] ?? null;
-            $block_32[] = $split[$nr + 17] ?? null;
-            $block_32[] = $split[$nr + 18] ?? null;
-            $block_32[] = $split[$nr + 19] ?? null;
-            $block_32[] = $split[$nr + 20] ?? null;
-            $block_32[] = $split[$nr + 21] ?? null;
-            $block_32[] = $split[$nr + 22] ?? null;
-            $block_32[] = $split[$nr + 23] ?? null;
-            $block_32[] = $split[$nr + 24] ?? null;
-            $block_32[] = $split[$nr + 25] ?? null;
-            $block_32[] = $split[$nr + 26] ?? null;
-            $block_32[] = $split[$nr + 27] ?? null;
-            $block_32[] = $split[$nr + 28] ?? null;
-            $block_32[] = $split[$nr + 29] ?? null;
-            $block_32[] = $split[$nr + 30] ?? null;
-            $block_32[] = $split[$nr + 31] ?? null;
-            $block_64 = $block_32;
-            $block_64[] = $split[$nr + 32] ?? null;
-            $block_64[] = $split[$nr + 33] ?? null;
-            $block_64[] = $split[$nr + 34] ?? null;
-            $block_64[] = $split[$nr + 35] ?? null;
-            $block_64[] = $split[$nr + 36] ?? null;
-            $block_64[] = $split[$nr + 37] ?? null;
-            $block_64[] = $split[$nr + 38] ?? null;
-            $block_64[] = $split[$nr + 39] ?? null;
-            $block_64[] = $split[$nr + 40] ?? null;
-            $block_64[] = $split[$nr + 41] ?? null;
-            $block_64[] = $split[$nr + 42] ?? null;
-            $block_64[] = $split[$nr + 43] ?? null;
-            $block_64[] = $split[$nr + 44] ?? null;
-            $block_64[] = $split[$nr + 45] ?? null;
-            $block_64[] = $split[$nr + 46] ?? null;
-            $block_64[] = $split[$nr + 47] ?? null;
-            $block_64[] = $split[$nr + 48] ?? null;
-            $block_64[] = $split[$nr + 49] ?? null;
-            $block_64[] = $split[$nr + 50] ?? null;
-            $block_64[] = $split[$nr + 51] ?? null;
-            $block_64[] = $split[$nr + 52] ?? null;
-            $block_64[] = $split[$nr + 53] ?? null;
-            $block_64[] = $split[$nr + 54] ?? null;
-            $block_64[] = $split[$nr + 55] ?? null;
-            $block_64[] = $split[$nr + 56] ?? null;
-            $block_64[] = $split[$nr + 57] ?? null;
-            $block_64[] = $split[$nr + 58] ?? null;
-            $block_64[] = $split[$nr + 59] ?? null;
-            $block_64[] = $split[$nr + 60] ?? null;
-            $block_64[] = $split[$nr + 61] ?? null;
-            $block_64[] = $split[$nr + 62] ?? null;
-            $block_64[] = $split[$nr + 63] ?? null;
-            breakpoint($block_2);
-            breakpoint($block_3);
-            breakpoint($block_4);
-            breakpoint($block_8);
-            breakpoint($block_16);
-            breakpoint($block_32);
-            breakpoint($block_64);
-
             if(array_key_exists($char, $char_to_key)){
                 $transform[] = $char_to_key[$char];
             }
         }
         $transform[] = $char_to_key['<HEADER_END>'] ?? null;
         $split = mb_str_split($file->read);
+        $skip = 0;
+        $block_2 = [];
+        $block_3 = [];
+        $block_4 = [];
+        $block_8 = [];
+        $block_16 = [];
+        $block_32 = [];
+        $block_64 = [];
         foreach($split as $nr => $char){
-            if(array_key_exists($char, $char_to_key)){
+            if($skip > 0){
+                $skip--;
+            } else {
+                $block_2 = [];
+                $block_2[] = $char;
+                $block_2[] = $split[$nr + 1] ?? null;
+                $block_3 = $block_2;
+                $block_3[] = $split[$nr + 2] ?? null;
+                $block_4 = $block_3;
+                $block_4[] = $split[$nr + 3] ?? null;
+                $block_8 = $block_4;
+                $block_8[] = $split[$nr + 4] ?? null;
+                $block_8[] = $split[$nr + 5] ?? null;
+                $block_8[] = $split[$nr + 6] ?? null;
+                $block_8[] = $split[$nr + 7] ?? null;
+                $block_16 = $block_8;
+                $block_16[] = $split[$nr + 8] ?? null;
+                $block_16[] = $split[$nr + 9] ?? null;
+                $block_16[] = $split[$nr + 10] ?? null;
+                $block_16[] = $split[$nr + 11] ?? null;
+                $block_16[] = $split[$nr + 12] ?? null;
+                $block_16[] = $split[$nr + 13] ?? null;
+                $block_16[] = $split[$nr + 14] ?? null;
+                $block_16[] = $split[$nr + 15] ?? null;
+                $block_32 = $block_16;
+                $block_32[] = $split[$nr + 16] ?? null;
+                $block_32[] = $split[$nr + 17] ?? null;
+                $block_32[] = $split[$nr + 18] ?? null;
+                $block_32[] = $split[$nr + 19] ?? null;
+                $block_32[] = $split[$nr + 20] ?? null;
+                $block_32[] = $split[$nr + 21] ?? null;
+                $block_32[] = $split[$nr + 22] ?? null;
+                $block_32[] = $split[$nr + 23] ?? null;
+                $block_32[] = $split[$nr + 24] ?? null;
+                $block_32[] = $split[$nr + 25] ?? null;
+                $block_32[] = $split[$nr + 26] ?? null;
+                $block_32[] = $split[$nr + 27] ?? null;
+                $block_32[] = $split[$nr + 28] ?? null;
+                $block_32[] = $split[$nr + 29] ?? null;
+                $block_32[] = $split[$nr + 30] ?? null;
+                $block_32[] = $split[$nr + 31] ?? null;
+                $block_64 = $block_32;
+                $block_64[] = $split[$nr + 32] ?? null;
+                $block_64[] = $split[$nr + 33] ?? null;
+                $block_64[] = $split[$nr + 34] ?? null;
+                $block_64[] = $split[$nr + 35] ?? null;
+                $block_64[] = $split[$nr + 36] ?? null;
+                $block_64[] = $split[$nr + 37] ?? null;
+                $block_64[] = $split[$nr + 38] ?? null;
+                $block_64[] = $split[$nr + 39] ?? null;
+                $block_64[] = $split[$nr + 40] ?? null;
+                $block_64[] = $split[$nr + 41] ?? null;
+                $block_64[] = $split[$nr + 42] ?? null;
+                $block_64[] = $split[$nr + 43] ?? null;
+                $block_64[] = $split[$nr + 44] ?? null;
+                $block_64[] = $split[$nr + 45] ?? null;
+                $block_64[] = $split[$nr + 46] ?? null;
+                $block_64[] = $split[$nr + 47] ?? null;
+                $block_64[] = $split[$nr + 48] ?? null;
+                $block_64[] = $split[$nr + 49] ?? null;
+                $block_64[] = $split[$nr + 50] ?? null;
+                $block_64[] = $split[$nr + 51] ?? null;
+                $block_64[] = $split[$nr + 52] ?? null;
+                $block_64[] = $split[$nr + 53] ?? null;
+                $block_64[] = $split[$nr + 54] ?? null;
+                $block_64[] = $split[$nr + 55] ?? null;
+                $block_64[] = $split[$nr + 56] ?? null;
+                $block_64[] = $split[$nr + 57] ?? null;
+                $block_64[] = $split[$nr + 58] ?? null;
+                $block_64[] = $split[$nr + 59] ?? null;
+                $block_64[] = $split[$nr + 60] ?? null;
+                $block_64[] = $split[$nr + 61] ?? null;
+                $block_64[] = $split[$nr + 62] ?? null;
+                $block_64[] = $split[$nr + 63] ?? null;
+            }
+            if(
+                $skip === 0 &&
+                $block_4[0] === ' ' &&
+                $block_4[1] === ' ' &&
+                $block_4[2] === ' ' &&
+                $block_4[3] === ' '
+            ){
+                $transform[] = $char_to_key['    '] ?? null;
+                $skip = 3;
+            }
+            elseif(
+                $skip === 0 &&
+                $block_3[0] === ' ' &&
+                $block_3[1] === ' ' &&
+                $block_3[2] === ' '
+            ){
+                $transform[] = $char_to_key['   '] ?? null;
+                $skip = 2;
+            }
+            elseif(
+                $skip === 0 &&
+                $block_2[0] === ' ' &&
+                $block_2[1] === ' '
+            ){
+                $transform[] = $char_to_key['  '] ?? null;
+                $skip = 1;
+            }
+            elseif(
+                $skip === 0 &&
+                array_key_exists($char, $char_to_key)
+            ){
                 $transform[] = $char_to_key[$char];
             }
         }
