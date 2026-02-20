@@ -125,9 +125,8 @@ trait Find {
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
                 */
-                $end = $i + 1;
                 $part = '';
-                for($i = $nr + $search_count; $i <= $end; $i++){
+                for($i = $nr + $search_count; $i <= $i + 1; $i++){
                     $part .= $key_to_char[$model[$i]] ?? '';
                 }
                 if(array_key_exists($part, $result)){
