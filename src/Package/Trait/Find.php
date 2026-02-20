@@ -71,6 +71,9 @@ trait Find {
                     break;
                 } else {
                     d($key_to_char[$token_id]);
+                    d($key_to_char[$token_id + 1]);
+                    d($key_to_char[$token_id + 2]);
+                    d($key_to_char[$token_id + 3]);
                     breakpoint($nr);
                 }
             }
