@@ -220,7 +220,7 @@ trait Token {
             $block[] = $split[$nr + 14] ?? null;
             $block[] = $split[$nr + 15] ?? null;
             $block[] = $split[$nr + 16] ?? null;
-            $block[] = $split[$nr + 17 ?? null;
+            $block[] = $split[$nr + 17] ?? null;
             $block[] = $split[$nr + 18] ?? null;
             $block[] = $split[$nr + 19] ?? null;
             $block[] = $split[$nr + 20] ?? null;
