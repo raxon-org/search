@@ -67,6 +67,7 @@ trait Find {
         $search_count = count($search);
         $model_count = count($model);
         $result = [];
+        $result_header = [];
         foreach($model as $nr => $token_id){
             $is_found = false;
             $context_window = [];
@@ -92,7 +93,6 @@ trait Find {
                     }
                 }
                 $header = Core::object(implode('', $header));
-                ddd($header);
                 //grep line from beginning of line to the end line
                 for($i = $nr; $i >= 0; $i--){
                     if($model[$i] === $char_to_key["\n"]){
@@ -118,6 +118,7 @@ trait Find {
                     $result[$part]++;
                 } else {
                     $result[$part] = 1;
+                    $result_header[$part] = $header;
                 }
                 $count++;
             }
@@ -128,7 +129,7 @@ trait Find {
         $max = 10;
         $response = [];
         foreach($result as $part => $appearance){
-            $response[] = $part . ' ' . ($appearance / $count * 100) . '%';;
+            $response[] = $part . ' ' . ($appearance / $count * 100) . '%' . ' ' . $result_header[$part]->file . '';
             $nr++;
             if($nr > $max){
                 break;
