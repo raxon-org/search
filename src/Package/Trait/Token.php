@@ -31,6 +31,8 @@ trait Token {
         $spec = [];
         $spec[] = ' ';
         $spec[] = '<EOF>';
+        $spec[] = '<HEADER_START>';
+        $spec[] = '<HEADER_END>';
         $spec[] = "\n";
         $spec[] = "\r";
         $spec[] = "\t";
@@ -155,15 +157,14 @@ trait Token {
                 }
             }
         }
-
-
-        ddd($spec);
     }
 
+    /**
+     * @throws ObjectException
+     */
     public function transform(object $file, array $spec): object
     {
         $object = $this->object();
-        $split = mb_str_split($file->read);
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
@@ -173,10 +174,26 @@ trait Token {
             $object->config('char.to.key', $char_to_key);
             $object->config('key.to.char', $spec);
         }
+        $header = [];
+        $header['file'] = $file->name;
+        $header['mtime'] = $file->mtime;
+        $header['size'] = File::size($file->url);
+        $header['extension'] = $file->extension;;
+        $header = Core::object($header, Core::JSON);
+
         $transform = [];
+        $transform[] = $char_to_key['<HEADER_START>'] ?? null;
+        $split = mb_str_split($header);
         foreach($split as $nr => $char){
             if(array_key_exists($char, $char_to_key)){
-                $transform[$nr] = $char_to_key[$char];
+                $transform[] = $char_to_key[$char];
+            }
+        }
+        $transform[] = $char_to_key['<HEADER_END>'] ?? null;
+        $split = mb_str_split($file->read);
+        foreach($split as $nr => $char){
+            if(array_key_exists($char, $char_to_key)){
+                $transform[] = $char_to_key[$char];
             }
         }
         $transform[] = $char_to_key['<EOF>'] ?? null;
