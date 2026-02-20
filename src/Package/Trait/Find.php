@@ -138,31 +138,22 @@ trait Find {
         }
         $pointer_min = [];
         $pointer_max = [];
-
+        $skip = 0;
         for($nr = $pointer_start; $nr < $pointer_end; $nr++){
+            if($skip > 0){
+                $skip--;
+                continue;
+            }
 //            $token_id = $model[$nr];
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
                 $char = $model[$nr + $i] ?? null;
-                if($char === '        '){
-                    $context_window[] = $char;
-                }
-                elseif($char === '    '){
-                    $context_window[] = $char;
-                }
-                elseif($char === '   '){
-                    $context_window[] = $char;
-                }
-                elseif($char === '  '){
-                    $context_window[] = $char;
-                } else {
-                    $context_window[] = $char;
-                }
-
+                $context_window[] = $char;
             }
             if($context_window === $search){
                 $is_found = true;
+                $skip += $search_count - 1;
             }
             if($is_found){
                 $part = '';
