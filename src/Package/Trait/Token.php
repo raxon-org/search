@@ -31,9 +31,9 @@ trait Token {
         $spec = [];
         $spec[] = ' ';
         $spec[] = '  ';
-        $spec[] = '   ';
-        $spec[] = '    ';
-        $spec[] = '        ';
+//        $spec[] = '   ';
+//        $spec[] = '    ';
+//        $spec[] = '        ';
         $spec[] = '<EOF>';
         $spec[] = '<HEADER_START>';
         $spec[] = '<HEADER_END>';
@@ -292,6 +292,7 @@ trait Token {
                 $block_64[] = $split[$nr + 62] ?? null;
                 $block_64[] = $split[$nr + 63] ?? null;
             }
+            /*
             if(
                 $skip === 0 &&
                 $block_4[0] === ' ' &&
@@ -311,13 +312,14 @@ trait Token {
                 $transform[] = $char_to_key['   '] ?? null;
                 $skip = 2;
             }
-            elseif(
+            */
+            if(
                 $skip === 0 &&
                 $block_2[0] === ' ' &&
                 $block_2[1] === ' '
             ){
                 $transform[] = $char_to_key['  '] ?? null;
-                $skip = 1;
+                $skip = 2;
             }
             elseif(
                 $skip === 0 &&
