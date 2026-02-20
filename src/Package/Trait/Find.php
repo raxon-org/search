@@ -116,6 +116,7 @@ trait Find {
                 }
                 if(array_key_exists($part, $result)){
                     $result[$part]++;
+                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 } else {
                     $result[$part] = 1;
                     $result_header[$part][] = Core::object($header, Core::JSON_LINE);
