@@ -312,6 +312,9 @@ trait Find {
         $count_last = end($options->result_count);
         if($count_last > 0 && $count_last === $count){
             //same search count
+            if($count === 1){
+                usleep(500000); //nice speed
+            }
         }
         elseif($count_last > 0 && $count_last < $count){
             //spread search
