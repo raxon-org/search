@@ -30,6 +30,7 @@ trait Token {
 
         $spec = [];
         $spec[] = ' ';
+        $spec[] = '<EOF>';
         $spec[] = "\n";
         $spec[] = "\r";
         $spec[] = "\t";
@@ -178,7 +179,8 @@ trait Token {
                 $transform[$nr] = $char_to_key[$char];
             }
         }
-        ddd($transform);
+        $transform[] = $char_to_key['<EOF>'] ?? null;
+        $file->transform = $transform;
         return $file;
     }
 
