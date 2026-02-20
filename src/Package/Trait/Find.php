@@ -92,8 +92,8 @@ trait Find {
             $pointer_start = 0;
             $start_fresh = true;
         }
-        $pointer_min = null;
-        $pointer_max = null;
+        $pointer_min = [];
+        $pointer_max = [];
         for($nr = $pointer_start; $nr < $model_count; $nr++){
 //            $token_id = $model[$nr];
             $is_found = false;
@@ -105,9 +105,12 @@ trait Find {
                 $is_found = true;
             }
             if($is_found){
-                if($pointer_min === null){
-                    $pointer_min = $nr;
+                $part = '';
+                $max = $nr + $search_count + 1;
+                for($i = $nr + $search_count; $i < $max; $i++){
+                    $part .= $key_to_char[$model[$i]] ?? '';
                 }
+                $pointer_min[$part][] = $nr;
                 /*
                 $header = [];
                 for($i = $nr; $i >= 0; $i--){
@@ -144,11 +147,6 @@ trait Find {
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
                 */
-                $part = '';
-                $max = $nr + $search_count + 1;
-                for($i = $nr + $search_count; $i < $max; $i++){
-                    $part .= $key_to_char[$model[$i]] ?? '';
-                }
                 if(array_key_exists($part, $result)){
                     $result[$part]++;
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
@@ -157,7 +155,7 @@ trait Find {
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
-                $pointer_max = $nr;
+                $pointer_max[$part][] = $nr + $search_count;
                 /*
                 if(
                     property_exists($options, 'result_count') &&
@@ -234,7 +232,7 @@ trait Find {
         if(!property_exists($options, 'result_count')){
             $options->result_count = [];
         }
-        $options->model_pointer_min[] = $pointer_min;
+        $options->model_pointer_min[] = end($pointer_min[$top[$key_rand]]);
 
         $end = end($options->model_pointer_max);
         if(
@@ -243,26 +241,28 @@ trait Find {
         ){ //pointer max can grow max. 5% or else it will add 1 token to the last pointer
             $pointer_max = $end;
         }
+        /*
         if(
             $end > 0 &&
             $count === 1
         ){
             $pointer_max = $pointer_min;
         }
+        */
         $count_last = end($options->result_count);
         if($count_last > 0 && $count_last === $count){
             //same search count
         }
         elseif($count_last > 0 && $count_last < $count){
             //spread search
-            $pointer_max = $pointer_min;
+//            $pointer_max = $pointer_min;
         }
         elseif($count_last > 0 && $count_last > $count){
             //narrow search
-            $pointer_max = $pointer_min;
+//            $pointer_max = $pointer_min;
         }
 
-        $options->model_pointer_max[] = $pointer_max;
+        $options->model_pointer_max[] = end($pointer_max[$top[$key_rand]]);
         $options->result_count[] = $count;
 //        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
         if(strlen($text) > 80){
