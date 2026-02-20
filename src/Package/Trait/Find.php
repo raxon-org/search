@@ -111,7 +111,7 @@ trait Find {
                 $is_found = true;
             }
             echo Cli::tput('cursor.up') . Cli::tput('erase.line') . PHP_EOL;
-            d($search);
+            d($context_window);
             if($is_found){
                 $part = '';
                 $max = $nr + $search_count + 1;
