@@ -94,7 +94,12 @@ trait Find {
                 for($i = $start; $i <= $end; $i++){
                     $line .= $key_to_char[$model[$i]] ?? '';
                 }
-                $result[] = $line;
+                $part = '';
+                for($i = $nr + 1; $i <= $end; $i++){
+                    $part .= $key_to_char[$model[$i]] ?? '';
+                }
+                //line whole line nr...
+                $result[] = $part;
                 $count++;
             }
         }
