@@ -129,7 +129,7 @@ trait Find {
         $max = 10;
         $response = [];
         foreach($result as $part => $appearance){
-            $response[] = $part . ' ' . ($appearance / $count * 100) . '%' . ' ' . $result_header[$part]->file . '';
+            $response[] = $part . ' ' . ($appearance / $count * 100) . '%' . ' ' . $result_header[$part]->url . '';
             $nr++;
             if($nr > $max){
                 break;

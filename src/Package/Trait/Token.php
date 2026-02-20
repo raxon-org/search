@@ -76,6 +76,7 @@ trait Token {
         $spec[] = 'J';
         $spec[] = 'K';
         $spec[] = 'L';
+        $spec[] = 'M';
         $spec[] = 'N';
         $spec[] = 'O';
         $spec[] = 'P';
@@ -183,7 +184,7 @@ trait Token {
             $object->config('key.to.char', $spec);
         }
         $header = [];
-        $header['file'] = $file->url;
+        $header['url'] = $file->url;
         $header['name'] = $file->name;
         $header['type'] = $file->type;
         $header['mtime'] = File::mtime($file->url);
