@@ -293,28 +293,38 @@ trait Token {
             $block_64[] = $split[$nr + 62] ?? null;
             $block_64[] = $split[$nr + 63] ?? null;
 
-            /*
             if(
                 $skip === 0 &&
+                $block_8[0] === ' ' &&
+                $block_8[1] === ' ' &&
+                $block_8[2] === ' ' &&
+                $block_8[3] === ' ' &&
+                $block_8[4] === ' ' &&
+                $block_8[5] === ' ' &&
+                $block_8[6] === ' ' &&
+                $block_8[7] === ' '
+            ){
+                $transform[] = $char_to_key['        '] ?? null;
+                $skip =+ 7;
+            }
+            elseif(
                 $block_4[0] === ' ' &&
                 $block_4[1] === ' ' &&
                 $block_4[2] === ' ' &&
                 $block_4[3] === ' '
             ){
                 $transform[] = $char_to_key['    '] ?? null;
-                $skip = 3;
+                $skip =+ 3;
             }
             elseif(
-                $skip === 0 &&
                 $block_3[0] === ' ' &&
                 $block_3[1] === ' ' &&
                 $block_3[2] === ' '
             ){
                 $transform[] = $char_to_key['   '] ?? null;
-                $skip = 2;
+                $skip += 2;
             }
-            */
-            if(
+            elseif(
                 $block_2[0] === ' ' &&
                 $block_2[1] === ' '
             ){

@@ -68,7 +68,46 @@ trait Find {
                 $block_2 = [];
                 $block_2[] = $char;
                 $block_2[] = $split[$nr + 1] ?? null;
+                $block_3 = $block_2;
+                $block_3[] = $split[$nr + 2] ?? null;
+                $block_4 = $block_3;
+                $block_4[] = $split[$nr + 3] ?? null;
+                $block_8 = $block_4;
+                $block_8[] = $split[$nr + 4] ?? null;
+                $block_8[] = $split[$nr + 5] ?? null;
+                $block_8[] = $split[$nr + 6] ?? null;
+                $block_8[] = $split[$nr + 7] ?? null;
                 if(
+                    $block_8[0] === ' ' &&
+                    $block_8[1] === ' ' &&
+                    $block_8[2] === ' ' &&
+                    $block_8[3] === ' ' &&
+                    $block_8[4] === ' ' &&
+                    $block_8[5] === ' ' &&
+                    $block_8[6] === ' ' &&
+                    $block_8[7] === ' '
+                ){
+                    $search[] = $char_to_key['    '];
+                    $skip+=7;
+                }
+                elseif(
+                    $block_4[0] === ' ' &&
+                    $block_4[1] === ' ' &&
+                    $block_4[2] === ' ' &&
+                    $block_4[3] === ' '
+                ){
+                    $search[] = $char_to_key['    '];
+                    $skip+=3;
+                }
+                elseif(
+                    $block_3[0] === ' ' &&
+                    $block_3[1] === ' ' &&
+                    $block_3[2] === ' '
+                ){
+                    $search[] = $char_to_key['   '];
+                    $skip+=2;
+                }
+                elseif(
                     $block_2[0] === ' ' &&
                     $block_2[1] === ' '
                 ){
