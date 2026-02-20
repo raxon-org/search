@@ -75,11 +75,9 @@ trait Find {
         $result_header = [];
         $pointer = $options->model_pointer ?? 0;
         foreach($model as $nr => $token_id){
-            /*
             if($nr < $pointer){
                 continue;
             }
-            */
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
@@ -165,10 +163,7 @@ trait Find {
             exit(0);
         }
         $key_rand = array_rand($top);
-        d($key_rand);
-        d($top);
         $search[] = $char_to_key[$top[$key_rand]] ?? null;
-        ddd($search);
         $text = '';
         foreach($search as $nr => $key){
             if(array_key_exists($key, $key_to_char)){
