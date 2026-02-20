@@ -160,6 +160,8 @@ trait Find {
             }
         }
         if(!array_key_exists(0, $top)){
+            d($options);
+            d($result);
             echo 'No results found' . PHP_EOL;
             exit(0);
         }
