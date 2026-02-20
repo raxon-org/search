@@ -105,13 +105,28 @@ trait Find {
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
-                $context_window[] = $model[$nr + $i] ?? null;
+                $char = $model[$nr + $i] ?? null;
+                if($char === '        '){
+                    $context_window[] = $char;
+                }
+                elseif($char === '    '){
+                    $context_window[] = $char;
+                }
+                elseif($char === '   '){
+                    $context_window[] = $char;
+                }
+                elseif($char === '  '){
+                    $context_window[] = $char;
+                } else {
+                    $context_window[] = $char;
+                }
+
             }
+            d($context_window);
+            d($search);
             if($context_window === $search){
                 $is_found = true;
             }
-//            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . PHP_EOL;
-            d($context_window);
             if($is_found){
                 $part = '';
                 $max = $nr + $search_count + 1;
