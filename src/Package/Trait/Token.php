@@ -307,9 +307,7 @@ trait Token {
                 $transform[] = $char_to_key[$char_block_2] ?? null;
                 $skip++;
             }
-            elseif(
-                array_key_exists($char, $char_to_key)
-            ){
+            elseif(array_key_exists($char, $char_to_key)){
                 $transform[] = $char_to_key[$char];
             }
         }
