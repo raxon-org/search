@@ -91,6 +91,7 @@ trait Find {
                         $header[] = $key_to_char[$model[$i]] ?? '';
                     }
                 }
+                $header = Core::object(implode('', $header));
                 ddd($header);
                 //grep line from beginning of line to the end line
                 for($i = $nr; $i >= 0; $i--){
