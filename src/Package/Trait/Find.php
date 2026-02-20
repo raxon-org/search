@@ -152,6 +152,9 @@ trait Find {
                 $top[] = $part;
             }
         }
+        if(!array_key_exists(0, $top)){
+            exit(0);
+        }
         $key_rand = array_rand($top);
         $search[] = $char_to_key[$top[$key_rand]] ?? null;
         $text = '';
