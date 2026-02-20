@@ -209,7 +209,7 @@ trait Token {
             $block_3[] = $split[$nr + 2] ?? null;
             $block_4 = $block_3;
             $block_4[] = $split[$nr + 3] ?? null;
-            $block_8[] = $block_4;
+            $block_8 = $block_4;
             $block_8[] = $split[$nr + 4] ?? null;
             $block_8[] = $split[$nr + 5] ?? null;
             $block_8[] = $split[$nr + 6] ?? null;
