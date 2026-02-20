@@ -155,6 +155,7 @@ trait Find {
             }
         }
         if(!array_key_exists(0, $top)){
+            echo 'No results found' . PHP_EOL;
             exit(0);
         }
         $key_rand = array_rand($top);
