@@ -125,6 +125,7 @@ trait Find {
                     $part .= $key_to_char[$model[$i]] ?? '';
                     break;
                 }
+                ddd($part);
                 if(array_key_exists($part, $result)){
                     $result[$part]++;
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
