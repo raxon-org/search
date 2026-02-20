@@ -69,7 +69,7 @@ trait Find {
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
-                $context_window[] = $model[$nr + $i];
+                $context_window[] = $model[$nr + $i] ?? null;
             }
             if($context_window === $search){
                 $is_found = true;
