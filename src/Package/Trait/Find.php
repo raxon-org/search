@@ -232,7 +232,7 @@ trait Find {
         if(!property_exists($options, 'result_count')){
             $options->result_count = [];
         }
-        $options->model_pointer_min[] = end($pointer_min[$top[$key_rand]]);
+        $options->model_pointer_min[] = reset($pointer_min[$top[$key_rand]]);
 
         /*
         $end = end($options->model_pointer_max);
@@ -270,7 +270,7 @@ trait Find {
         if(strlen($text) > 80){
             $text = substr($text, -80);
         }
-        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . end($pointer_min[$top[$key_rand]]) .', max: ' . end($pointer_max[$top[$key_rand]]) . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
+        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . reset($pointer_min[$top[$key_rand]]) .', max: ' . end($pointer_max[$top[$key_rand]]) . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
         $this->find($flags, $options);
     }
