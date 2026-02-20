@@ -153,6 +153,7 @@ trait Token {
                     ){
                         $file->read = File::read($file->url);
                         $file = $this->transform($file, $spec);
+                        breakpoint($file);
                     }
                 }
             }
