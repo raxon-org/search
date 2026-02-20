@@ -72,7 +72,7 @@ trait Find {
                     $block_2[0] === ' ' &&
                     $block_2[1] === ' '
                 ){
-                    $search[] = $char_to_key[$char];
+                    $search[] = $char_to_key['  '];
                     $skip++;
                 }
                 elseif(array_key_exists($char, $char_to_key)){
