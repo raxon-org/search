@@ -160,6 +160,7 @@ trait Find {
                 }
                 */
             }
+
             elseif(
                 $pointer_max > 0 &&
                 $nr > $pointer_max &&
@@ -229,7 +230,7 @@ trait Find {
         $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
 //        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
-        echo 'Count: ' . $count . ' min:' . $pointer_min .', max:' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
+        echo 'Count: ' . $count . ' total: '. $model_count . 'min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
         $this->find($flags, $options);
     }
