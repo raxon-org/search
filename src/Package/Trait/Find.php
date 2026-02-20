@@ -158,6 +158,7 @@ trait Find {
         if($options->iteration_count > $options->iterations){
             exit(0);
         }
+        $options->text = $text;
         $this->find($flags, $options);
     }
 
