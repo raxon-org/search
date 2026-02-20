@@ -87,14 +87,20 @@ trait Find {
         $result_header = [];
         $start_fresh = false;
         if(property_exists($options, 'model_pointer_min')){
-            $pointer_start = end($options->model_pointer_min);
+            $pointer_start = reset($options->model_pointer_min);
         } else {
             $pointer_start = 0;
             $start_fresh = true;
         }
+        if(property_exists($options, 'model_pointer_max')){
+            $pointer_end = end($options->model_pointer_max);
+        } else {
+            $pointer_end = $model_count;
+        }
         $pointer_min = [];
         $pointer_max = [];
-        for($nr = $pointer_start; $nr < $model_count; $nr++){
+
+        for($nr = $pointer_start; $nr < $pointer_end; $nr++){
 //            $token_id = $model[$nr];
             $is_found = false;
             $context_window = [];
