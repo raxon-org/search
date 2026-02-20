@@ -136,7 +136,14 @@ trait Find {
                 break;
             }
         }
-        ddd($top_result);
+        $top = [];
+        foreach($top_result as $part => $appearance){
+            $multiplier = (int) $appearance * 100;
+            for($i=0; $i < $multiplier; $i++){
+                $top[] = $part;
+            }
+        }
+        ddd($top);
         $search[] = $char_to_key[$char];
         d('count: ' . $count);
     }
