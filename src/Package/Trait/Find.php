@@ -76,7 +76,11 @@ trait Find {
         }
         $result = [];
         $result_header = [];
-        $pointer_start = end($options->model_pointer_min) ?? 0;
+        if(property_exists($options, 'model_pointer_min')){
+            $pointer_start = end($options->model_pointer_min);
+        } else {
+            $pointer_start = 0;
+        }
         $pointer_min = null;
         $pointer_max = null;
         for($nr = $pointer_start; $nr < $model_count; $nr++){
