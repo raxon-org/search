@@ -134,6 +134,13 @@ trait Find {
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
+                if(
+                    property_exists($options, 'result_count') &&
+                    $options->result_count > 1 &&
+                    $count >= $options->result_count
+                ){
+                    break;
+                }
                 if($count >= $max){
                     break;
                 }
@@ -183,6 +190,7 @@ trait Find {
         }
         $options->text = $text;
         $options->model_pointer = $pointer_new;
+        $options->result_count = $count;
         $this->find($flags, $options);
     }
 
