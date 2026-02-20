@@ -221,10 +221,6 @@ trait Find {
             }
         }
         if(!array_key_exists(0, $top)){
-            d($model_count);
-            d($search_count);
-            d($options);
-            d($result);
             echo 'No results found' . PHP_EOL;
             exit(0);
         }
