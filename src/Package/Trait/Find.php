@@ -144,8 +144,9 @@ trait Find {
                 $top[] = $part;
             }
         }
-        ddd($top);
-        $search[] = $char_to_key[$char];
+        $part = array_rand($top);
+        d($part);
+        $search[] = $char_to_key[$part] ?? null;
         d('count: ' . $count);
     }
 
