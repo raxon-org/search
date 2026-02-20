@@ -110,7 +110,7 @@ trait Find {
             if($context_window === $search){
                 $is_found = true;
             }
-            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . PHP_EOL;
+//            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . PHP_EOL;
             d($context_window);
             if($is_found){
                 $part = '';
