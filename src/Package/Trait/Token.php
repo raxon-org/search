@@ -30,6 +30,10 @@ trait Token {
 
         $spec = [];
         $spec[] = ' ';
+        $spec[] = '  ';
+        $spec[] = '   ';
+        $spec[] = '    ';
+        $spec[] = '        ';
         $spec[] = '<EOF>';
         $spec[] = '<HEADER_START>';
         $spec[] = '<HEADER_END>';
@@ -198,6 +202,74 @@ trait Token {
         $transform[] = $char_to_key['<HEADER_START>'] ?? null;
         $split = mb_str_split($header);
         foreach($split as $nr => $char){
+            $block = [];
+            $block[] = $char;
+            $block[] = $split[$nr + 1] ?? null;
+            $block[] = $split[$nr + 2] ?? null;
+            $block[] = $split[$nr + 3] ?? null;
+            $block[] = $split[$nr + 4] ?? null;
+            $block[] = $split[$nr + 5] ?? null;
+            $block[] = $split[$nr + 6] ?? null;
+            $block[] = $split[$nr + 7] ?? null;
+            $block[] = $split[$nr + 8] ?? null;
+            $block[] = $split[$nr + 9] ?? null;
+            $block[] = $split[$nr + 10] ?? null;
+            $block[] = $split[$nr + 11] ?? null;
+            $block[] = $split[$nr + 12] ?? null;
+            $block[] = $split[$nr + 13] ?? null;
+            $block[] = $split[$nr + 14] ?? null;
+            $block[] = $split[$nr + 15] ?? null;
+            $block[] = $split[$nr + 16] ?? null;
+            $block[] = $split[$nr + 17 ?? null;
+            $block[] = $split[$nr + 18] ?? null;
+            $block[] = $split[$nr + 19] ?? null;
+            $block[] = $split[$nr + 20] ?? null;
+            $block[] = $split[$nr + 21] ?? null;
+            $block[] = $split[$nr + 22] ?? null;
+            $block[] = $split[$nr + 23] ?? null;
+            $block[] = $split[$nr + 24] ?? null;
+            $block[] = $split[$nr + 25] ?? null;
+            $block[] = $split[$nr + 26] ?? null;
+            $block[] = $split[$nr + 27] ?? null;
+            $block[] = $split[$nr + 28] ?? null;
+            $block[] = $split[$nr + 29] ?? null;
+            $block[] = $split[$nr + 30] ?? null;
+            $block[] = $split[$nr + 31] ?? null;
+            $block[] = $split[$nr + 32] ?? null;
+            $block[] = $split[$nr + 33] ?? null;
+            $block[] = $split[$nr + 34] ?? null;
+            $block[] = $split[$nr + 35] ?? null;
+            $block[] = $split[$nr + 36] ?? null;
+            $block[] = $split[$nr + 37] ?? null;
+            $block[] = $split[$nr + 38] ?? null;
+            $block[] = $split[$nr + 39] ?? null;
+            $block[] = $split[$nr + 40] ?? null;
+            $block[] = $split[$nr + 41] ?? null;
+            $block[] = $split[$nr + 42] ?? null;
+            $block[] = $split[$nr + 43] ?? null;
+            $block[] = $split[$nr + 44] ?? null;
+            $block[] = $split[$nr + 45] ?? null;
+            $block[] = $split[$nr + 46] ?? null;
+            $block[] = $split[$nr + 47] ?? null;
+            $block[] = $split[$nr + 48] ?? null;
+            $block[] = $split[$nr + 49] ?? null;
+            $block[] = $split[$nr + 50] ?? null;
+            $block[] = $split[$nr + 51] ?? null;
+            $block[] = $split[$nr + 52] ?? null;
+            $block[] = $split[$nr + 53] ?? null;
+            $block[] = $split[$nr + 54] ?? null;
+            $block[] = $split[$nr + 55] ?? null;
+            $block[] = $split[$nr + 56] ?? null;
+            $block[] = $split[$nr + 57] ?? null;
+            $block[] = $split[$nr + 58] ?? null;
+            $block[] = $split[$nr + 59] ?? null;
+            $block[] = $split[$nr + 60] ?? null;
+            $block[] = $split[$nr + 61] ?? null;
+            $block[] = $split[$nr + 62] ?? null;
+            $block[] = $split[$nr + 63] ?? null;
+
+            ddd($block);
+
             if(array_key_exists($char, $char_to_key)){
                 $transform[] = $char_to_key[$char];
             }
