@@ -44,7 +44,7 @@ trait Find {
         }
         $text = $options->text ?? null;
         $current_count = $options->result_count ?? 0;
-        d($text . ' ' . $current_count);
+        d($text . ' ' . $current_count . ' ' . $options->model_pointer_min . ' ' . $options->model_pointer_max)  ;
         $search = [];
         if($text){
             $split = mb_str_split($text);
@@ -54,14 +54,18 @@ trait Find {
                 }
             }
         }
-        $model = $object->data_read($url_model, 'model');
-        if(!$model){
-            throw new ErrorException('Model file not found');
-        }
         $count = 0;
         $result_max = 100; //max_results
         $key_to_char = $object->config('key.to.char');
-        $model = $model->data();
+        $model  = $object->data('model.data');
+        if($model === null){
+            $model = $object->data_read($url_model);
+            if(!$model){
+                throw new ErrorException('Model file not found');
+            }
+            $model = $model->data();
+            $object->data('model.data', $model);
+        }
         $search_count = count($search);
         $model_count = $object->config('model.count');
         if($model_count === null){
@@ -136,6 +140,7 @@ trait Find {
 //                    $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
+                $pointer_max = $nr;
                 if(
                     property_exists($options, 'result_count') &&
                     $options->result_count > 1 &&
@@ -144,7 +149,6 @@ trait Find {
                     break;
                 }
                 if($count >= $result_max){
-                    $pointer_max = $nr;
                     break;
                 }
             }
