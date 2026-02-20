@@ -158,6 +158,9 @@ trait Find {
                     break;
                 }
             }
+            elseif($nr > $pointer_max){
+                break;
+            }
         }
         arsort($result, SORT_NATURAL);
         $nr = 0;
