@@ -128,10 +128,7 @@ trait Token {
         $spec[] = '?';
 
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
-        ddd($url_spec);
         File::write($url_spec, Core::object($spec, Core::JSON));
-
-
         $dir = new Dir();
         $read = $dir->read('/Application', true);
         if($read){
@@ -152,7 +149,7 @@ trait Token {
                         )
                     ){
                         $file->read = File::read($file->url);
-                        ddd($file);
+                        $file = $this->transform($object, $file, $spec);
                     }
                 }
             }
@@ -160,6 +157,28 @@ trait Token {
 
 
         ddd($spec);
+    }
+
+    public function transform(App $object ,object $file, array $spec): object
+    {
+        $split = mb_str_split($file->read);
+        $char_to_key = $object->config('char.to.key');
+        if($char_to_key === null){
+            $char_to_key = [];
+            foreach($spec as $nr => $char){
+                $char_to_key[$char] = $nr;
+            }
+            $object->config('char.to.key', $char_to_key);
+            $object->config('key.to.char', $spec);
+        }
+        $transform = [];
+        foreach($split as $nr => $char){
+            if(array_key_exists($char, $char_to_key)){
+                $transform[$nr] = $char_to_key[$char];
+            }
+        }
+        ddd($transform);
+        return $file;
     }
 
 
