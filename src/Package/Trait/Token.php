@@ -133,6 +133,8 @@ trait Token {
 
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
         $url_output = $object->config('controller.dir.data') . 'Model.json';
+        File::delete($url_spec);
+        File::delete($url_output);
         File::write($url_spec, Core::object($spec, Core::JSON));
         $dir = new Dir();
         $read = $dir->read('/Application', true);
