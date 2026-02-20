@@ -149,7 +149,7 @@ trait Token {
                         )
                     ){
                         $file->read = File::read($file->url);
-                        $file = $this->transform($object, $file, $spec);
+                        $file = $this->transform($file, $spec);
                     }
                 }
             }
@@ -159,8 +159,9 @@ trait Token {
         ddd($spec);
     }
 
-    public function transform(App $object ,object $file, array $spec): object
+    public function transform(object $file, array $spec): object
     {
+        $object = $this->object();
         $split = mb_str_split($file->read);
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
