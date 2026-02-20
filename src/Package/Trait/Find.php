@@ -59,7 +59,22 @@ trait Find {
         $search = [];
         if($text){
             $split = mb_str_split($text);
+            $skip = 0;
             foreach($split as $nr => $char){
+                if($skip > 0){
+                    $skip--;
+                    continue;
+                }
+                $block_2 = [];
+                $block_2[] = $char;
+                $block_2[] = $split[$nr + 1] ?? null;
+                if(
+                    $block_2[0] === ' ' &&
+                    $block_2[1] === ' '
+                ){
+                    $search[] = $char_to_key[$char];
+                    $skip++;
+                }
                 if(array_key_exists($char, $char_to_key)){
                     $search[] = $char_to_key[$char];
                 }

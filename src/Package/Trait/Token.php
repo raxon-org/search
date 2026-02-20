@@ -217,6 +217,10 @@ trait Token {
         $block_32 = [];
         $block_64 = [];
         foreach($split as $nr => $char){
+            if($skip > 0){
+                $skip--;
+                continue;
+            }
             $block_2 = [];
             $block_2[] = $char;
             $block_2[] = $split[$nr + 1] ?? null;
@@ -315,6 +319,7 @@ trait Token {
                 $block_2[1] === ' '
             ){
                 $transform[] = $char_to_key['  '] ?? null;
+                $skip++;
             }
             elseif(
                 array_key_exists($char, $char_to_key)
