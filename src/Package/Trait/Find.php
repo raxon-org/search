@@ -44,7 +44,7 @@ trait Find {
             $object->config('key.to.char', $spec->data());
         }
         $text = $options->text ?? null;
-        $current_count = $options->result_count ?? 0;
+        $current_count = end($options->result_count) ?? 0;
         $current_pointer_min = $options->model_pointer_min ?? [0];
         $current_pointer_max = $options->model_pointer_max ?? [0];
         $search = [];
@@ -220,6 +220,9 @@ trait Find {
         if(!property_exists($options, 'model_pointer_max')){
             $options->model_pointer_max = [];
         }
+        if(!property_exists($options, 'result_count')){
+            $options->result_count = [];
+        }
         $options->model_pointer_min[] = $pointer_min;
 
         $end = end($options->model_pointer_max);
@@ -236,7 +239,7 @@ trait Find {
             $pointer_max = $pointer_min;
         }
         $options->model_pointer_max[] = $pointer_max;
-        $options->result_count = $count;
+        $options->result_count[] = $count;
 //        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
         echo 'Count: ' . $count . ' total: '. $model_count . ', min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
