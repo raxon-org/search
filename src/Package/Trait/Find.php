@@ -44,8 +44,8 @@ trait Find {
         }
         $text = $options->text ?? null;
         $current_count = $options->result_count ?? 0;
-        $current_pointer_min = $options->model_pointer_min ?? 0;
-        $current_pointer_max = $options->model_pointer_max ?? 0;
+        $current_pointer_min = $options->model_pointer_min ?? [0];
+        $current_pointer_max = $options->model_pointer_max ?? [0];
         d($text . ' ' . $current_count . ' ' . $current_pointer_min . ' ' . $current_pointer_max)  ;
         $search = [];
         if($text){
@@ -76,7 +76,7 @@ trait Find {
         }
         $result = [];
         $result_header = [];
-        $pointer_start = $options->model_pointer_min ?? 0;
+        $pointer_start = end($options->model_pointer_min) ?? 0;
         $pointer_min = null;
         $pointer_max = null;
         for($nr = $pointer_start; $nr < $model_count; $nr++){
@@ -198,8 +198,19 @@ trait Find {
             exit(0);
         }
         $options->text = $text;
-        $options->model_pointer_min = $pointer_min;
-        $options->model_pointer_max = $pointer_max;
+        if(!property_exists($options, 'model_pointer_min')){
+            $options->model_pointer_min = [];
+        }
+        if(!property_exists($options, 'model_pointer_max')){
+            $options->model_pointer_max = [];
+        }
+        $options->model_pointer_min[] = $pointer_min;
+
+        $end = end($options->model_pointer_max);
+        if($current_pointer_max > $end * 1.05){ //pointer max can grow max. 5% or else it will add 1 token to the last pointer
+            $pointer_max = $end + 1;
+        }
+        $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
         $this->find($flags, $options);
     }
