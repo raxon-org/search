@@ -76,10 +76,12 @@ trait Find {
         }
         $result = [];
         $result_header = [];
+        $start_fresh = false;
         if(property_exists($options, 'model_pointer_min')){
             $pointer_start = end($options->model_pointer_min);
         } else {
             $pointer_start = 0;
+            $start_fresh = true;
         }
         $pointer_min = null;
         $pointer_max = null;
@@ -162,6 +164,7 @@ trait Find {
             }
 
             elseif(
+                $start_fresh === false &&
                 $pointer_max > 0 &&
                 $nr > $pointer_max &&
                 $pointer_max > $pointer_min * 1.02      //minimal growth of 2%
@@ -230,7 +233,7 @@ trait Find {
         $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
 //        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
-        echo 'Count: ' . $count . ' total: '. $model_count . 'min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
+        echo 'Count: ' . $count . ' total: '. $model_count . ', min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
         $this->find($flags, $options);
     }
