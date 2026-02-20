@@ -130,7 +130,7 @@ trait Find {
         $max = 10;
         $response = [];
         foreach($result as $part => $appearance){
-            $response[] = $part . ' ' . ($appearance / $count * 100) . '%' . ' ' . implode(' ',$result_header[$part]) . '';
+            $response[] = $part . ' ' . ($appearance / $count * 100) . '%';
             $nr++;
             if($nr > $max){
                 break;
