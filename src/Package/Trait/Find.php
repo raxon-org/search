@@ -110,9 +110,12 @@ trait Find {
             if($context_window === $search){
                 $is_found = true;
             }
+            echo Cli::tput('cursor.up') . Cli::tput('erase.line') . PHP_EOL;
+            d($search);
             if($is_found){
                 $part = '';
                 $max = $nr + $search_count + 1;
+                //might need conversion for 4 spaces, 3 spaces, 2 spaces
                 for($i = $nr + $search_count; $i < $max; $i++){
                     $part .= $key_to_char[$model[$i]] ?? '';
                 }
