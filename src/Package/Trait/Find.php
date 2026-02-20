@@ -123,7 +123,7 @@ trait Find {
 
             }
             d($context_window);
-            d($search);
+            breakpoint($search);
             if($context_window === $search){
                 $is_found = true;
             }
