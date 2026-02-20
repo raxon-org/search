@@ -57,7 +57,7 @@ trait Find {
             }
         }
         $count = 0;
-        $result_max = 100; //max_results
+        $result_max = 10000; //max_results
         $key_to_char = $object->config('key.to.char');
         $model  = $object->data('model.data');
         if($model === null){
