@@ -70,9 +70,11 @@ trait Find {
         $result_header = [];
         $pointer = $options->model_pointer ?? 0;
         foreach($model as $nr => $token_id){
+            /*
             if($nr < $pointer){
                 continue;
             }
+            */
             $is_found = false;
             $context_window = [];
             for($i = 0; $i < $search_count; $i++){
