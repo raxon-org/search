@@ -223,7 +223,7 @@ trait Find {
             $end > 0 &&
             $current_pointer_max > $end * 1.05
         ){ //pointer max can grow max. 5% or else it will add 1 token to the last pointer
-            $pointer_max = $end + 1;
+            $pointer_max = $end;
         }
         $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
