@@ -126,6 +126,34 @@ trait Token {
         $spec[] = '.';
         $spec[] = '/';
         $spec[] = '?';
+
+        $dir = new Dir();
+        $read = $dir->read('/Application', true);
+        if($read){
+            foreach($read as $file){
+                if($file->type === File::TYPE){
+                    $file->extension = File::extension($file->url);
+                    if(
+                        in_array(
+                            $file->extension,
+                            [
+                                'php',
+                                'html',
+                                'css',
+                                'js',
+                                'tpl',
+                                '.md'
+                            ], true
+                        )
+                    ){
+                        $file->read = File::read($file->url);
+                        ddd($file);
+                    }
+                }
+            }
+        }
+
+
         ddd($spec);
     }
 
