@@ -180,7 +180,7 @@ trait Token {
         $header['mtime'] = File::mtime($file->url);
         $header['size'] = File::size($file->url);
         $header['extension'] = $file->extension;;
-        $header = Core::object($header, Core::JSON);
+        $header = Core::object($header, Core::JSON_LINE);
 
         $transform = [];
         $transform[] = $char_to_key['<HEADER_START>'] ?? null;
