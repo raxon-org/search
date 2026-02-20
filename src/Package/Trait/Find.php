@@ -226,9 +226,9 @@ trait Find {
         }
         $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
-        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
+//        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
         echo 'Found: ' . $count . ' results' . PHP_EOL;
-        usleep(500);
+//        usleep(5000);
         $this->find($flags, $options);
     }
 
