@@ -139,6 +139,7 @@ trait Find {
         $top = [];
         foreach($top_result as $part => $appearance){
             $multiplier = (int) $appearance * 100;
+            d($multiplier);
             for($i=0; $i < $multiplier; $i++){
                 $top[] = $part;
             }
