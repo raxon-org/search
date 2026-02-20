@@ -234,6 +234,7 @@ trait Find {
         }
         $options->model_pointer_min[] = end($pointer_min[$top[$key_rand]]);
 
+        /*
         $end = end($options->model_pointer_max);
         if(
             $end > 0 &&
@@ -241,6 +242,7 @@ trait Find {
         ){ //pointer max can grow max. 5% or else it will add 1 token to the last pointer
             $pointer_max = $end;
         }
+        */
         /*
         if(
             $end > 0 &&
@@ -268,7 +270,7 @@ trait Find {
         if(strlen($text) > 80){
             $text = substr($text, -80);
         }
-        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . $pointer_min .', max: ' . $pointer_max . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
+        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . end($pointer_min[$top[$key_rand]]) .', max: ' . end($pointer_max[$top[$key_rand]]) . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
         $this->find($flags, $options);
     }
