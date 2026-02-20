@@ -25,6 +25,7 @@ trait Find {
     public function find(object $flags, object $options): void
     {
         $object = $this->object();
+        Core::interactive();
         $options->iterations = $options->iterations ?? 128;
 //        $encoded = htmlentities($string, ENT_QUOTES, 'UTF-8');
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
