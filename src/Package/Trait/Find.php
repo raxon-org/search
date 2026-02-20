@@ -59,7 +59,7 @@ trait Find {
             throw new ErrorException('Model file not found');
         }
         $count = 0;
-        $max = 100; //max_results
+        $result_max = 100; //max_results
         $key_to_char = $object->config('key.to.char');
         $model = $model->data();
         $search_count = count($search);
@@ -142,7 +142,7 @@ trait Find {
                 ){
                     break;
                 }
-                if($count >= $max){
+                if($count >= $result_max){
                     break;
                 }
             }
