@@ -131,9 +131,11 @@ trait Token {
         $spec[] = '?';
 
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
+        $url_output = $object->config('controller.dir.data') . 'Model.json';
         File::write($url_spec, Core::object($spec, Core::JSON));
         $dir = new Dir();
         $read = $dir->read('/Application', true);
+        $model = [];
         if($read){
             foreach($read as $file){
                 if($file->type === File::TYPE){
@@ -153,11 +155,16 @@ trait Token {
                     ){
                         $file->read = File::read($file->url);
                         $file = $this->transform($file, $spec);
-                        breakpoint($file);
+                        if(property_exists($file, 'transform')){
+                            foreach ($file->transform as $token) {
+                                $model[] = $token;
+                            }
+                        }
                     }
                 }
             }
         }
+        File::write($url_output, Core::object($model, Core::JSON));
     }
 
     /**
