@@ -162,7 +162,6 @@ trait Find {
                 }
                 */
             }
-
             elseif(
                 $start_fresh === false &&
                 $pointer_max > 0 &&
@@ -229,6 +228,12 @@ trait Find {
             $current_pointer_max > $end //* 1.05
         ){ //pointer max can grow max. 5% or else it will add 1 token to the last pointer
             $pointer_max = $end;
+        }
+        if(
+            $end > 0 &&
+            $count === 1
+        ){
+            $pointer_max = $pointer_min;
         }
         $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
