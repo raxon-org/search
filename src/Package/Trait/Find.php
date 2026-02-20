@@ -206,8 +206,6 @@ trait Find {
             $options->iteration_count = 1;
         }
         if($options->iteration_count > $options->iterations){
-            echo $text . PHP_EOL;
-            d($options);
             exit(0);
         }
         $options->text = $text;
@@ -228,6 +226,8 @@ trait Find {
         }
         $options->model_pointer_max[] = $pointer_max;
         $options->result_count = $count;
+        echo Cli::tput('cursor.up') . Cli::tput('erase.line');
+        echo 'Found: ' . $count . ' results' . PHP_EOL;
         $this->find($flags, $options);
     }
 
