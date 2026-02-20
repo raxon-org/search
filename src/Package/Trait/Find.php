@@ -123,20 +123,21 @@ trait Find {
                     $result_header[$part][] = Core::object($header, Core::JSON_LINE);
                 }
                 $count++;
-                arsort($result, SORT_NATURAL);
-                $nr = 0;
-                $max = 10;
-                foreach($result as $part => $appearance){
-                    $top_result[$part] = $appearance / $count;
-                    $nr++;
-                    if($nr > $max){
-                        ddd($top_result);
-                        $search[] = $char_to_key[$char];
-                        break;
-                    }
-                }
             }
         }
+        arsort($result, SORT_NATURAL);
+        $nr = 0;
+        $max = 10;
+        $top_result = [];
+        foreach($result as $part => $appearance){
+            $top_result[$part] = $appearance / $count;
+            $nr++;
+            if($nr > $max){
+                break;
+            }
+        }
+        ddd($top_result);
+        $search[] = $char_to_key[$char];
         d('count: ' . $count);
     }
 
