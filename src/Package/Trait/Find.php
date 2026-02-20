@@ -87,7 +87,7 @@ trait Find {
         $result_header = [];
         $start_fresh = false;
         if(property_exists($options, 'model_pointer_min')){
-            $pointer_start = reset($options->model_pointer_min);
+            $pointer_start = end($options->model_pointer_min);
         } else {
             $pointer_start = 0;
             $start_fresh = true;
