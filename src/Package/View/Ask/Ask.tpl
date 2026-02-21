@@ -1,1 +1,1 @@
-{{Package.Raxon.Search:service:ask(flags(), options())}}
+{{Package.Raxon.Search:Service:ask(flags(), options())}}
