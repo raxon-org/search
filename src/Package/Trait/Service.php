@@ -13,6 +13,7 @@ use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
+use Raxon\Module\Parallel;
 use Raxon\Module\SharedMemory;
 use Raxon\Module\Time;
 
@@ -24,7 +25,7 @@ trait Service {
      * @throws FileWriteException
      * @throws Exception
      */
-    public function ask(object $flags, object $options): void
+    public function ask_word(object $flags, object $options): void
     {
         $object = $this->object();
         if(!property_exists($options, 'text')){
@@ -41,7 +42,8 @@ trait Service {
             'url'  => (object) [
                 'input' => $dir_input . $uuid . $object->config('extension.json'),
                 'output' => $dir_output . $uuid . $object->config('extension.json')
-            ]
+            ],
+            'type' => 'word'
         ];
         $data = new Data();
         $data->set('ask', $ask);
@@ -64,7 +66,6 @@ trait Service {
      */
     public function model(object $flags, object $options): void
     {
-        //min max at second iteration is wrong
 
         $object = $this->object();
         Core::interactive();
@@ -80,6 +81,11 @@ trait Service {
         if($char_to_key === null){
             $char_to_key = [];
             $key_to_char = [];
+
+            $data = $spec->data();
+            $partition = Core::array_partition($data , 96);
+            ddd($partition);
+
             foreach($spec->data() as $nr => $record){
                 if(property_exists($record, 'token')){
                     $char_to_key[$record->token] = $nr;
@@ -107,6 +113,42 @@ trait Service {
                 if($file->type === File::TYPE){
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
+                    $chunks = array_chunk($string->{'#parallel'}, $threads);
+                    foreach($chunks as $chunk_nr => $chunk) {
+                        $closures = [];
+                        $forks = count($chunk);
+                        for ($i = 0; $i < $forks; $i++) {
+                            $closures[] = function () use (
+                                $object,
+                                $parse,
+                                $chunk,
+                                $chunk_nr,
+                                $chunk_count,
+                                $i,
+                                $depth,
+                                $is_debug
+                            ) {
+                                if (array_key_exists($i, $chunk)) {
+                                    return $parse->compile($chunk[$i], $object->data(), $parse->storage(), $depth, $is_debug);
+                                }
+                                return null;
+                            };
+                        }
+                        $list = Parallel::new()->execute($closures);
+                        foreach($list as $key => $item){
+                            if(
+                                $item !== null &&
+                                $item !== 'progress'
+                            ){
+                                $result[] = $item;
+                                $count++;
+                                $done++;
+                            }
+                        }
+                    }
+
+
+
                     ddd($file);
                 }
             }
