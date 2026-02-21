@@ -127,8 +127,29 @@ trait Service {
                         ) {
                             $char_to_key = $object->config('char.to.key');
                             $key_to_char = $object->config('key.to.char');
-//                                $search = $object->data('service')->search($text, $char_to_key);;
+                            $search = $object->data('service')->search($file->node->ask->text, $char_to_key);;
+                            $search_count = count($search);
+                            $token_count = $search_count;
+                            $result = [];
+                            foreach($chunk as $nr => $record){
+                                ddd($record);
+                                /*
+                                $context_window = [];
+                                for($i = 0; $i < $search_count; $i++){
+                                    $char = $model[$nr + $i] ?? null;
+                                    $context_window[] = $char;
+                                }
+                                if($context_window === $search){
+                                    $is_found = true;
+                                    $skip += $search_count - 1;
+                                    /*
+                                    if(($pointer_end - $pointer_start)  > ($model_count / 8)) {
+                                        $options->model_pointer_max[] = $pointer_end * 0.95;
+                                    }
 
+                                }
+                                */
+                            }
 
                         };
                         $list = Parallel::new()->execute($closures);
