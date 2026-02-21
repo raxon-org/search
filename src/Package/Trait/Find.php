@@ -39,11 +39,13 @@ trait Find {
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
-            foreach($spec->data() as $nr => $char){
-                $char_to_key[$char] = $nr;
+            $key_to_char = [];
+            foreach($spec->data() as $nr => $record){
+                $char_to_key[$record->token] = $nr;
+                $key_to_char[$nr] = $record->token;
             }
             $object->config('char.to.key', $char_to_key);
-            $object->config('key.to.char', $spec->data());
+            $object->config('key.to.char', $key_to_char);
         }
         $text = $options->text ?? null;
         /*
