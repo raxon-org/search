@@ -124,6 +124,8 @@ trait Token {
         $spec[] = ']';
         $spec[] = '{';
         $spec[] = '}';
+        $spec[] = '|';
+        $spec[] = '\\';
         $spec[] = ';';
         $spec[] = ':';
         $spec[] = '\'';
