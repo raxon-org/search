@@ -120,18 +120,17 @@ trait Service {
                     ddd($file);
 
                     foreach($partition as $partition_nr => $chunk) {
-                            $closures[] = function () use (
-                                $object,
-                                $chunk,
-                                $file,
-                            ) {
-                                $char_to_key = $object->config('char.to.key');
-                                $key_to_char = $object->config('key.to.char');
+                        $closures[] = function () use (
+                            $object,
+                            $chunk,
+                            $file,
+                        ) {
+                            $char_to_key = $object->config('char.to.key');
+                            $key_to_char = $object->config('key.to.char');
 //                                $search = $object->data('service')->search($text, $char_to_key);;
 
 
-                            };
-                        }
+                        };
                         $list = Parallel::new()->execute($closures);
                         foreach($list as $key => $item){
                             if(
@@ -145,9 +144,6 @@ trait Service {
                         }
 
                     }
-                    */
-
-
                     ddd($file);
                 }
             }
