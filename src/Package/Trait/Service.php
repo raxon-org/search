@@ -157,12 +157,13 @@ trait Service {
                                 $item !== 'progress'
                             ){
                                 $result[] = $item;
-                                $count++;
-                                $done++;
+//                                $count++;
+//                                $done++;
                             }
                         }
 
                     }
+                    d($result);
                     ddd($file);
                 }
             }
