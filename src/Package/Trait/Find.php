@@ -526,6 +526,7 @@ trait Find {
             $object->data('model.data', $model);
         }
         $search_count = count($search);
+        $token_count = $search_count;
         $model_count = $object->config('model.count');
         if($model_count === null){
             $model_count = count($model);
@@ -563,6 +564,12 @@ trait Find {
             if($context_window === $search){
                 $is_found = true;
                 $skip += $search_count - 1;
+                /*
+                if(($pointer_end - $pointer_start)  > ($model_count / 8)) {
+                    $options->model_pointer_max[] = $pointer_end * 0.95;
+                }
+                */
+
             }
             if($is_found){
                 $part = '';
@@ -709,11 +716,17 @@ trait Find {
             $pointer_max = $pointer_min;
         }
         */
+        $object->config('time.duration', round(microtime(true) - $object->config('time.start'), 2));
         $count_last = end($options->result_count);
+        $timeout_duplicate_find = false;
         if($count_last > 0 && $count_last === $count){
             //same search count
             if($count === 1){
                 usleep(500000); //nice speed
+            }
+            elseif($object->config('time.duration') >= 60){
+                $options->model_pointer_max[] = end($options->model_pointer_min);
+                $timeout_duplicate_find = true;
             }
         }
         elseif($count_last > 0 && $count_last < $count){
@@ -727,14 +740,15 @@ trait Find {
             //narrow search
 //            $pointer_max = $pointer_min;
         }
-
-        $options->model_pointer_max[] = end($pointer_max[$top[$key_rand]]);
+        if($timeout_duplicate_find === false){
+            $options->model_pointer_max[] = end($pointer_max[$top[$key_rand]]);
+        }
         $options->result_count[] = $count;
         echo Cli::tput('cursor.up') . Cli::tput('erase.line');
         if(strlen($text) > 80){
             $text = substr($text, -80);
         }
-        echo 'Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . reset($pointer_min[$top[$key_rand]]) .', max: ' . end($pointer_max[$top[$key_rand]]) . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
+        echo 'Duration: ' . $object->config('time.duration') . ', Tokens: ' . $token_count . ', T/sec: ' . round($token_count / $object->config('time.duration'), 2)  . ', Count: ' . $count . ' total: '. $model_count . ', start: '. $pointer_start . ', min: ' . reset($pointer_min[$top[$key_rand]]) .', max: ' . end($pointer_max[$top[$key_rand]]) . ' ' . str_replace("\n", '<br>', $text) . PHP_EOL;
 //        usleep(5000);
         $this->find($flags, $options);
     }
