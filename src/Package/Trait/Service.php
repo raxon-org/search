@@ -117,8 +117,6 @@ trait Service {
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
                     $closures = [];
-                    ddd($file);
-
                     foreach($partition as $partition_nr => $chunk) {
                         $closures[] = function () use (
                             $object,
