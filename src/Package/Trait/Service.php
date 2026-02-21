@@ -130,7 +130,7 @@ trait Service {
                             $search_count = count($search);
                             $token_count = $search_count;
                             $count = 0;
-                            $result = [];
+                            $result =[];
                             foreach($chunk as $nr => $key){
                                 $is_found = false;
                                 $context_window = [];
@@ -204,9 +204,8 @@ trait Service {
 //                                $done++;
                             }
                         }
-                        ddd($result);
-
                     }
+                    ddd($result);
                 }
             }
             usleep(500000);
