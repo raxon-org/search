@@ -81,11 +81,6 @@ trait Service {
         if($char_to_key === null){
             $char_to_key = [];
             $key_to_char = [];
-
-            $data = $spec->data();
-            $partition = Core::array_partition($data , 96);
-            ddd($partition);
-
             foreach($spec->data() as $nr => $record){
                 if(property_exists($record, 'token')){
                     $char_to_key[$record->token] = $nr;
@@ -100,6 +95,13 @@ trait Service {
         Dir::create($dir_input, Dir::CHMOD);
         Dir::create($dir_output, Dir::CHMOD);
         $dir = new Dir();
+        $data = $object->data_read($url_model, 'model');
+        if(!$data){
+            throw new ErrorException('Model file not found');
+        }
+        $data = $data->data();
+        $partition = Core::array_partition($data , 96);
+        ddd($partition);
         while(true){
             $object->config('time.duration', microtime(true) - $object->config('time.start'));
             if($object->config('time.duration') > 60){
