@@ -638,11 +638,15 @@ trait Token {
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
+            $key_to_char = [];
             foreach($spec as $nr => $record){
-                $char_to_key[$record->token] = $nr;
+                if(property_exists($record, 'token') !== false){
+                    $char_to_key[$record->token] = $nr;
+                    $key_to_char[$nr] = $record->token;
+                }
             }
             $object->config('char.to.key', $char_to_key);
-            $object->config('key.to.char', $spec);
+            $object->config('key.to.char', $key_to_char);
         }
         $meta = [];
         $meta['url'] = $file->url;

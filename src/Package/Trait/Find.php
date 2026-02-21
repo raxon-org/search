@@ -735,9 +735,6 @@ trait Find {
         elseif($count_last > 0 && $count_last < $count){
             //spread search
 //            $pointer_max = $pointer_min;
-            if($count === 1){
-                usleep(500000); //nice speed
-            }
         }
         elseif($count_last > 0 && $count_last > $count){
             //narrow search
