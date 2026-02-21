@@ -115,6 +115,7 @@ trait Service {
                 if($file->type === File::TYPE){
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
+                    /*
                     $chunks = array_chunk($string->{'#parallel'}, $threads);
                     foreach($chunks as $chunk_nr => $chunk) {
                         $closures = [];
@@ -147,8 +148,9 @@ trait Service {
                                 $done++;
                             }
                         }
-                    }
 
+                    }
+                    */
 
 
                     ddd($file);
