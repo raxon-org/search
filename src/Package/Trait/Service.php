@@ -159,6 +159,8 @@ trait Service {
                                 }
                             }
                             arsort($result, SORT_NATURAL);
+                            d($count);
+                            d($result);
                             $nr = 0;
                             $max = 10;
                             $top_result = [];
