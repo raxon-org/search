@@ -117,6 +117,7 @@ trait Service {
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
                     $closures = [];
+                    $result = [];
                     foreach($partition as $partition_nr => $chunk) {
                         $closures[] = function () use (
                             $object,
@@ -128,27 +129,69 @@ trait Service {
                             $search = $object->data('service')->search($file->node->ask->text, $char_to_key);;
                             $search_count = count($search);
                             $token_count = $search_count;
+                            $count = 0;
                             $result = [];
-                            foreach($chunk as $nr => $record){
-                                ddd($record);
-                                /*
+                            foreach($chunk as $nr => $key){
+                                $is_found = false;
                                 $context_window = [];
                                 for($i = 0; $i < $search_count; $i++){
-                                    $char = $model[$nr + $i] ?? null;
+                                    $char = $chunk[$nr + $i] ?? null;
                                     $context_window[] = $char;
                                 }
                                 if($context_window === $search){
                                     $is_found = true;
                                     $skip += $search_count - 1;
-                                    /*
-                                    if(($pointer_end - $pointer_start)  > ($model_count / 8)) {
-                                        $options->model_pointer_max[] = $pointer_end * 0.95;
-                                    }
-
                                 }
-                                */
+                                if($is_found){
+                                    $part = '';
+                                    $max = $nr + $search_count + 1;
+                                    //might need conversion for 4 spaces, 3 spaces, 2 spaces
+                                    for($i = $nr + $search_count; $i < $max; $i++){
+                                        $part .= $key_to_char[$chunk[$i]] ?? '';
+                                    }
+                                    if(array_key_exists($part, $result)){
+                                        $result[$part]++;
+                                    } else {
+                                        $result[$part] = 1;
+                                    }
+                                    $count++;
+                                }
                             }
-
+                            arsort($result, SORT_NATURAL);
+                            $nr = 0;
+                            $max = 10;
+                            $top_result = [];
+                            foreach($result as $part => $appearance){
+                                $top_result[$part] = round(($appearance / $count) * 100, 2);
+                                $nr++;
+                                if($nr > $max){
+                                    break;
+                                }
+                            }
+                            $top = [];
+                            foreach($top_result as $part => $appearance){
+                                $multiplier = (int) $appearance;
+                                for($i=0; $i < $multiplier; $i++){
+                                    $top[] = $part;
+                                }
+                            }
+                            if(!array_key_exists(0, $top)){
+                                return false;
+                            }
+                            $key_rand = array_rand($top);
+                            $search[] = $char_to_key[$top[$key_rand]] ?? null;
+                            $text_original = $file->node->ask->text;
+                            $text = '';
+                            foreach($search as $nr => $key){
+                                if(array_key_exists($key, $key_to_char)){
+                                    $text .= $key_to_char[$key];
+                                }
+                            }
+                            return (object) [
+                                'original' => $text_original,
+                                'text' => $text,
+                                'token' => $top[$key_rand]
+                            ];
                         };
                         $list = Parallel::new()->execute($closures);
                         foreach($list as $key => $item){
@@ -161,10 +204,9 @@ trait Service {
 //                                $done++;
                             }
                         }
+                        ddd($result);
 
                     }
-                    d($result);
-                    ddd($file);
                 }
             }
             usleep(500000);
