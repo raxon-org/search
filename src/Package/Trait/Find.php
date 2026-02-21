@@ -726,6 +726,7 @@ trait Find {
             }
             elseif($object->config('time.duration') >= 60){
                 $options->model_pointer_max[] = reset($options->model_pointer_min);
+                $count = 1;
                 $timeout_duplicate_find = true;
             }
         }
