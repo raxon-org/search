@@ -725,7 +725,7 @@ trait Find {
                 usleep(500000); //nice speed
             }
             elseif($object->config('time.duration') >= 60){
-                $options->model_pointer_max[] = reset($options->model_pointer_min);
+                $options->model_pointer_max[] = reset($options->model_pointer_min) + $search_count + 1;
                 $count = 1;
                 $timeout_duplicate_find = true;
             }
