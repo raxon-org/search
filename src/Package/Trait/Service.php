@@ -27,6 +27,9 @@ trait Service {
     public function ask(object $flags, object $options): void
     {
         $object = $this->object();
+        if(!property_exists($options, 'text')){
+            throw new ErrorException('Missing text option');
+        }
         $dir_input = $object->config('ramdisk.url') . '33/Model/Input/';
         $dir_output = $object->config('ramdisk.url') . '33/Model/Output/';
         $uuid = Core::uuid();
