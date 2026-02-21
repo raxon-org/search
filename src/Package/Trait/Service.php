@@ -192,11 +192,14 @@ trait Service {
                                     $text .= $key_to_char[$key];
                                 }
                             }
+                            return $text;
+                            /*
                             return (object) [
                                 'original' => $text_original,
                                 'text' => $text,
                                 'token' => $top[$key_rand]
                             ];
+                            */
                         };
                         $list = Parallel::new()->execute($closures);
                         foreach($list as $key => $item){
