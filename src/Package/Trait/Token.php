@@ -590,6 +590,366 @@ trait Token {
         $spec[] = (object) [
             'token' => 'extends'
         ];
+        $spec[] = (object) [
+            'token' => 'ar'
+        ];
+        $spec[] = (object) [
+            'token' => 'as'
+        ];
+        $spec[] = (object) [
+            'token' => 'mo'
+        ];
+        $spec[] = (object) [
+            'token' => 're'
+        ];
+        $spec[] = (object) [
+            'token' => 'of'
+        ];
+        $spec[] = (object) [
+            'token' => 'is'
+        ];
+        $spec[] = (object) [
+            'token' => 'to'
+        ];
+        $spec[] = (object) [
+            'token' => 'in'
+        ];
+        $spec[] = (object) [
+            'token' => 'it'
+        ];
+        $spec[] = (object) [
+            'token' => 'be'
+        ];
+        $spec[] = (object) [
+            'token' => 'as'
+        ];
+        $spec[] = (object) [
+            'token' => 'at'
+        ];
+        $spec[] = (object) [
+            'token' => 'an'
+        ];
+        $spec[] = (object) [
+            'token' => 'we'
+        ];
+        $spec[] = (object) [
+            'token' => 'to'
+        ];
+        $spec[] = (object) [
+            'token' => 'ken'
+        ];
+        $spec[] = (object) [
+            'token' => 'op'
+        ];
+        $spec[] = (object) [
+            'token' => 'ti'
+        ];
+        $spec[] = (object) [
+            'token' => 'ons'
+        ];
+        $spec[] = (object) [
+            'token' => 'ish'
+        ];
+        $spec[] = (object) [
+            'token' => 'ion'
+        ];
+        $spec[] = (object) [
+            'token' => 'ute'
+        ];
+        $spec[] = (object) [
+            'token' => 'ac'
+        ];
+        $spec[] = (object) [
+            'token' => 'ade'
+        ];
+        $spec[] = (object) [
+            'token' => 'ate'
+        ];
+        $spec[] = (object) [
+            'token' => 'ab'
+        ];
+        $spec[] = (object) [
+            'token' => 'le'
+        ];
+        $spec[] = (object) [
+            'token' => 'able'
+        ];
+        $spec[] = (object) [
+            'token' => 'an'
+        ];
+        $spec[] = (object) [
+            'token' => 'ce'
+        ];
+        $spec[] = (object) [
+            'token' => 'de'
+        ];
+        $spec[] = (object) [
+            'token' => 'nt'
+        ];
+        $spec[] = (object) [
+            'token' => 'ing'
+        ];
+        $spec[] = (object) [
+            'token' => 'ly'
+        ];
+        $spec[] = (object) [
+            'token' => 'ely'
+        ];
+        $spec[] = (object) [
+            'token' => 'ant'
+        ];
+        $spec[] = (object) [
+            'token' => 'acc'
+        ];
+        $spec[] = (object) [
+            'token' => 'ac'
+        ];
+        $spec[] = (object) [
+            'token' => 're'
+        ];
+        $spec[] = (object) [
+            'token' => 'ter'
+        ];
+        $spec[] = (object) [
+            'token' => 'ent'
+        ];
+        $spec[] = (object) [
+            'token' => 'age'
+        ];
+        $spec[] = (object) [
+            'token' => 'line'
+        ];
+        $spec[] = (object) [
+            'token' => 'ine'
+        ];
+        $spec[] = (object) [
+            'token' => 'ign'
+        ];
+        $spec[] = (object) [
+            'token' => 'ive'
+        ];
+        $spec[] = (object) [
+            'token' => 'all'
+        ];
+        $spec[] = (object) [
+            'token' => 'eg'
+        ];
+        $spec[] = (object) [
+            'token' => 'ost'
+        ];
+        $spec[] = (object) [
+            'token' => 'her'
+        ];
+        $spec[] = (object) [
+            'token' => 'mi'
+        ];
+        $spec[] = (object) [
+            'token' => 'ni'
+        ];
+        $spec[] = (object) [
+            'token' => 'um'
+        ];
+        $spec[] = (object) [
+            'token' => 'dor'
+        ];
+        $spec[] = (object) [
+            'token' => 'or'
+        ];
+        $spec[] = (object) [
+            'token' => 'xor'
+        ];
+        $spec[] = (object) [
+            'token' => 'ous'
+        ];
+        $spec[] = (object) [
+            'token' => 'ate'
+        ];
+        $spec[] = (object) [
+            'token' => 'art'
+        ];
+        $spec[] = (object) [
+            'token' => 'aud'
+        ];
+        $spec[] = (object) [
+            'token' => 'val'
+        ];
+        $spec[] = (object) [
+            'token' => 'ect'
+        ];
+        $spec[] = (object) [
+            'token' => 'cia'
+        ];
+        $spec[] = (object) [
+            'token' => 'att'
+        ];
+        $spec[] = (object) [
+            'token' => 'tic'
+        ];
+        $spec[] = (object) [
+            'token' => 'ess'
+        ];
+        $spec[] = (object) [
+            'token' => 'ain'
+        ];
+        $spec[] = (object) [
+            'token' => 'gain'
+        ];
+        $spec[] = (object) [
+            'token' => 'oom'
+        ];
+        $spec[] = (object) [
+            'token' => 'th'
+        ];
+        $spec[] = (object) [
+            'token' => 'oa'
+        ];
+        $spec[] = (object) [
+            'token' => 'or'
+        ];
+        $spec[] = (object) [
+            'token' => 'ro'
+        ];
+        $spec[] = (object) [
+            'token' => 'er'
+        ];
+        $spec[] = (object) [
+            'token' => 'le'
+        ];
+        $spec[] = (object) [
+            'token' => 'ea'
+        ];
+        $spec[] = (object) [
+            'token' => 'll'
+        ];
+        $spec[] = (object) [
+            'token' => 'in'
+        ];
+        $spec[] = (object) [
+            'token' => 'ai'
+        ];
+        $spec[] = (object) [
+            'token' => 'acc'
+        ];
+        $spec[] = (object) [
+            'token' => 'dent'
+        ];
+        $spec[] = (object) [
+            'token' => 'ance'
+        ];
+        $spec[] = (object) [
+            'token' => 'emy'
+        ];
+        $spec[] = (object) [
+            'token' => 'mic'
+        ];
+        $spec[] = (object) [
+            'token' => 'the'
+        ];
+        $spec[] = (object) [
+            'token' => 'and'
+        ];
+        $spec[] = (object) [
+            'token' => 'you'
+        ];
+        $spec[] = (object) [
+            'token' => 'not'
+        ];
+        $spec[] = (object) [
+            'token' => 'are'
+        ];
+        $spec[] = (object) [
+            'token' => 'all'
+        ];
+        $spec[] = (object) [
+            'token' => 'new'
+        ];
+        $spec[] = (object) [
+            'token' => 'was'
+        ];
+        $spec[] = (object) [
+            'token' => 'can'
+        ];
+        $spec[] = (object) [
+            'token' => 'has'
+        ];
+        $spec[] = (object) [
+            'token' => 'but'
+        ];
+        $spec[] = (object) [
+            'token' => 'our'
+        ];
+        $spec[] = (object) [
+            'token' => 'may'
+        ];
+        $spec[] = (object) [
+            'token' => 'out'
+        ];
+        $spec[] = (object) [
+            'token' => 'use'
+        ];
+        $spec[] = (object) [
+            'token' => 'any'
+        ];
+        $spec[] = (object) [
+            'token' => 'see'
+        ];
+        $spec[] = (object) [
+            'token' => 'his'
+        ];
+        $spec[] = (object) [
+            'token' => 'one'
+        ];
+        $spec[] = (object) [
+            'token' => 'two'
+        ];
+        $spec[] = (object) [
+            'token' => 'three'
+        ];
+        $spec[] = (object) [
+            'token' => 'four'
+        ];
+        $spec[] = (object) [
+            'token' => 'five'
+        ];
+        $spec[] = (object) [
+            'token' => 'six'
+        ];
+        $spec[] = (object) [
+            'token' => 'seven'
+        ];
+        $spec[] = (object) [
+            'token' => 'eight'
+        ];
+        $spec[] = (object) [
+            'token' => 'nine'
+        ];
+        $spec[] = (object) [
+            'token' => 'ten'
+        ];
+        $spec[] = (object) [
+            'token' => 'zero'
+        ];
+        $spec[] = (object) [
+            'token' => 'hundred'
+        ];
+        $spec[] = (object) [
+            'token' => 'thausand'
+        ];
+        $spec[] = (object) [
+            'token' => 'million'
+        ];
+        $spec[] = (object) [
+            'token' => 'billion'
+        ];
+        $spec[] = (object) [
+            'token' => 'trillion'
+        ];
+        $spec[] = (object) [
+            'token' => 'quadrillion'
+        ];
+        $spec[] = (object) [
+            'token' => 'quintillion'
+        ];
         $url_spec = $object->config('controller.dir.data') . 'Spec.json';
         $url_output = $object->config('controller.dir.data') . 'Model.json';
         File::delete($url_spec);
