@@ -111,6 +111,7 @@ trait Service {
             $read = $dir->read($dir_input);
             if(!$read){
                 sleep(1);
+                continue;
             }
             foreach($read as $file){
                 if($file->type === File::TYPE){
