@@ -118,8 +118,6 @@ trait Service {
                 if($file->type === File::TYPE){
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
-                    $closures = [];
-                    $result_partition = [];
                     $search = $file->node->ask->text;
                     $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
                     ddd($key_to_char[$next_token]);
