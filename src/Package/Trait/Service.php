@@ -74,6 +74,11 @@ trait Service {
                     ];
                     $columns = Cli::tput('columns');
                     $rows = Cli::tput('rows');
+
+                    echo CLi::tput('cursor.position', [0, 0]);
+                    for($nr = 0; $nr < $rows; $nr++){
+                        echo str_repeat(' ', $columns);
+                    }
                     echo CLi::tput('cursor.position', [0, 0]);
                     if(is_array($stream)){
                         foreach($stream as $token){
