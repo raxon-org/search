@@ -125,6 +125,7 @@ trait Service {
                             break;
                         case 'word':
                             $next_word = '';
+                            $ask = $file->node->ask;
                             while(true){
                                 $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
                                 $next_char = $key_to_char[$next_token];
@@ -133,14 +134,27 @@ trait Service {
                                     if($explode[0] !== ' '){
                                         $next_word .= $explode[0];
                                     }
+                                    if(!property_exists($ask, 'stream')){
+                                        $ask->stream = [];
+                                    }
+                                    $ask->stream[] = $next_token;
+                                    $ask->status = 'finish';
+                                    $ask->word = $next_word;
+                                    $data = new Data($ask);
+                                    $data->write($ask->url->output);
                                     break;
                                 } else {
                                     $next_word .= $next_char;
                                 }
                                 $search .= $next_char;
+                                $ask->status = 'progress';
+                                if(!property_exists($ask, 'stream')){
+                                    $ask->stream = [];
+                                }
+                                $ask->stream[] = $next_token;
+                                $data = new Data($ask);
+                                $data->write($ask->url->output);
                             }
-                            d($file);
-                            ddd($next_word);
                     }
                 }
             }
