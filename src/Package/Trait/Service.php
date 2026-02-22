@@ -119,6 +119,7 @@ trait Service {
                     $file->node = Core::object($file->read);
                     $closures = [];
                     $result = [];
+                    breakpoint(count($partition));
                     foreach($partition as $partition_nr => $chunk) {
                         $closures[] = function () use (
                             $object,
