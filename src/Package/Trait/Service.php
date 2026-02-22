@@ -222,6 +222,7 @@ trait Service {
                                 }
                                 $next_token_token = $next_token->token;
                                 $enabled_partitions = $next_token->partitions->enable ?? null;
+                                d($enabled_partitions);
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
