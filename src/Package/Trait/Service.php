@@ -119,7 +119,6 @@ trait Service {
                     $file->node = Core::object($file->read);
                     $closures = [];
                     $result_partition = [];
-                    breakpoint(count($partition));
                     foreach($partition as $partition_nr => $chunk) {
                         $closures[] = function () use (
                             $object,
@@ -209,7 +208,9 @@ trait Service {
                         };
                         breakpoint(count($closures));
                         $list = Parallel::new()->execute($closures);
+                        d($list);
                         breakpoint(count($list));
+                        d($result_partition);
                         foreach($list as $key => $item){
                             if(
                                 $item !== null &&
