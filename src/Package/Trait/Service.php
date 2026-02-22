@@ -167,6 +167,8 @@ trait Service {
                                 ddd($result);
 
                             }
+                            return $result;
+                            /*
                             $nr = 0;
                             $max = 10;
                             $top_result = [];
@@ -197,6 +199,7 @@ trait Service {
                                 }
                             }
                             return $text;
+                            */
                             /*
                             return (object) [
                                 'original' => $text_original,
