@@ -66,7 +66,6 @@ trait Service {
                         ]
                     )
                 ){
-                    usleep(300000);
                     $stream = $read->get('stream');
                     $token_count = count($stream);
                     $token = (object) [
@@ -87,6 +86,7 @@ trait Service {
                     }
                     echo CLi::tput('cursor.position', [0, $rows-1]);
                     echo 'Token count: ' . $token_count . ', hit: ' . $token->hit . PHP_EOL;;
+                    usleep(300000);
                 }
                 elseif($read->get('status') === 'finish'){
                     break;
