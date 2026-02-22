@@ -1,1 +1,1 @@
-{{Package.Raxon.Search:Token:dict.4(flags(), options())}}
+{{Package.Raxon.Search:Token:dict.3(flags(), options())}}
