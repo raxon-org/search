@@ -58,6 +58,9 @@ trait Service {
                     File::delete($ask->url->input);
                     File::delete($ask->url->output);
                 }
+                $stream = $read->get('stream');
+                $token_count = count($stream);
+                $bytes_count = 0;
                 if(
                     in_array(
                         $read->get('status'),
@@ -67,9 +70,6 @@ trait Service {
                         ]
                     )
                 ){
-                    $stream = $read->get('stream');
-                    $token_count = count($stream);
-                    $bytes_count = 0;
                     $token = (object) [
                         'hit' => 0
                     ];
@@ -98,6 +98,17 @@ trait Service {
                 }
                 elseif($read->get('status') === 'finish'){
                     $start = true;
+                    echo CLi::tput('cursor.position', [0, 0]);
+                    if(is_array($stream)){
+                        foreach($stream as $token){
+                            echo $token->token;
+                        }
+                    }
+                    $duration = round(microtime(true) - $object->config('time.start'), 2);
+                    if($duration > 0){
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . PHP_EOL;;
+                    }
                     break;
                 }
             } else {
