@@ -1,0 +1,1 @@
+{{Package.Raxon.Search:Model:create(flags(), options())}}
