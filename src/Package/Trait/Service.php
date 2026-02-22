@@ -227,7 +227,7 @@ trait Service {
                             }
                         }
                     }
-                    arsort($result_closure, SORT_NATURAL);
+                    arsort($result_partition, SORT_NATURAL);
                     d($count);
 
                     ddd($result_partition);
