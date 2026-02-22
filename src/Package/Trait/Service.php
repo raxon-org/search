@@ -53,7 +53,7 @@ trait Service {
         //wait for output
         while(true){
             if(File::exist($ask->url->output)){
-                $read = $object->data_read($ask->url->output, 'ask');
+                $read = $object->data_read($ask->url->output);
                 if($read === null){
                     File::delete($ask->url->input);
                     File::delete($ask->url->output);
