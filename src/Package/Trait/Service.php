@@ -233,7 +233,7 @@ trait Service {
                             $result[] = $part;
                         }
                     }
-                    $key_rand = array_rand($result_partition);
+                    $key_rand = array_rand($result);
                     ddd($result[$key_rand]);
                 }
             }
