@@ -119,8 +119,29 @@ trait Service {
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
                     $search = $file->node->ask->text;
-                    $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
-                    ddd($key_to_char[$next_token]);
+                    switch($file->node->ask->type){
+                        case 'token':
+                            $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
+                            ddd($key_to_char[$next_token]);
+                            break;
+                        case 'word':
+                            $next_word = '';
+                            while(true){
+                                $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
+                                $next_char = $key_to_char[$next_token];
+                                $explode = explode(' ', $search, 2);
+                                if(array_key_exists(1, $explode)){
+                                    if($explode[0] !== ' '){
+                                        $next_word .= $next_char;
+                                    }
+                                    break;
+                                } else {
+                                    $next_word .= $next_char;
+                                }
+                                $search .= $next_char;
+                            }
+                            ddd($next_word);
+                    }
                 }
             }
             usleep(500000);
@@ -204,8 +225,6 @@ trait Service {
             }
         }
         $key_rand = array_rand($result);
-        d($char_to_key);
-        ddd($result[$key_rand]);
         return $char_to_key[$result[$key_rand]] ?? null;
     }
 
