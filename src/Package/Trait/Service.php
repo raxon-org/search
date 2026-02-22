@@ -33,15 +33,18 @@ trait Service {
         }
         $dir_input = $object->config('ramdisk.url') . '33/Model/Input/';
         $dir_output = $object->config('ramdisk.url') . '33/Model/Output/';
+        $dir_stream = $object->config('ramdisk.url') . '33/Model/Stream/';
         $uuid = Core::uuid();
         Dir::create($dir_input, Dir::CHMOD);
         Dir::create($dir_output, Dir::CHMOD);
+        Dir::create($dir_stream, Dir::CHMOD);
         $ask = (object) [
             'uuid' => $uuid,
             'text' => $options->text ?? null,
             'url'  => (object) [
                 'input' => $dir_input . $uuid . $object->config('extension.json'),
-                'output' => $dir_output . $uuid . $object->config('extension.json')
+                'output' => $dir_output . $uuid . $object->config('extension.json'),
+                'stream' => $dir_stream . $uuid . $object->config('extension.json')
             ],
             'type' => 'word',
             'status' => 'init'
@@ -52,11 +55,11 @@ trait Service {
         $start = true;
         //wait for output
         while(true){
-            if(File::exist($ask->url->output)){
-                $read = $object->data_read($ask->url->output);
+            if(File::exist($ask->url->stream)){
+                $read = $object->data_read($ask->url->stream);
                 if($read === null){
                     File::delete($ask->url->input);
-                    File::delete($ask->url->output);
+                    File::delete($ask->url->stream);
                 }
                 $stream = $read->get('stream');
                 $token_count = count($stream);
@@ -94,16 +97,21 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
                     }
                     usleep(300000);
                 }
                 elseif($read->get('status') === 'finish'){
                     $start = true;
                     echo CLi::tput('cursor.position', [0, 0]);
+                    for($nr = 0; $nr < $rows; $nr++){
+                        echo str_repeat(' ', $columns);
+                    }
+                    echo CLi::tput('cursor.position', [0, 1]);
                     if(is_array($stream)){
                         foreach($stream as $token){
                             echo $token->token;
+                            $bytes_count += mb_strlen($token->token);
                         }
                     }
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
@@ -111,16 +119,16 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
                     }
+                    File::copy($ask->url->stream, $ask->url->output);
+                    File::delete($ask->url->stream);
                     break;
                 }
             } else {
-                sleep(1);
+                usleep(300000);
             }
         }
-        File::delete($ask->url->input);
-//        echo File::read($ask->url->output) . PHP_EOL;
     }
 
     /**
@@ -223,7 +231,7 @@ trait Service {
                                     $ask->status = 'finish';
                                     $ask->word = $next_word;
                                     $data = new Data($ask);
-                                    $data->write($ask->url->output);
+                                    $data->write($ask->url->stream);
                                     break;
                                 } else {
                                     $next_word .= $next_token_token;
@@ -235,7 +243,7 @@ trait Service {
                                 }
                                 $ask->stream[] = $next_token;
                                 $data = new Data($ask);
-                                $data->write($ask->url->output);
+                                $data->write($ask->url->stream);
                             }
                     }
                 }
