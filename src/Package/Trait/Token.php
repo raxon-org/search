@@ -79,47 +79,9 @@ trait Token {
         $spec[] = 'X';
         $spec[] = 'Y';
         $spec[] = 'Z';
-        $spec[] = '0';
-        $spec[] = '1';
-        $spec[] = '2';
-        $spec[] = '3';
-        $spec[] = '4';
-        $spec[] = '5';
-        $spec[] = '6';
-        $spec[] = '7';
-        $spec[] = '8';
-        $spec[] = '9';
         $count = count($spec);
         $dict = [];
-
-        for($i_1 = 0; $i_1 < $count; $i_1++) {
-            for($i_2 = 0; $i_2 < $count; $i_2++) {
-                for($i_3 = 0; $i_3 < $count; $i_3++) {
-                    $dict[] = (object) [
-                        'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3]
-                    ];
-                }
-
-            }
-        }
         d($count);
-        d(count($dict));
-
-        /*
-        for($i_1 = 0; $i_1 < 4; $i_1++) {
-            for($i_2 = 0; $i_2 < 4; $i_2++) {
-                for($i_3 = 0; $i_3 < 4; $i_3++) {
-                    for($i_4 = 0; $i_4 < 4; $i_4++) {
-                        $dict[] = (object) [
-                            'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3].$spec[$i_4]
-                        ];
-                    }
-                }
-            }
-        }
-        */
-
-        /*
         for($i_1 = 0; $i_1 < $count; $i_1++) {
             for($i_2 = 0; $i_2 < $count; $i_2++) {
                 for($i_3 = 0; $i_3 < $count; $i_3++) {
@@ -131,7 +93,33 @@ trait Token {
                 }
             }
         }
-        */
+        $spec = [];
+        $spec[] = '0';
+        $spec[] = '1';
+        $spec[] = '2';
+        $spec[] = '3';
+        $spec[] = '4';
+        $spec[] = '5';
+        $spec[] = '6';
+        $spec[] = '7';
+        $spec[] = '8';
+        $spec[] = '9';
+        $spec[] = '.';
+        $spec[] = ',';
+        $count = count($spec);
+        for($i_1 = 0; $i_1 < $count; $i_1++) {
+            for($i_2 = 0; $i_2 < $count; $i_2++) {
+                for($i_3 = 0; $i_3 < $count; $i_3++) {
+                    for($i_4 = 0; $i_4 < $count; $i_4++) {
+                        $dict[] = (object) [
+                            'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3].$spec[$i_4]
+                        ];
+                    }
+                }
+            }
+        }
+        d($count);
+        d(count($dict));
     }
 
     /**
