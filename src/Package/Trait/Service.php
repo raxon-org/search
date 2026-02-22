@@ -204,6 +204,7 @@ trait Service {
             }
         }
         $key_rand = array_rand($result);
+        ddd($result[$key_rand]);
         return $char_to_key[$result[$key_rand]] ?? null;
     }
 
