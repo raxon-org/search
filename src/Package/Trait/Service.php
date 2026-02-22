@@ -205,7 +205,8 @@ trait Service {
                     }
                     switch($file->node->ask->type){
                         case 'token':
-                            $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
+                            $enabled_partitions = null;
+                            $next_token = $this->token_next($partition, $file, $enabled_partitions, $this->search($search, $char_to_key));
                             if($next_token !== null){
                                 ddd($key_to_char[$next_token->token]);
                             }
@@ -213,7 +214,7 @@ trait Service {
                         case 'word':
                             $next_word = '';
                             $ask = $file->node->ask;
-                            $enabled_partitions = [];
+                            $enabled_partitions = null;
                             while(true){
                                 $next_token = $this->token_next($partition, $file, $enabled_partitions, $this->search($search, $char_to_key));
                                 if($next_token === null){
