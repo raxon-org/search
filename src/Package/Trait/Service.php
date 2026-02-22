@@ -43,7 +43,8 @@ trait Service {
                 'input' => $dir_input . $uuid . $object->config('extension.json'),
                 'output' => $dir_output . $uuid . $object->config('extension.json')
             ],
-            'type' => 'word'
+            'type' => 'word',
+            'status' => 'init'
         ];
         $data = new Data();
         $data->set('ask', $ask);
@@ -52,10 +53,42 @@ trait Service {
         while(true){
             if(File::exist($ask->url->output)){
                 $read = $object->data_read($ask->url->output, 'ask');
-                ddd($read);
-                break;
+                if($read === null){
+                    File::delete($ask->url->input);
+                    File::delete($ask->url->output);
+                }
+                if(
+                    in_array(
+                        $read->get('status'),
+                        [
+                            'init',
+                            'progress'
+                        ]
+                    )
+                ){
+                    usleep(300000);
+                    $stream = $read->get('stream');
+                    $token_count = count($stream);
+                    $token = (object) [
+                        'hit' => 0
+                    ];
+                    $columns = Cli::tput('columns');
+                    $rows = Cli::tput('rows');
+                    CLi::tput('cursor.position', [0, 0]);
+                    if(is_array($stream)){
+                        foreach($stream as $token){
+                            echo $token->token;
+                        }
+                    }
+                    CLi::tput('cursor.position', [$columns-1, 0]);
+                    echo 'Token count: ' . $token_count . ', hit: ' . $token->hit . PHP_EOL;;
+                }
+                elseif($read->get('status') === 'finish'){
+                    break;
+                }
+            } else {
+                sleep(1);
             }
-            sleep(1);
         }
         File::delete($ask->url->input);
 //        echo File::read($ask->url->output) . PHP_EOL;
