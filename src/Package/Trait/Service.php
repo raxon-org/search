@@ -100,7 +100,7 @@ trait Service {
             throw new ErrorException('Model file not found');
         }
         $data = $data->data();
-        $partition = Core::array_partition($data , 96);
+        $partition = Core::array_partition($data , 2);
 //        $object->data('partition', $partition);
         while(true){
             $object->data('service', $this);
@@ -139,6 +139,8 @@ trait Service {
                                     $char = $chunk[$nr + $i] ?? null;
                                     $context_window[] = $char;
                                 }
+                                d($context_window);
+                                d($search);
                                 if($context_window === $search){
                                     $is_found = true;
                                     $skip += $search_count - 1;
@@ -161,7 +163,8 @@ trait Service {
                             arsort($result, SORT_NATURAL);
                             if($count > 0){
                                 d($count);
-                                d($result);
+                                ddd($result);
+
                             }
                             $nr = 0;
                             $max = 10;
