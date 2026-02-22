@@ -276,7 +276,7 @@ trait Service {
         }
     }
 
-    private function token_next(array $partition, object $file, array|null $enabled_partitions, array $search): null|object
+    private function token_next(array $partition, object $file, array|null $partition_enable, array $search): null|object
     {
         $object = $this->object();
         $closures = [];
@@ -284,8 +284,8 @@ trait Service {
         $char_to_key = $object->config('char.to.key');
         foreach($partition as $partition_nr => $chunk) {
             if(
-                $enabled_partitions !== null &&
-                !in_array($partition_nr, $enabled_partitions, true)
+                $partition_enable !== null &&
+                !in_array($partition_nr, $partition_enable, true)
             ){
                 continue;
             }
