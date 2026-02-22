@@ -17,6 +17,116 @@ use Raxon\Module\Time;
 
 trait Token {
 
+    public function dict_6(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $spec = [];
+        $spec[] = ' ';
+        $spec[] = "\n";
+        $spec[] = "\r";
+        $spec[] = "\t";
+        $spec[] = "\v";
+        $spec[] = "\0";
+        $spec[] = 'a';
+        $spec[] = 'b';
+        $spec[] = 'c';
+        $spec[] = 'd';
+        $spec[] = 'e';
+        $spec[] = 'f';
+        $spec[] = 'g';
+        $spec[] = 'h';
+        $spec[] = 'i';
+        $spec[] = 'j';
+        $spec[] = 'k';
+        $spec[] = 'l';
+        $spec[] = 'm';
+        $spec[] = 'n';
+        $spec[] = 'o';
+        $spec[] = 'p';
+        $spec[] = 'q';
+        $spec[] = 'r';
+        $spec[] = 's';
+        $spec[] = 't';
+        $spec[] = 'u';
+        $spec[] = 'v';
+        $spec[] = 'w';
+        $spec[] = 'x';
+        $spec[] = 'y';
+        $spec[] = 'z';
+        $spec[] = 'A';
+        $spec[] = 'B';
+        $spec[] = 'C';
+        $spec[] = 'D';
+        $spec[] = 'E';
+        $spec[] = 'F';
+        $spec[] = 'G';
+        $spec[] = 'H';
+        $spec[] = 'I';
+        $spec[] = 'J';
+        $spec[] = 'K';
+        $spec[] = 'L';
+        $spec[] = 'M';
+        $spec[] = 'N';
+        $spec[] = 'O';
+        $spec[] = 'P';
+        $spec[] = 'Q';
+        $spec[] = 'R';
+        $spec[] = 'S';
+        $spec[] = 'T';
+        $spec[] = 'U';
+        $spec[] = 'V';
+        $spec[] = 'W';
+        $spec[] = 'X';
+        $spec[] = 'Y';
+        $spec[] = 'Z';
+        $spec[] = '0';
+        $spec[] = '1';
+        $spec[] = '2';
+        $spec[] = '3';
+        $spec[] = '4';
+        $spec[] = '5';
+        $spec[] = '6';
+        $spec[] = '7';
+        $spec[] = '8';
+        $spec[] = '9';
+        $spec[] = '`';
+        $spec[] = '~';
+        $spec[] = '!';
+        $spec[] = '@';
+        $spec[] = '#';
+        $spec[] = '$';
+        $spec[] = '%';
+        $spec[] = '^';
+        $spec[] = '&';
+        $spec[] = '*';
+        $spec[] = '(';
+        $spec[] = ')';
+        $spec[] = '-';
+        $spec[] = '_';
+        $spec[] = '=';
+        $spec[] = '+';
+        $spec[] = '[';
+        $spec[] = ']';
+        $spec[] = '{';
+        $spec[] = '}';
+        $spec[] = ';';
+        $spec[] = ':';
+        $spec[] = '\'';
+        $spec[] = '"';
+        $spec[] = '<';
+        $spec[] = '>';
+        $spec[] = ',';
+        $spec[] = '.';
+        $spec[] = '/';
+        $spec[] = '?';
+
+        $count = count($spec);
+
+        d($count);
+
+
+    }
+
     /**
      * @throws ObjectException
      * @throws DirectoryCreateException
