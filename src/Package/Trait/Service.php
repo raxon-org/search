@@ -186,7 +186,6 @@ trait Service {
         $dir_output = $object->config('ramdisk.url') . '33/Model/Output/';
         Dir::create($dir_input, Dir::CHMOD);
         Dir::create($dir_output, Dir::CHMOD);
-        $dir = new Dir();
         $data = $object->data_read($url_model, 'model');
         if(!$data){
             throw new ErrorException('Model file not found');
@@ -200,6 +199,7 @@ trait Service {
             if($object->config('time.duration') > 60){
                 break;
             }
+            $dir = new Dir();
             $read = $dir->read($dir_input);
             if(!$read){
                 sleep(1);
