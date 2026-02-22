@@ -128,8 +128,8 @@ trait Service {
                             $ask = $file->node->ask;
                             while(true){
                                 $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
-                                $next_char = $key_to_char[$next_token];
-                                $explode = explode(' ', $next_char, 2);
+                                $next_token_token = $next_token->token;
+                                $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
                                         $next_word .= $explode[0];
@@ -144,9 +144,9 @@ trait Service {
                                     $data->write($ask->url->output);
                                     break;
                                 } else {
-                                    $next_word .= $next_char;
+                                    $next_word .= $next_token_token;
                                 }
-                                $search .= $next_char;
+                                $search .= $next_token_token;
                                 $ask->status = 'progress';
                                 if(!property_exists($ask, 'stream')){
                                     $ask->stream = [];
@@ -162,7 +162,7 @@ trait Service {
         }
     }
 
-    private function token_next(array $partition, object $file, array $search): null|int
+    private function token_next(array $partition, object $file, array $search): null|object
     {
         $object = $this->object();
         $closures = [];
@@ -239,7 +239,12 @@ trait Service {
             }
         }
         $key_rand = array_rand($result);
-        return $char_to_key[$result[$key_rand]] ?? null;
+        $key = $char_to_key[$result[$key_rand]] ?? null;
+        return (object) [
+            'key' => $key,
+            'token' => $result[$key_rand],
+            'count' => $count,
+        ];
     }
 
     private function search(string $text, array $char_to_key): array
