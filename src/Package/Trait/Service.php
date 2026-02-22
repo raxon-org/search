@@ -185,8 +185,10 @@ trait Service {
         $key_to_char = $object->config('key.to.char');
         $dir_input = $object->config('ramdisk.url') . '33/Model/Input/';
         $dir_output = $object->config('ramdisk.url') . '33/Model/Output/';
+        $dir_stream = $object->config('ramdisk.url') . '33/Model/Stream/';
         Dir::create($dir_input, Dir::CHMOD);
         Dir::create($dir_output, Dir::CHMOD);
+        Dir::create($dir_stream, Dir::CHMOD);
         $data = $object->data_read($url_model, 'model');
         if(!$data){
             throw new ErrorException('Model file not found');
@@ -258,6 +260,7 @@ trait Service {
                                     $ask->word = $next_word;
                                     $data = new Data($ask);
                                     $data->write($ask->url->stream);
+                                    File::delete($file->url);
                                     break;
                                 } else {
                                     $next_word .= $next_token_token;
