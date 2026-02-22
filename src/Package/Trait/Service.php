@@ -129,7 +129,7 @@ trait Service {
                             while(true){
                                 $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
                                 $next_char = $key_to_char[$next_token];
-                                $explode = explode(' ', $search, 2);
+                                $explode = explode(' ', $next_char, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
                                         $next_word .= $explode[0];
