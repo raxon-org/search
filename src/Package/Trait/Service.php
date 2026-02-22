@@ -118,7 +118,7 @@ trait Service {
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
                     $closures = [];
-                    $result = [];
+                    $result_partition = [];
                     breakpoint(count($partition));
                     foreach($partition as $partition_nr => $chunk) {
                         $closures[] = function () use (
@@ -132,7 +132,7 @@ trait Service {
                             $search_count = count($search);
                             $token_count = $search_count;
                             $count = 0;
-                            $result =[];
+                            $result_closure =[];
                             $skip = 0;
                             foreach($chunk as $nr => $key){
                                 if($skip > 0){
@@ -157,16 +157,16 @@ trait Service {
                                     for($i = $nr + $search_count; $i < $max; $i++){
                                         $part .= $key_to_char[$chunk[$i]] ?? '';
                                     }
-                                    if(array_key_exists($part, $result)){
-                                        $result[$part]++;
+                                    if(array_key_exists($part, $result_closure)){
+                                        $result_closure[$part]++;
                                     } else {
-                                        $result[$part] = 1;
+                                        $result_closure[$part] = 1;
                                     }
                                     $count++;
                                 }
                             }
-                            arsort($result, SORT_NATURAL);
-                            return $result;
+                            arsort($result_closure, SORT_NATURAL);
+                            return $result_closure;
                             /*
                             $nr = 0;
                             $max = 10;
@@ -207,19 +207,21 @@ trait Service {
                             ];
                             */
                         };
+                        breakpoint(count($closures));
                         $list = Parallel::new()->execute($closures);
+                        breakpoint(count($list));
                         foreach($list as $key => $item){
                             if(
                                 $item !== null &&
                                 $item !== 'progress'
                             ){
-                                $result[] = $item;
+                                $result_partition[] = $item;
 //                                $count++;
 //                                $done++;
                             }
                         }
                     }
-                    ddd($result);
+                    ddd($result_partition);
                 }
             }
             usleep(500000);
