@@ -219,6 +219,7 @@ trait Service {
                                     break;
                                 }
                                 $next_token_token = $next_token->token;
+                                ddd($next_token);
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
@@ -291,7 +292,6 @@ trait Service {
                         $skip += $search_count - 1;
                         $part = '';
                         $max = $nr + $search_count + 1;
-                        //might need conversion for 4 spaces, 3 spaces, 2 spaces
                         for ($i = $nr + $search_count; $i < $max; $i++) {
                             $part .= $key_to_char[$chunk[$i]] ?? '';
                         }
