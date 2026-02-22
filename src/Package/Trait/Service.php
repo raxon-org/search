@@ -227,9 +227,14 @@ trait Service {
                         }
                     }
                     arsort($result_partition, SORT_NATURAL);
-                    d($count);
-
-                    ddd($result_partition);
+                    $result = [];
+                    foreach($result_partition as $part => $appearance){
+                        for($i = 0; $i < $appearance; $i++){
+                            $result[] = $part;
+                        }
+                    }
+                    $key_rand = array_rand($result_partition);
+                    ddd($result[$key_rand]);
                 }
             }
             usleep(500000);
