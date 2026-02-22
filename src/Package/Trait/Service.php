@@ -92,6 +92,8 @@ trait Service {
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
                     if($duration > 0){
                         echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo str_repeat(' ', $columns);
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
                     }
                     usleep(300000);
@@ -106,6 +108,8 @@ trait Service {
                     }
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
                     if($duration > 0){
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
                     }
