@@ -85,7 +85,7 @@ trait Service {
                             echo $token->token;
                         }
                     }
-                    echo CLi::tput('cursor.position', [$rows-1, 0]);
+                    echo CLi::tput('cursor.position', [0, $rows-1]);
                     echo 'Token count: ' . $token_count . ', hit: ' . $token->hit . PHP_EOL;;
                 }
                 elseif($read->get('status') === 'finish'){
