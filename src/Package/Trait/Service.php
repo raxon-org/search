@@ -217,7 +217,7 @@ trait Service {
                             if(is_array($item)){
                                 foreach($item as $part => $appearance){
                                     $count += $appearance;
-                                    if(array_key_exists($part, $result_partition)){
+                                    if(!array_key_exists($part, $result_partition)){
                                         $result_partition[$part] = $appearance;
                                     } else {
                                         $result_partition[$part] += $appearance;
