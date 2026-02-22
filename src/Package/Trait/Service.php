@@ -165,11 +165,6 @@ trait Service {
                                 }
                             }
                             arsort($result, SORT_NATURAL);
-                            if($count > 0){
-                                d($count);
-                                ddd($result);
-
-                            }
                             return $result;
                             /*
                             $nr = 0;
@@ -212,7 +207,6 @@ trait Service {
                             */
                         };
                         $list = Parallel::new()->execute($closures);
-                        ddd($list);
                         foreach($list as $key => $item){
                             if(
                                 $item !== null &&
