@@ -51,12 +51,14 @@ trait Service {
         //wait for output
         while(true){
             if(File::exist($ask->url->output)){
+                $read = $object->data_read($ask->url->output, 'ask');
+                ddd($read);
                 break;
             }
             sleep(1);
         }
         File::delete($ask->url->input);
-        echo File::read($ask->url->output) . PHP_EOL;
+//        echo File::read($ask->url->output) . PHP_EOL;
     }
 
     /**
