@@ -297,7 +297,6 @@ trait Model {
             $this->dictionary($flags, $options);
         }
         $dictionary = $object->data_read($url_dictionary);
-        ddd($dictionary);
         $url_output = $object->config('controller.dir.data') . 'Model.json';
         File::delete($url_output);
         $dir = new Dir();
@@ -321,7 +320,7 @@ trait Model {
                         )
                     ){
                         $file->read = File::read($file->url);
-                        $file = $this->transform($file, $spec);
+                        $file = $this->transform($file, $dictionary->data());
                         if(property_exists($file, 'transform')){
                             foreach ($file->transform as $token) {
                                 $model[] = $token;
@@ -337,14 +336,14 @@ trait Model {
     /**
      * @throws ObjectException
      */
-    public function transform(object $file, array $spec): object
+    public function transform(object $file, array $dictionary): object
     {
         $object = $this->object();
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
             $key_to_char = [];
-            foreach($spec as $nr => $record){
+            foreach($dictionary as $nr => $record){
                 if(property_exists($record, 'token') !== false){
                     $char_to_key[$record->token] = $nr;
                     $key_to_char[$nr] = $record->token;
