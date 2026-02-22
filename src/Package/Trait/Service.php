@@ -302,6 +302,9 @@ trait Service {
                             $result_closure[$part] = (object) [
                                 'appearance' => 1,
                                 'count' => $count,
+                                'partition' => [
+                                    'nr' => $partition_nr,
+                                ]
                             ];
                         }
                     }
@@ -312,6 +315,7 @@ trait Service {
         $list = Parallel::new()->execute($closures);
         $hit = 0;
         $count = 0;
+        $enabled_partitions = [];
         foreach($list as $key => $item){
             if(
                 $item !== null &&
@@ -322,6 +326,12 @@ trait Service {
                         $hit += $node->appearance;
                         if($node->count > $count){
                             $count = $node->count;
+                        }
+                        //might be narrower then -2 (might be 1 after only)
+                        for($i = $node->partition->nr; $i < $node->partition->nr + 2; $i++){
+                            if(!in_array($i, $enabled_partitions, true)){
+                                $enabled_partitions[] = $i;
+                            }
                         }
                         if(!array_key_exists($part, $result_partition)){
                             $result_partition[$part] = $node->appearance;
@@ -348,7 +358,10 @@ trait Service {
                     'token' => $result[$key_rand],
                     'hit' => $hit,
                     'count' => $count,
-                    'float' => $hit / $count
+                    'float' => $hit / $count,
+                    'partitions' => [
+                        'enable' => $enabled_partitions
+                    ]
                 ];
             }
         }
