@@ -132,20 +132,21 @@ trait Service {
                             $token_count = $search_count;
                             $count = 0;
                             $result =[];
+                            $skip = 0;
                             foreach($chunk as $nr => $key){
+                                if($skip > 0){
+                                    $skip--;
+                                    continue;
+                                }
                                 $is_found = false;
                                 $context_window = [];
                                 for($i = 0; $i < $search_count; $i++){
                                     $char = $chunk[$nr + $i] ?? null;
                                     $context_window[] = $char;
                                 }
-                                d($context_window);
-                                d($search);
                                 if($context_window === $search){
                                     $is_found = true;
                                     $skip += $search_count - 1;
-                                }
-                                if($is_found){
                                     $part = '';
                                     $max = $nr + $search_count + 1;
                                     //might need conversion for 4 spaces, 3 spaces, 2 spaces
