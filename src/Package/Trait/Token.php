@@ -122,6 +122,32 @@ trait Token {
 
         $count = count($spec);
         $dict = [];
+
+        for($i = 0; $i < $count; $i++) {
+            for($j = 0; $j < $count; $j++) {
+                $dict[] = (object) [
+                    'token' => $spec[$i].$spec[$j]
+                ];
+            }
+        }
+
+        d(count($dict));
+
+        /*
+        for($i_1 = 0; $i_1 < 4; $i_1++) {
+            for($i_2 = 0; $i_2 < 4; $i_2++) {
+                for($i_3 = 0; $i_3 < 4; $i_3++) {
+                    for($i_4 = 0; $i_4 < 4; $i_4++) {
+                        $dict[] = (object) [
+                            'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3].$spec[$i_4]
+                        ];
+                    }
+                }
+            }
+        }
+        */
+
+        /*
         for($i_1 = 0; $i_1 < $count; $i_1++) {
             for($i_2 = 0; $i_2 < $count; $i_2++) {
                 for($i_3 = 0; $i_3 < $count; $i_3++) {
@@ -133,7 +159,7 @@ trait Token {
                 }
             }
         }
-        d(count($dict));
+        */
     }
 
     /**
