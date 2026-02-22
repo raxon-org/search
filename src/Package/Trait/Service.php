@@ -19,7 +19,8 @@ use Raxon\Module\Time;
 
 trait Service {
     //512 0.36 T/sec
-    const PARTITION_SIZE = 128;
+    //128 0.86 T/sec
+    const PARTITION_SIZE = 64;
 
     /**
      * @throws DirectoryCreateException
