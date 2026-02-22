@@ -191,13 +191,16 @@ trait Service {
                 $object,
                 $chunk,
                 $file,
-                $search
+                $search,
+                $partition_nr
             ) {
                 $key_to_char = $object->config('key.to.char');
                 $search_count = count($search);
                 $result_closure = [];
                 $skip = 0;
+                $count = 0;
                 foreach ($chunk as $nr => $key) {
+                    $count++;
                     if ($skip > 0) {
                         $skip--;
                         continue;
@@ -221,9 +224,13 @@ trait Service {
                             $part .= $key_to_char[$chunk[$i]] ?? '';
                         }
                         if (array_key_exists($part, $result_closure)) {
-                            $result_closure[$part]++;
+                            $result_closure[$part]->appearance++;
+                            $result_closure[$part]->count = $count;
                         } else {
-                            $result_closure[$part] = 1;
+                            $result_closure[$part] = (object) [
+                                'appearance' => 1,
+                                'count' => $count,
+                            ];
                         }
                     }
                 }
@@ -231,6 +238,7 @@ trait Service {
             };
         }
         $list = Parallel::new()->execute($closures);
+        $hit = 0;
         $count = 0;
         foreach($list as $key => $item){
             if(
@@ -238,12 +246,15 @@ trait Service {
                 $item !== 'progress'
             ){
                 if(is_array($item)){
-                    foreach($item as $part => $appearance){
-                        $count += $appearance;
+                    foreach($item as $part => $node){
+                        $hit += $node->appearance;
+                        if($node->count > $count){
+                            $count = $node->count;
+                        }
                         if(!array_key_exists($part, $result_partition)){
-                            $result_partition[$part] = $appearance;
+                            $result_partition[$part] = $node->appearance;
                         } else {
-                            $result_partition[$part] += $appearance;
+                            $result_partition[$part] += $node->appearance;
                         }
                     }
                 }
@@ -259,11 +270,15 @@ trait Service {
         if(array_key_exists(0, $result)){
             $key_rand = array_rand($result);
             $key = $char_to_key[$result[$key_rand]] ?? null;
-            return (object) [
-                'key' => $key,
-                'token' => $result[$key_rand],
-                'count' => $count,
-            ];
+            if($count > 0){
+                return (object) [
+                    'key' => $key,
+                    'token' => $result[$key_rand],
+                    'hit' => $hit,
+                    'count' => $count,
+                    'float' => $hit / $count
+                ];
+            }
         }
         return null;
     }
