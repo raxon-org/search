@@ -121,13 +121,18 @@ trait Service {
                     switch($file->node->ask->type){
                         case 'token':
                             $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
-                            ddd($key_to_char[$next_token]);
+                            if($next_token !== null){
+                                ddd($key_to_char[$next_token->token]);
+                            }
                             break;
                         case 'word':
                             $next_word = '';
                             $ask = $file->node->ask;
                             while(true){
                                 $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
+                                if($next_token === null){
+                                    break;
+                                }
                                 $next_token_token = $next_token->token;
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
@@ -238,13 +243,16 @@ trait Service {
                 $result[] = $part;
             }
         }
-        $key_rand = array_rand($result);
-        $key = $char_to_key[$result[$key_rand]] ?? null;
-        return (object) [
-            'key' => $key,
-            'token' => $result[$key_rand],
-            'count' => $count,
-        ];
+        if(array_key_exists(0, $result)){
+            $key_rand = array_rand($result);
+            $key = $char_to_key[$result[$key_rand]] ?? null;
+            return (object) [
+                'key' => $key,
+                'token' => $result[$key_rand],
+                'count' => $count,
+            ];
+        }
+        return null;
     }
 
     private function search(string $text, array $char_to_key): array
