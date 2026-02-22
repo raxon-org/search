@@ -66,7 +66,6 @@ trait Service {
      */
     public function model(object $flags, object $options): void
     {
-
         $object = $this->object();
         Core::interactive();
         $options->iterations = $options->iterations ?? 128;
@@ -140,6 +139,7 @@ trait Service {
                                 }
                                 $search .= $next_char;
                             }
+                            d($file);
                             ddd($next_word);
                     }
                 }
@@ -623,50 +623,6 @@ trait Service {
         }
         return $search;
     }
-
-    /**
-     * @throws ObjectException
-     */
-    public function transform(object $file, array $spec): object
-    {
-        $object = $this->object();
-        $char_to_key = $object->config('char.to.key');
-        if($char_to_key === null){
-            $char_to_key = [];
-            foreach($spec as $nr => $char){
-                $char_to_key[$char] = $nr;
-            }
-            $object->config('char.to.key', $char_to_key);
-            $object->config('key.to.char', $spec);
-        }
-        $header = [];
-        $header['file'] = $file->name;
-        $header['mtime'] = File::mtime($file->url);
-        $header['size'] = File::size($file->url);
-        $header['extension'] = $file->extension;;
-        $header = Core::object($header, Core::JSON_LINE);
-
-        $transform = [];
-        $transform[] = $char_to_key['<HEADER_START>'] ?? null;
-        $split = mb_str_split($header);
-        foreach($split as $nr => $char){
-            if(array_key_exists($char, $char_to_key)){
-                $transform[] = $char_to_key[$char];
-            }
-        }
-        $transform[] = $char_to_key['<HEADER_END>'] ?? null;
-        $split = mb_str_split($file->read);
-        foreach($split as $nr => $char){
-            if(array_key_exists($char, $char_to_key)){
-                $transform[] = $char_to_key[$char];
-            }
-        }
-        $transform[] = $char_to_key['<EOF>'] ?? null;
-        $file->transform = $transform;
-        return $file;
-    }
-
-
 }
 
 
