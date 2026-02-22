@@ -49,6 +49,7 @@ trait Service {
         $data = new Data();
         $data->set('ask', $ask);
         $data->write($ask->url->input);
+        $start = true;
         //wait for output
         while(true){
             if(File::exist($ask->url->output)){
@@ -74,9 +75,12 @@ trait Service {
                     $columns = Cli::tput('columns');
                     $rows = Cli::tput('rows');
 
-                    echo CLi::tput('cursor.position', [0, 0]);
-                    for($nr = 0; $nr < $rows; $nr++){
-                        echo str_repeat(' ', $columns);
+                    if($start === true){
+                        echo CLi::tput('cursor.position', [0, 0]);
+                        for($nr = 0; $nr < $rows; $nr++){
+                            echo str_repeat(' ', $columns);
+                        }
+                        $start = false;
                     }
                     echo CLi::tput('cursor.position', [0, 0]);
                     if(is_array($stream)){
@@ -89,6 +93,7 @@ trait Service {
                     usleep(300000);
                 }
                 elseif($read->get('status') === 'finish'){
+                    $start = true;
                     break;
                 }
             } else {
