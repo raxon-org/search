@@ -1,20 +1,14 @@
 <?php
 namespace Package\Raxon\Search\Trait;
 
-use Error;
-use ErrorException;
 use Exception;
-use Raxon\Config;
 use Raxon\Exception\DirectoryCreateException;
 use Raxon\Exception\FileWriteException;
 use Raxon\Exception\ObjectException;
-use Raxon\Module\Cli;
 use Raxon\Module\Core;
 use Raxon\Module\Data;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
-use Raxon\Module\SharedMemory;
-use Raxon\Module\Time;
 
 trait Token {
 
@@ -24,16 +18,11 @@ trait Token {
      * @throws ObjectException
      * @throws Exception
      */
-    public function dict_4(object $flags, object $options): void
+    public function dict(object $flags, object $options): void
     {
         $object = $this->object();
         $spec = [];
         $spec[] = ' ';
-        $spec[] = "\n";
-        $spec[] = "\r";
-        $spec[] = "\t";
-        $spec[] = "\v";
-        $spec[] = "\0";
         $spec[] = 'a';
         $spec[] = 'b';
         $spec[] = 'c';
@@ -88,126 +77,29 @@ trait Token {
         $spec[] = 'Z';
         $count = count($spec);
         $dict = [];
+        $combination = [];
         for($i_1 = 0; $i_1 < $count; $i_1++) {
-            for($i_2 = 0; $i_2 < $count; $i_2++) {
-                for($i_3 = 0; $i_3 < $count; $i_3++) {
-                    for($i_4 = 0; $i_4 < $count; $i_4++) {
-                        $dict[] = (object) [
-                            'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3].$spec[$i_4]
-                        ];
-                    }
-                }
+            if(!in_array($spec[$i_1], $combination, true)){
+                $combination[] = $spec[$i_1];
+                $dict[] = (object) [
+                    'token' => $spec[$i_1]
+                ];
             }
-        }
-        $spec = [];
-        $spec[] = '0';
-        $spec[] = '1';
-        $spec[] = '2';
-        $spec[] = '3';
-        $spec[] = '4';
-        $spec[] = '5';
-        $spec[] = '6';
-        $spec[] = '7';
-        $spec[] = '8';
-        $spec[] = '9';
-        $spec[] = '.';
-        $spec[] = ',';
-        $spec[] = ' ';
-        $count = count($spec);
-        for($i_1 = 0; $i_1 < $count; $i_1++) {
             for($i_2 = 0; $i_2 < $count; $i_2++) {
-                for($i_3 = 0; $i_3 < $count; $i_3++) {
-                    for($i_4 = 0; $i_4 < $count; $i_4++) {
-                        $dict[] = (object) [
-                            'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3].$spec[$i_4]
-                        ];
-                    }
+                if(!in_array($spec[$i_1] . $spec[$i_2], $combination, true)){
+                    $combination[] = $spec[$i_1] . $spec[$i_2];
+                    $dict[] = (object) [
+                        'token' => $spec[$i_1] . $spec[$i_2]
+                    ];
                 }
-            }
-        }
-        $url_spec = $object->config('controller.dir.data') . 'Spec_dict_4.json';
-        $data = new Data();
-        $data->data($dict);
-        $data->write($url_spec);
-        echo 'Duration: '. round((microtime(true) - $object->config('time.start')), 2) . ' seconds';
-    }
 
-    /**
-     * @throws DirectoryCreateException
-     * @throws FileWriteException
-     * @throws ObjectException
-     * @throws Exception
-     */
-    public function dict_3(object $flags, object $options): void
-    {
-        $object = $this->object();
-        $spec = [];
-        $spec[] = ' ';
-        $spec[] = "\n";
-        $spec[] = "\r";
-        $spec[] = "\t";
-        $spec[] = "\v";
-        $spec[] = "\0";
-        $spec[] = 'a';
-        $spec[] = 'b';
-        $spec[] = 'c';
-        $spec[] = 'd';
-        $spec[] = 'e';
-        $spec[] = 'f';
-        $spec[] = 'g';
-        $spec[] = 'h';
-        $spec[] = 'i';
-        $spec[] = 'j';
-        $spec[] = 'k';
-        $spec[] = 'l';
-        $spec[] = 'm';
-        $spec[] = 'n';
-        $spec[] = 'o';
-        $spec[] = 'p';
-        $spec[] = 'q';
-        $spec[] = 'r';
-        $spec[] = 's';
-        $spec[] = 't';
-        $spec[] = 'u';
-        $spec[] = 'v';
-        $spec[] = 'w';
-        $spec[] = 'x';
-        $spec[] = 'y';
-        $spec[] = 'z';
-        $spec[] = 'A';
-        $spec[] = 'B';
-        $spec[] = 'C';
-        $spec[] = 'D';
-        $spec[] = 'E';
-        $spec[] = 'F';
-        $spec[] = 'G';
-        $spec[] = 'H';
-        $spec[] = 'I';
-        $spec[] = 'J';
-        $spec[] = 'K';
-        $spec[] = 'L';
-        $spec[] = 'M';
-        $spec[] = 'N';
-        $spec[] = 'O';
-        $spec[] = 'P';
-        $spec[] = 'Q';
-        $spec[] = 'R';
-        $spec[] = 'S';
-        $spec[] = 'T';
-        $spec[] = 'U';
-        $spec[] = 'V';
-        $spec[] = 'W';
-        $spec[] = 'X';
-        $spec[] = 'Y';
-        $spec[] = 'Z';
-        $count = count($spec);
-        $dict = [];
-        for($i_1 = 0; $i_1 < $count; $i_1++) {
-            for($i_2 = 0; $i_2 < $count; $i_2++) {
                 for($i_3 = 0; $i_3 < $count; $i_3++) {
-                    $dict[] = (object) [
-                        'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3]
-                    ];
+                    if(!in_array($spec[$i_1] . $spec[$i_2] . $spec[$i_3], $combination, true)){
+                        $combination[] = $spec[$i_1] . $spec[$i_2] . $spec[$i_3];
+                        $dict[] = (object) [
+                            'token' => $spec[$i_1] . $spec[$i_2] . $spec[$i_3]
+                        ];
+                    }
                 }
             }
         }
@@ -227,15 +119,163 @@ trait Token {
         $spec[] = ' ';
         $count = count($spec);
         for($i_1 = 0; $i_1 < $count; $i_1++) {
+            if(!in_array($spec[$i_1], $combination, true)){
+                $combination[] = $spec[$i_1];
+                $dict[] = (object) [
+                    'token' => $spec[$i_1]
+                ];
+            }
             for($i_2 = 0; $i_2 < $count; $i_2++) {
-                for($i_3 = 0; $i_3 < $count; $i_3++) {
+                if(!in_array($spec[$i_1] . $spec[$i_2], $combination, true)){
+                    $combination[] = $spec[$i_1] . $spec[$i_2];
                     $dict[] = (object) [
-                        'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3]
+                        'token' => $spec[$i_1] . $spec[$i_2]
                     ];
+                }
+                for($i_3 = 0; $i_3 < $count; $i_3++) {
+                    if(!in_array($spec[$i_1] . $spec[$i_2] . $spec[$i_3], $combination, true)){
+                        $combination[] = $spec[$i_1] . $spec[$i_2] . $spec[$i_3];
+                        $dict[] = (object) [
+                            'token' => $spec[$i_1] . $spec[$i_2] . $spec[$i_3]
+                        ];
+                    }
                 }
             }
         }
-        $url_spec = $object->config('controller.dir.data') . 'Spec_dict_3.json';
+        $spec = [];
+        $spec[] = '`';
+        $spec[] = '~';
+        $spec[] = '!';
+        $spec[] = '@';
+        $spec[] = '#';
+        $spec[] = '$';
+        $spec[] = '%';
+        $spec[] = '^';
+        $spec[] = '&';
+        $spec[] = '*';
+        $spec[] = '(';
+        $spec[] = ')';
+        $spec[] = '-';
+        $spec[] = '_';
+        $spec[] = '=';
+        $spec[] = '+';
+        $spec[] = '[';
+        $spec[] = ']';
+        $spec[] = '{';
+        $spec[] = '}';
+        $spec[] = '\\';
+        $spec[] = '|';
+        $spec[] = ';';
+        $spec[] = ':';
+        $spec[] = '\'';
+        $spec[] = '"';
+        $spec[] = ',';
+        $spec[] = '<';
+        $spec[] = '.';
+        $spec[] = '>';
+        $spec[] = '/';
+        $spec[] = '?';
+        $spec[] = '{{';
+        $spec[] = '}}';
+        $spec[] = '[]';
+        $spec[] = '""';
+        $spec[] = '\'\'';
+        $spec[] = '/*';
+        $spec[] = '*/';
+        $spec[] = '/**';
+        $spec[] = '**/';
+        $spec[] = '..';
+        $spec[] = '...';
+        $spec[] = '<EOF>';
+        $spec[] = '<META>';
+        $spec[] = '->';
+        $spec[] = '=>';
+        $spec[] = '::';
+        $spec[] = '||';
+        $spec[] = '&&';
+        $spec[] = '!!';
+        $spec[] = '+=';
+        $spec[] = '-=';
+        $spec[] = '++';
+        $spec[] = '--';
+        $spec[] = '**';
+        $spec[] = '***';
+        $spec[] = '&$';
+        $spec[] = '& $';
+        $spec[] = "\n";
+        $spec[] = "\r";
+        $spec[] = "\t";
+        $spec[] = "\v";
+        $spec[] = "\0";
+        $spec[] = '    ';
+        $spec[] = '        ';
+        $spec[] = '            ';
+        $spec[] = '                ';
+        $spec[] = '##';
+        $spec[] = '###';
+        $spec[] = '####';
+        $spec[] = '#####';
+        $spec[] = '######';
+        $spec[] = 'class';
+        $spec[] = 'interface';
+        $spec[] = 'trait';
+        $spec[] = 'abstract';
+        $spec[] = 'final';
+        $spec[] = 'static';
+        $spec[] = 'public';
+        $spec[] = 'private';
+        $spec[] = 'protected';
+        $spec[] = 'function';
+        $spec[] = 'namespace';
+        $spec[] = 'global';
+        $spec[] = 'echo';
+        $spec[] = 'print';
+        $spec[] = 'exit';
+        $spec[] = 'include';
+        $spec[] = 'require';
+        $spec[] = 'else';
+        $spec[] = 'elseif';
+        $spec[] = 'else if';
+        $spec[] = 'switch';
+        $spec[] = 'while';
+        $spec[] = 'foreach';
+        $spec[] = 'return';
+        $spec[] = 'break';
+        $spec[] = 'continue';
+        $spec[] = 'instanceof';
+        $spec[] = 'array';
+        $spec[] = 'default';
+        $spec[] = 'clone';
+        $spec[] = 'catch';
+        $spec[] = 'finally';
+        $spec[] = 'throw';
+        $spec[] = 'goto';
+        $spec[] = 'const';
+        $spec[] = 'yield';
+        $spec[] = 'implements';
+        $spec[] = 'extends';
+        $spec[] = 'self';
+        $spec[] = 'parent';
+        $spec[] = 'true';
+        $spec[] = 'false';
+        $spec[] = 'null';
+        $spec[] = 'void';
+        $spec[] = 'float';
+        $spec[] = 'string';
+        $spec[] = 'callable';
+        $spec[] = 'iterable';
+        $spec[] = 'resource';
+        $spec[] = 'mixed';
+        $count = count($spec);
+        for($i_1 = 0; $i_1 < $count; $i_1++) {
+            if(!in_array($spec[$i_1], $combination, true)){
+                $combination[] = $spec[$i_1];
+                $dict[] = (object) [
+                    'token' => $spec[$i_1]
+                ];
+            }
+        }
+        $url_spec = $object->config('controller.dir.data') . 'Dictionary.json';
         $data = new Data();
         $data->data($dict);
         $data->write($url_spec);
@@ -1710,5 +1750,3 @@ trait Token {
         return $file;
     }
 }
-
-
