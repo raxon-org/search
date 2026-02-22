@@ -18,6 +18,7 @@ use Raxon\Module\SharedMemory;
 use Raxon\Module\Time;
 
 trait Service {
+    const PARTITION_SIZE = 512;
 
     /**
      * @throws DirectoryCreateException
@@ -76,7 +77,10 @@ trait Service {
                     )
                 ){
                     $token = (object) [
-                        'hit' => 0
+                        'hit' => 0,
+                        'partitions' => (object) [
+                            'count' => self::PARTITION_SIZE,
+                        ]
                     ];
                     if($start === true){
                         echo CLi::tput('cursor.position', [0, 0]);
@@ -90,6 +94,11 @@ trait Service {
                         foreach($stream as $token){
                             echo $token->token;
                             $bytes_count += mb_strlen($token->token);
+                            if(property_exists($token, 'partitions')){
+                                if(property_exists($token->partitions, 'enable')){
+                                    $token->partitions->count = count($token->partitions->enable);
+                                }
+                            }
                         }
                     }
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
@@ -97,12 +106,17 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partitions->count;
                     }
                     usleep(300000);
                 }
                 elseif($read->get('status') === 'finish'){
-                    $start = true;
+                    $token = (object) [
+                        'hit' => 0,
+                        'partitions' => (object) [
+                            'count' => self::PARTITION_SIZE,
+                        ]
+                    ];
                     echo CLi::tput('cursor.position', [0, 0]);
                     for($nr = 0; $nr < $rows; $nr++){
                         echo str_repeat(' ', $columns);
@@ -112,6 +126,11 @@ trait Service {
                         foreach($stream as $token){
                             echo $token->token;
                             $bytes_count += mb_strlen($token->token);
+                            if(property_exists($token, 'partitions')){
+                                if(property_exists($token->partitions, 'enable')){
+                                    $token->partitions->count = count($token->partitions->enable);
+                                }
+                            }
                         }
                     }
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
@@ -119,7 +138,7 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partitions->count;
                     }
                     File::copy($ask->url->stream, $ask->url->output);
                     File::delete($ask->url->stream);
@@ -172,7 +191,7 @@ trait Service {
             throw new ErrorException('Model file not found');
         }
         $data = $data->data();
-        $partition = Core::array_partition($data , 512);
+        $partition = Core::array_partition($data , self::PARTITION_SIZE);
 //        $object->data('partition', $partition);
         while(true){
             $object->data('service', $this);
@@ -205,8 +224,8 @@ trait Service {
                     }
                     switch($file->node->ask->type){
                         case 'token':
-                            $enabled_partitions = null;
-                            $next_token = $this->token_next($partition, $file, $enabled_partitions, $this->search($search, $char_to_key));
+                            $partitions_enable = null;
+                            $next_token = $this->token_next($partition, $file, $partitions_enable, $this->search($search, $char_to_key));
                             if($next_token !== null){
                                 ddd($key_to_char[$next_token->token]);
                             }
@@ -214,15 +233,14 @@ trait Service {
                         case 'word':
                             $next_word = '';
                             $ask = $file->node->ask;
-                            $enabled_partitions = null;
+                            $partitions_enable = null;
                             while(true){
-                                $next_token = $this->token_next($partition, $file, $enabled_partitions, $this->search($search, $char_to_key));
+                                $next_token = $this->token_next($partition, $file, $partitions_enable, $this->search($search, $char_to_key));
                                 if($next_token === null){
                                     break;
                                 }
                                 $next_token_token = $next_token->token;
-                                $enabled_partitions = $next_token->partitions->enable ?? null;
-                                d($enabled_partitions);
+                                $partitions_enable = $next_token->partitions->enable ?? null;
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
@@ -263,7 +281,10 @@ trait Service {
         $result_partition = [];
         $char_to_key = $object->config('char.to.key');
         foreach($partition as $partition_nr => $chunk) {
-            if($enabled_partitions !== null && !in_array($partition_nr, $enabled_partitions, true)){
+            if(
+                $enabled_partitions !== null &&
+                !in_array($partition_nr, $enabled_partitions, true)
+            ){
                 continue;
             }
             $closures[] = function () use (
