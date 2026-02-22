@@ -90,6 +90,7 @@ trait Service {
             $object->config('char.to.key', $char_to_key);
             $object->config('key.to.char', $key_to_char);
         }
+        $key_to_char = $object->config('key.to.char');
         $dir_input = $object->config('ramdisk.url') . '33/Model/Input/';
         $dir_output = $object->config('ramdisk.url') . '33/Model/Output/';
         Dir::create($dir_input, Dir::CHMOD);
@@ -119,129 +120,96 @@ trait Service {
                     $file->node = Core::object($file->read);
                     $closures = [];
                     $result_partition = [];
-                    foreach($partition as $partition_nr => $chunk) {
-                        $closures[] = function () use (
-                            $object,
-                            $chunk,
-                            $file,
-                        ) {
-                            $char_to_key = $object->config('char.to.key');
-                            $key_to_char = $object->config('key.to.char');
-                            $search = $object->data('service')->search($file->node->ask->text, $char_to_key);;
-                            $search_count = count($search);
-                            $token_count = $search_count;
-                            $count = 0;
-                            $result_closure = [];
-                            $skip = 0;
-                            foreach ($chunk as $nr => $key) {
-                                if ($skip > 0) {
-                                    $skip--;
-                                    continue;
-                                }
-                                $context_window = [];
-                                for ($i = 0; $i < $search_count; $i++) {
-                                    $char = $chunk[$nr + $i] ?? null;
-                                    //should speedup search...
-                                    if (!in_array($char, $search, true)) {
-                                        $skip += $i;
-                                        break;
-                                    }
-                                    $context_window[] = $char;
-                                }
-                                if ($context_window === $search) {
-                                    $skip += $search_count - 1;
-                                    $part = '';
-                                    $max = $nr + $search_count + 1;
-                                    //might need conversion for 4 spaces, 3 spaces, 2 spaces
-                                    for ($i = $nr + $search_count; $i < $max; $i++) {
-                                        $part .= $key_to_char[$chunk[$i]] ?? '';
-                                    }
-                                    if (array_key_exists($part, $result_closure)) {
-                                        $result_closure[$part]++;
-                                    } else {
-                                        $result_closure[$part] = 1;
-                                    }
-                                    $count++;
-                                }
-                            }
-//                            arsort($result_closure, SORT_NATURAL);
-                            return $result_closure;
-                            /*
-                            $nr = 0;
-                            $max = 10;
-                            $top_result = [];
-                            foreach($result as $part => $appearance){
-                                $top_result[$part] = round(($appearance / $count) * 100, 2);
-                                $nr++;
-                                if($nr > $max){
-                                    break;
-                                }
-                            }
-                            $top = [];
-                            foreach($top_result as $part => $appearance){
-                                $multiplier = (int) $appearance;
-                                for($i=0; $i < $multiplier; $i++){
-                                    $top[] = $part;
-                                }
-                            }
-                            if(!array_key_exists(0, $top)){
-                                return false;
-                            }
-                            $key_rand = array_rand($top);
-                            $search[] = $char_to_key[$top[$key_rand]] ?? null;
-                            $text_original = $file->node->ask->text;
-                            $text = '';
-                            foreach($search as $nr => $key){
-                                if(array_key_exists($key, $key_to_char)){
-                                    $text .= $key_to_char[$key];
-                                }
-                            }
-                            return $text;
-                            */
-                            /*
-                            return (object) [
-                                'original' => $text_original,
-                                'text' => $text,
-                                'token' => $top[$key_rand]
-                            ];
-                            */
-                        };
-                    }
-                    $list = Parallel::new()->execute($closures);
-                    $count = 0;
-                    foreach($list as $key => $item){
-                        if(
-                            $item !== null &&
-                            $item !== 'progress'
-                        ){
-                            if(is_array($item)){
-                                foreach($item as $part => $appearance){
-                                    $count += $appearance;
-                                    if(!array_key_exists($part, $result_partition)){
-                                        $result_partition[$part] = $appearance;
-                                    } else {
-                                        $result_partition[$part] += $appearance;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    arsort($result_partition, SORT_NATURAL);
-                    $result = [];
-                    foreach($result_partition as $part => $appearance){
-                        for($i = 0; $i < $appearance; $i++){
-                            $result[] = $part;
-                        }
-                    }
-                    $key_rand = array_rand($result);
-                    ddd($result[$key_rand]);
+                    $search = $file->node->ask->text;
+                    $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
+                    ddd($key_to_char[$next_token]);
                 }
             }
             usleep(500000);
         }
     }
 
-    private function search($text, $char_to_key)
+    private function token_next(array $partition, object $file, array $search): null|int
+    {
+        $object = $this->object();
+        $closures = [];
+        $result_partition = [];
+        foreach($partition as $partition_nr => $chunk) {
+            $closures[] = function () use (
+                $object,
+                $chunk,
+                $file,
+                $search
+            ) {
+                $char_to_key = $object->config('char.to.key');
+                $key_to_char = $object->config('key.to.char');
+                $search_count = count($search);
+                $result_closure = [];
+                $skip = 0;
+                foreach ($chunk as $nr => $key) {
+                    if ($skip > 0) {
+                        $skip--;
+                        continue;
+                    }
+                    $context_window = [];
+                    for ($i = 0; $i < $search_count; $i++) {
+                        $char = $chunk[$nr + $i] ?? null;
+                        //should speedup search...
+                        if (!in_array($char, $search, true)) {
+                            $skip += $i;
+                            break;
+                        }
+                        $context_window[] = $char;
+                    }
+                    if ($context_window === $search) {
+                        $skip += $search_count - 1;
+                        $part = '';
+                        $max = $nr + $search_count + 1;
+                        //might need conversion for 4 spaces, 3 spaces, 2 spaces
+                        for ($i = $nr + $search_count; $i < $max; $i++) {
+                            $part .= $key_to_char[$chunk[$i]] ?? '';
+                        }
+                        if (array_key_exists($part, $result_closure)) {
+                            $result_closure[$part]++;
+                        } else {
+                            $result_closure[$part] = 1;
+                        }
+                    }
+                }
+                return $result_closure;
+            };
+        }
+        $list = Parallel::new()->execute($closures);
+        $count = 0;
+        foreach($list as $key => $item){
+            if(
+                $item !== null &&
+                $item !== 'progress'
+            ){
+                if(is_array($item)){
+                    foreach($item as $part => $appearance){
+                        $count += $appearance;
+                        if(!array_key_exists($part, $result_partition)){
+                            $result_partition[$part] = $appearance;
+                        } else {
+                            $result_partition[$part] += $appearance;
+                        }
+                    }
+                }
+            }
+        }
+        arsort($result_partition, SORT_NATURAL);
+        $result = [];
+        foreach($result_partition as $part => $appearance){
+            for($i = 0; $i < $appearance; $i++){
+                $result[] = $part;
+            }
+        }
+        $key_rand = array_rand($result);
+        return $char_to_key[$result[$key_rand]] ?? null;
+    }
+
+    private function search(string $text, array $char_to_key): array
     {
         $split = mb_str_split($text);
         $skip = 0;
