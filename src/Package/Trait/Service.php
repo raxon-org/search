@@ -302,7 +302,7 @@ trait Service {
                             $result_closure[$part] = (object) [
                                 'appearance' => 1,
                                 'count' => $count,
-                                'partition' => [
+                                'partition' => (object) [
                                     'nr' => $partition_nr,
                                 ]
                             ];
