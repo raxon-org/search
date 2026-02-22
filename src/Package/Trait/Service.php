@@ -18,7 +18,8 @@ use Raxon\Module\SharedMemory;
 use Raxon\Module\Time;
 
 trait Service {
-    const PARTITION_SIZE = 512;
+    //512 0.36 T/sec
+    const PARTITION_SIZE = 128;
 
     /**
      * @throws DirectoryCreateException
