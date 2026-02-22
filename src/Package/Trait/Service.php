@@ -164,7 +164,7 @@ trait Service {
                                     $count++;
                                 }
                             }
-                            arsort($result_closure, SORT_NATURAL);
+//                            arsort($result_closure, SORT_NATURAL);
                             return $result_closure;
                             /*
                             $nr = 0;
@@ -208,6 +208,7 @@ trait Service {
                         };
                     }
                     $list = Parallel::new()->execute($closures);
+                    $count = 0;
                     foreach($list as $key => $item){
                         if(
                             $item !== null &&
@@ -215,8 +216,10 @@ trait Service {
                         ){
                             if(is_array($item)){
                                 foreach($item as $part => $appearance){
+                                    $count += $appearance;
                                     if(!in_array($part, $result_partition, true)){
                                         $result_partition[$part] = $appearance;
+
                                     } else {
                                         $result_partition[$part] += $appearance;
                                     }
@@ -224,6 +227,9 @@ trait Service {
                             }
                         }
                     }
+                    arsort($result_closure, SORT_NATURAL);
+                    d($count);
+
                     ddd($result_partition);
                 }
             }
