@@ -132,7 +132,7 @@ trait Service {
                                 $explode = explode(' ', $search, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
-                                        $next_word .= $next_char;
+                                        $next_word .= $explode[0];
                                     }
                                     break;
                                 } else {
