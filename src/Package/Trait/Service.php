@@ -213,13 +213,14 @@ trait Service {
                         case 'word':
                             $next_word = '';
                             $ask = $file->node->ask;
+                            $enabled_partitions = [];
                             while(true){
-                                $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
+                                $next_token = $this->token_next($partition, $file, $enabled_partitions, $this->search($search, $char_to_key));
                                 if($next_token === null){
                                     break;
                                 }
                                 $next_token_token = $next_token->token;
-                                ddd($next_token);
+                                $enabled_partitions = $next_token->partitions->enable ?? null;
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
@@ -253,13 +254,16 @@ trait Service {
         }
     }
 
-    private function token_next(array $partition, object $file, array $search): null|object
+    private function token_next(array $partition, object $file, array|null $enabled_partitions, array $search): null|object
     {
         $object = $this->object();
         $closures = [];
         $result_partition = [];
         $char_to_key = $object->config('char.to.key');
         foreach($partition as $partition_nr => $chunk) {
+            if($enabled_partitions !== null && !in_array($partition_nr, $enabled_partitions, true)){
+                continue;
+            }
             $closures[] = function () use (
                 $object,
                 $chunk,
