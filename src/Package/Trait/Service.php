@@ -74,13 +74,13 @@ trait Service {
                     ];
                     $columns = Cli::tput('columns');
                     $rows = Cli::tput('rows');
-                    CLi::tput('cursor.position', [0, 0]);
+                    echo CLi::tput('cursor.position', [0, 0]);
                     if(is_array($stream)){
                         foreach($stream as $token){
                             echo $token->token;
                         }
                     }
-                    CLi::tput('cursor.position', [$columns-1, 0]);
+                    echo CLi::tput('cursor.position', [$rows-1, 0]);
                     echo 'Token count: ' . $token_count . ', hit: ' . $token->hit . PHP_EOL;;
                 }
                 elseif($read->get('status') === 'finish'){
