@@ -70,17 +70,17 @@ trait Service {
         Core::interactive();
         $options->iterations = $options->iterations ?? 128;
 //        $encoded = htmlentities($string, ENT_QUOTES, 'UTF-8');
-        $url_spec = $object->config('controller.dir.data') . 'Spec.json';
+        $url_dictionary = $object->config('controller.dir.data') . 'Dictionary.json';
         $url_model = $object->config('controller.dir.data') . 'Model.json';
-        $spec = $object->data_read($url_spec, 'spec');
-        if(!$spec){
-            throw new ErrorException('Spec file not found');
+        $dictionary = $object->data_read($url_dictionary, 'dictionary');
+        if(!$dictionary){
+            throw new ErrorException('Dictionary file not found');
         }
         $char_to_key = $object->config('char.to.key');
         if($char_to_key === null){
             $char_to_key = [];
             $key_to_char = [];
-            foreach($spec->data() as $nr => $record){
+            foreach($dictionary->data() as $nr => $record){
                 if(property_exists($record, 'token')){
                     $char_to_key[$record->token] = $nr;
                     $key_to_char[$nr] = $record->token;
@@ -118,6 +118,19 @@ trait Service {
                     $file->read = File::read($file->url);
                     $file->node = Core::object($file->read);
                     $search = $file->node->ask->text;
+                    if(
+                        property_exists($file->node, 'ask') &&
+                        property_exists($file->node->ask, 'status') &&
+                        in_array(
+                            $file->node->ask->status,
+                            [
+                                'progress',
+                                'finish'
+                            ]
+                        )
+                    ){
+                        continue;
+                    }
                     switch($file->node->ask->type){
                         case 'token':
                             $next_token = $this->token_next($partition, $file, $this->search($search, $char_to_key));
