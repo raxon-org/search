@@ -100,7 +100,7 @@ trait Service {
             throw new ErrorException('Model file not found');
         }
         $data = $data->data();
-        $partition = Core::array_partition($data , 2);
+        $partition = Core::array_partition($data , 512);
 //        $object->data('partition', $partition);
         while(true){
             $object->data('service', $this);
