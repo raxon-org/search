@@ -131,32 +131,32 @@ trait Service {
                             $search_count = count($search);
                             $token_count = $search_count;
                             $count = 0;
-                            $result_closure =[];
+                            $result_closure = [];
                             $skip = 0;
-                            foreach($chunk as $nr => $key){
-                                if($skip > 0){
+                            foreach ($chunk as $nr => $key) {
+                                if ($skip > 0) {
                                     $skip--;
                                     continue;
                                 }
                                 $context_window = [];
-                                for($i = 0; $i < $search_count; $i++){
+                                for ($i = 0; $i < $search_count; $i++) {
                                     $char = $chunk[$nr + $i] ?? null;
                                     //should speedup search...
-                                    if(!in_array($char, $search, true)){
+                                    if (!in_array($char, $search, true)) {
                                         $skip += $i;
                                         break;
                                     }
                                     $context_window[] = $char;
                                 }
-                                if($context_window === $search){
+                                if ($context_window === $search) {
                                     $skip += $search_count - 1;
                                     $part = '';
                                     $max = $nr + $search_count + 1;
                                     //might need conversion for 4 spaces, 3 spaces, 2 spaces
-                                    for($i = $nr + $search_count; $i < $max; $i++){
+                                    for ($i = $nr + $search_count; $i < $max; $i++) {
                                         $part .= $key_to_char[$chunk[$i]] ?? '';
                                     }
-                                    if(array_key_exists($part, $result_closure)){
+                                    if (array_key_exists($part, $result_closure)) {
                                         $result_closure[$part]++;
                                     } else {
                                         $result_closure[$part] = 1;
@@ -206,20 +206,20 @@ trait Service {
                             ];
                             */
                         };
-                        breakpoint(count($closures));
-                        $list = Parallel::new()->execute($closures);
-                        d($list);
-                        breakpoint(count($list));
-                        d($result_partition);
-                        foreach($list as $key => $item){
-                            if(
-                                $item !== null &&
-                                $item !== 'progress'
-                            ){
-                                $result_partition[] = $item;
+                    }
+                    breakpoint(count($closures));
+                    $list = Parallel::new()->execute($closures);
+                    d($list);
+                    breakpoint(count($list));
+                    d($result_partition);
+                    foreach($list as $key => $item){
+                        if(
+                            $item !== null &&
+                            $item !== 'progress'
+                        ){
+                            $result_partition[] = $item;
 //                                $count++;
 //                                $done++;
-                            }
                         }
                     }
                     ddd($result_partition);
