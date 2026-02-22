@@ -209,6 +209,7 @@ trait Service {
                             */
                         };
                         $list = Parallel::new()->execute($closures);
+                        ddd($list);
                         foreach($list as $key => $item){
                             if(
                                 $item !== null &&
