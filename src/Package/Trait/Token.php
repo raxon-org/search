@@ -89,45 +89,17 @@ trait Token {
         $spec[] = '7';
         $spec[] = '8';
         $spec[] = '9';
-        $spec[] = '`';
-        $spec[] = '~';
-        $spec[] = '!';
-        $spec[] = '@';
-        $spec[] = '#';
-        $spec[] = '$';
-        $spec[] = '%';
-        $spec[] = '^';
-        $spec[] = '&';
-        $spec[] = '*';
-        $spec[] = '(';
-        $spec[] = ')';
-        $spec[] = '-';
-        $spec[] = '_';
-        $spec[] = '=';
-        $spec[] = '+';
-        $spec[] = '[';
-        $spec[] = ']';
-        $spec[] = '{';
-        $spec[] = '}';
-        $spec[] = ';';
-        $spec[] = ':';
-        $spec[] = '\'';
-        $spec[] = '"';
-        $spec[] = '<';
-        $spec[] = '>';
-        $spec[] = ',';
-        $spec[] = '.';
-        $spec[] = '/';
-        $spec[] = '?';
-
         $count = count($spec);
         $dict = [];
 
-        for($i = 0; $i < $count; $i++) {
-            for($j = 0; $j < $count; $j++) {
-                $dict[] = (object) [
-                    'token' => $spec[$i].$spec[$j]
-                ];
+        for($i_1 = 0; $i_1 < $count; $i_1++) {
+            for($i_2 = 0; $i_2 < $count; $i_2++) {
+                for($i_3 = 0; $i_3 < $count; $i_3++) {
+                    $dict[] = (object) [
+                        'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3]
+                    ];
+                }
+
             }
         }
 
