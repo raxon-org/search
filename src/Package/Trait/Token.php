@@ -6,6 +6,7 @@ use ErrorException;
 use Exception;
 use Raxon\Config;
 use Raxon\Exception\DirectoryCreateException;
+use Raxon\Exception\FileWriteException;
 use Raxon\Exception\ObjectException;
 use Raxon\Module\Cli;
 use Raxon\Module\Core;
@@ -17,7 +18,13 @@ use Raxon\Module\Time;
 
 trait Token {
 
-    public function dict_6(object $flags, object $options): void
+    /**
+     * @throws DirectoryCreateException
+     * @throws FileWriteException
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function dict_4(object $flags, object $options): void
     {
         $object = $this->object();
         $spec = [];
@@ -81,7 +88,6 @@ trait Token {
         $spec[] = 'Z';
         $count = count($spec);
         $dict = [];
-        d($count);
         for($i_1 = 0; $i_1 < $count; $i_1++) {
             for($i_2 = 0; $i_2 < $count; $i_2++) {
                 for($i_3 = 0; $i_3 < $count; $i_3++) {
@@ -106,6 +112,7 @@ trait Token {
         $spec[] = '9';
         $spec[] = '.';
         $spec[] = ',';
+        $spec[] = ' ';
         $count = count($spec);
         for($i_1 = 0; $i_1 < $count; $i_1++) {
             for($i_2 = 0; $i_2 < $count; $i_2++) {
@@ -118,8 +125,10 @@ trait Token {
                 }
             }
         }
-        d($count);
-        d(count($dict));
+        $url_spec = $object->config('controller.dir.data') . 'Spec_dict_4.json';
+        $data = new Data();
+        $data->data($dict);
+        $data->write($url_spec);
         echo 'Duration: '. round((microtime(true) - $object->config('time.start')), 2) . ' seconds';
     }
 
