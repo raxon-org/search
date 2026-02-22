@@ -133,6 +133,116 @@ trait Token {
     }
 
     /**
+     * @throws DirectoryCreateException
+     * @throws FileWriteException
+     * @throws ObjectException
+     * @throws Exception
+     */
+    public function dict_3(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $spec = [];
+        $spec[] = ' ';
+        $spec[] = "\n";
+        $spec[] = "\r";
+        $spec[] = "\t";
+        $spec[] = "\v";
+        $spec[] = "\0";
+        $spec[] = 'a';
+        $spec[] = 'b';
+        $spec[] = 'c';
+        $spec[] = 'd';
+        $spec[] = 'e';
+        $spec[] = 'f';
+        $spec[] = 'g';
+        $spec[] = 'h';
+        $spec[] = 'i';
+        $spec[] = 'j';
+        $spec[] = 'k';
+        $spec[] = 'l';
+        $spec[] = 'm';
+        $spec[] = 'n';
+        $spec[] = 'o';
+        $spec[] = 'p';
+        $spec[] = 'q';
+        $spec[] = 'r';
+        $spec[] = 's';
+        $spec[] = 't';
+        $spec[] = 'u';
+        $spec[] = 'v';
+        $spec[] = 'w';
+        $spec[] = 'x';
+        $spec[] = 'y';
+        $spec[] = 'z';
+        $spec[] = 'A';
+        $spec[] = 'B';
+        $spec[] = 'C';
+        $spec[] = 'D';
+        $spec[] = 'E';
+        $spec[] = 'F';
+        $spec[] = 'G';
+        $spec[] = 'H';
+        $spec[] = 'I';
+        $spec[] = 'J';
+        $spec[] = 'K';
+        $spec[] = 'L';
+        $spec[] = 'M';
+        $spec[] = 'N';
+        $spec[] = 'O';
+        $spec[] = 'P';
+        $spec[] = 'Q';
+        $spec[] = 'R';
+        $spec[] = 'S';
+        $spec[] = 'T';
+        $spec[] = 'U';
+        $spec[] = 'V';
+        $spec[] = 'W';
+        $spec[] = 'X';
+        $spec[] = 'Y';
+        $spec[] = 'Z';
+        $count = count($spec);
+        $dict = [];
+        for($i_1 = 0; $i_1 < $count; $i_1++) {
+            for($i_2 = 0; $i_2 < $count; $i_2++) {
+                for($i_3 = 0; $i_3 < $count; $i_3++) {
+                    $dict[] = (object) [
+                        'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3]
+                    ];
+                }
+            }
+        }
+        $spec = [];
+        $spec[] = '0';
+        $spec[] = '1';
+        $spec[] = '2';
+        $spec[] = '3';
+        $spec[] = '4';
+        $spec[] = '5';
+        $spec[] = '6';
+        $spec[] = '7';
+        $spec[] = '8';
+        $spec[] = '9';
+        $spec[] = '.';
+        $spec[] = ',';
+        $spec[] = ' ';
+        $count = count($spec);
+        for($i_1 = 0; $i_1 < $count; $i_1++) {
+            for($i_2 = 0; $i_2 < $count; $i_2++) {
+                for($i_3 = 0; $i_3 < $count; $i_3++) {
+                    $dict[] = (object) [
+                        'token' => $spec[$i_1].$spec[$i_2].$spec[$i_3]
+                    ];
+                }
+            }
+        }
+        $url_spec = $object->config('controller.dir.data') . 'Spec_dict_3.json';
+        $data = new Data();
+        $data->data($dict);
+        $data->write($url_spec);
+        echo 'Duration: '. round((microtime(true) - $object->config('time.start')), 2) . ' seconds';
+    }
+
+    /**
      * @throws ObjectException
      * @throws DirectoryCreateException
      * @throws Exception
