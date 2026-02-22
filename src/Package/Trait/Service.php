@@ -207,19 +207,21 @@ trait Service {
                             */
                         };
                     }
-                    breakpoint(count($closures));
                     $list = Parallel::new()->execute($closures);
-                    d($list);
-                    breakpoint(count($list));
-                    d($result_partition);
                     foreach($list as $key => $item){
                         if(
                             $item !== null &&
                             $item !== 'progress'
                         ){
-                            $result_partition[] = $item;
-//                                $count++;
-//                                $done++;
+                            if(is_array($item)){
+                                foreach($item as $part => $appearance){
+                                    if(!in_array($part, $result_partition, true)){
+                                        $result_partition[$part] = $appearance;
+                                    } else {
+                                        $result_partition[$part] += $appearance;
+                                    }
+                                }
+                            }
                         }
                     }
                     ddd($result_partition);
