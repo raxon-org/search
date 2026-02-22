@@ -245,6 +245,8 @@ trait Service {
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
                                         $next_word .= $explode[0];
+                                        $next_token->token = $explode[0];
+                                        $next_token->key = $char_to_key[$explode[0]] ?? null;
                                     }
                                     if(!property_exists($ask, 'stream')){
                                         $ask->stream = [];
