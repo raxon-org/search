@@ -120,6 +120,7 @@ trait Token {
         }
         d($count);
         d(count($dict));
+        echo 'Duration: '. round((microtime(true) - $object->config('time.start')), 2) . ' seconds';
     }
 
     /**
