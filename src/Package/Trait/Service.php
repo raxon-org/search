@@ -132,6 +132,7 @@ trait Service {
         $object = $this->object();
         $closures = [];
         $result_partition = [];
+        $char_to_key = $object->config('char.to.key');
         foreach($partition as $partition_nr => $chunk) {
             $closures[] = function () use (
                 $object,
@@ -139,7 +140,6 @@ trait Service {
                 $file,
                 $search
             ) {
-                $char_to_key = $object->config('char.to.key');
                 $key_to_char = $object->config('key.to.char');
                 $search_count = count($search);
                 $result_closure = [];
@@ -204,6 +204,7 @@ trait Service {
             }
         }
         $key_rand = array_rand($result);
+        d($char_to_key);
         ddd($result[$key_rand]);
         return $char_to_key[$result[$key_rand]] ?? null;
     }
