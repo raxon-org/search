@@ -138,14 +138,17 @@ trait Service {
                                     $skip--;
                                     continue;
                                 }
-                                $is_found = false;
                                 $context_window = [];
                                 for($i = 0; $i < $search_count; $i++){
                                     $char = $chunk[$nr + $i] ?? null;
+                                    //should speedup search...
+                                    if(!in_array($char, $search, true)){
+                                        $skip += $i;
+                                        break;
+                                    }
                                     $context_window[] = $char;
                                 }
                                 if($context_window === $search){
-                                    $is_found = true;
                                     $skip += $search_count - 1;
                                     $part = '';
                                     $max = $nr + $search_count + 1;
