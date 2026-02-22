@@ -102,7 +102,7 @@ trait Token {
 
             }
         }
-
+        d($count);
         d(count($dict));
 
         /*
