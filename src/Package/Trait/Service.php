@@ -72,8 +72,8 @@ trait Service {
                     $token = (object) [
                         'hit' => 0
                     ];
-                    $columns = Cli::tput('columns');
-                    $rows = Cli::tput('rows');
+                    $columns = (int) Cli::tput('columns');
+                    $rows = (int) Cli::tput('rows');
 
                     if($start === true){
                         echo CLi::tput('cursor.position', [0, 0]);
@@ -88,7 +88,7 @@ trait Service {
                             echo $token->token;
                         }
                     }
-                    echo CLi::tput('cursor.position', [0, $rows-1]);
+                    echo CLi::tput('cursor.position', [0, $rows-2]);
                     echo 'Token count: ' . $token_count . ', hit: ' . $token->hit . PHP_EOL;;
                     usleep(300000);
                 }
