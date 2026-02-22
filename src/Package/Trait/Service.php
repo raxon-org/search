@@ -61,6 +61,8 @@ trait Service {
                 $stream = $read->get('stream');
                 $token_count = count($stream);
                 $bytes_count = 0;
+                $columns = (int) Cli::tput('columns');
+                $rows = (int) Cli::tput('rows');
                 if(
                     in_array(
                         $read->get('status'),
@@ -73,8 +75,6 @@ trait Service {
                     $token = (object) [
                         'hit' => 0
                     ];
-                    $columns = (int) Cli::tput('columns');
-                    $rows = (int) Cli::tput('rows');
                     if($start === true){
                         echo CLi::tput('cursor.position', [0, 0]);
                         for($nr = 0; $nr < $rows; $nr++){
@@ -92,7 +92,7 @@ trait Service {
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
                     if($duration > 0){
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . PHP_EOL;;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
                     }
                     usleep(300000);
                 }
@@ -107,7 +107,7 @@ trait Service {
                     $duration = round(microtime(true) - $object->config('time.start'), 2);
                     if($duration > 0){
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . PHP_EOL;;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . $token_count / $duration . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit;
                     }
                     break;
                 }
