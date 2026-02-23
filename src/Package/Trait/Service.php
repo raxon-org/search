@@ -263,7 +263,10 @@ trait Service {
                                         unset($pos[$key]);
                                     }
                                 }
-                                $pos_min = min($pos);
+                                $pos_min = false;
+                                if($pos){
+                                    $pos_min = min($pos);
+                                }
                                 if($pos_min === 0){
                                     $ask->status = 'finish';
                                     $ask->word = $next_word;
