@@ -526,7 +526,7 @@ trait Service {
                         for ($i = $nr + $search_count; $i < $max; $i++) {
                             $part .= $key_to_char[$chunk[$i]] ?? '';
                         }
-                        d($part);
+                        $pos = [];
                         $pos[] = strpos($part, "\t");
                         $pos[] = strpos($part, "\n");
                         $pos[] = strpos($part, "\r");
