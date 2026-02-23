@@ -245,6 +245,7 @@ trait Service {
                             $next_word = '';
                             $partition_enable = null;
                             $next_word = $this->word_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
+                            ddd($next_word);
                             $ask = $file->node->ask;
                             $partition_enable = null;
                             while(true){
