@@ -85,7 +85,7 @@ trait Service {
                 ){
                     $token = (object) [
                         'hit' => 0,
-                        'partitions' => (object) [
+                        'partition' => (object) [
                             'count' => self::PARTITION_SIZE,
                         ]
                     ];
@@ -120,7 +120,7 @@ trait Service {
                 elseif($read->get('status') === 'finish'){
                     $token = (object) [
                         'hit' => 0,
-                        'partitions' => (object) [
+                        'partition' => (object) [
                             'count' => self::PARTITION_SIZE,
                         ]
                     ];
