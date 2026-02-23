@@ -549,10 +549,8 @@ trait Service {
                         if($pos){
                             $pos_min = min($pos);
                         }
-                        d($pos_min);
                         if($pos_min > 0){
                             $part = substr($part, 0, $pos_min);
-                            break;
                         }
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
