@@ -249,7 +249,7 @@ trait Service {
                                     break;
                                 }
                                 $next_token_token = $next_token->token;
-                                $partition_enable = $next_token->partitions->enable ?? null;
+                                $partition_enable = $next_token->partition->enable ?? null;
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
