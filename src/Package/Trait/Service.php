@@ -550,8 +550,8 @@ trait Service {
                             }
                             if($pos_min > 0){
                                 $part = substr($part, 0, $pos_min);
+                                break;
                             }
-                            d($pos_min);
                         }
                         d($part);
                         if (array_key_exists($part, $result_closure)) {
