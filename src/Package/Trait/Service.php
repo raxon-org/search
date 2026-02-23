@@ -260,6 +260,28 @@ trait Service {
                                 $pos[] = strpos($next_token_token, '?');
                                 $pos[] = strpos($next_token_token, '!');
                                 $pos[] = strpos($next_token_token, ':');
+                                $pos[] = strpos($next_token_token, '(');
+                                $pos[] = strpos($next_token_token, ')');
+                                $pos[] = strpos($next_token_token, '{');
+                                $pos[] = strpos($next_token_token, '}');
+                                $pos[] = strpos($next_token_token, '|');;
+                                $pos[] = strpos($next_token_token, '\\');
+                                $pos[] = strpos($next_token_token, '//');
+                                $pos[] = strpos($next_token_token, '<');
+                                $pos[] = strpos($next_token_token, '>');
+                                $pos[] = strpos($next_token_token, '-');
+                                $pos[] = strpos($next_token_token, '_');
+                                $pos[] = strpos($next_token_token, '+');
+                                $pos[] = strpos($next_token_token, '=');
+                                $pos[] = strpos($next_token_token, '`');
+                                $pos[] = strpos($next_token_token, '~');
+                                $pos[] = strpos($next_token_token, '@');
+                                $pos[] = strpos($next_token_token, '#');
+                                $pos[] = strpos($next_token_token, '$');
+                                $pos[] = strpos($next_token_token, '%');
+                                $pos[] = strpos($next_token_token, '^');
+                                $pos[] = strpos($next_token_token, '&');
+                                $pos[] = strpos($next_token_token, '*');
                                 foreach($pos as $key => $value){
                                     if($value === false){
                                         unset($pos[$key]);
