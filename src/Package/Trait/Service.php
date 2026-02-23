@@ -291,7 +291,10 @@ trait Service {
                                 if($pos){
                                     $pos_min = min($pos);
                                 }
-                                if($pos_min === 0){
+                                if(
+                                    $pos_min === 0 &&
+                                    strlen($next_word) > 0
+                                ){
                                     $ask->status = 'finish';
                                     $ask->word = $next_word;
                                     $data = new Data($ask);
