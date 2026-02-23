@@ -67,7 +67,10 @@ trait Service {
                     File::delete($ask->url->stream);
                 }
                 $stream = $read->get('stream');
-                $token_count = count($stream);
+                $token_count = 0;
+                if($stream){
+                    $token_count = count($stream);
+                }
                 $bytes_count = 0;
                 $columns = (int) Cli::tput('columns');
                 $rows = (int) Cli::tput('rows');
