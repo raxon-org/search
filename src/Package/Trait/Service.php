@@ -243,6 +243,7 @@ trait Service {
                             break;
                         case 'word':
                             $next_word = '';
+                            $next_word = $this->word_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
                             $ask = $file->node->ask;
                             $partition_enable = null;
                             while(true){
@@ -298,6 +299,8 @@ trait Service {
                                 if($pos){
                                     $pos_min = min($pos);
                                 }
+                                d($pos_min);
+                                breakpoint($next_word);
                                 if(
                                     $pos_min === 0 &&
                                     strlen($next_word) > 1
@@ -391,6 +394,164 @@ trait Service {
                         for ($i = $nr + $search_count; $i < $max; $i++) {
                             $part .= $key_to_char[$chunk[$i]] ?? '';
                         }
+                        if (array_key_exists($part, $result_closure)) {
+                            $result_closure[$part]->appearance++;
+                            $result_closure[$part]->count = $count;
+                        } else {
+                            $result_closure[$part] = (object) [
+                                'appearance' => 1,
+                                'count' => $count,
+                                'partition' => (object) [
+                                    'nr' => $partition_nr,
+                                ]
+                            ];
+                        }
+                    }
+                }
+                return $result_closure;
+            };
+        }
+        $list = Parallel::new()->execute($closures);
+        $hit = 0;
+        $count = 0;
+        $partition_enable = [];
+        foreach($list as $key => $item){
+            if(
+                $item !== null &&
+                $item !== 'progress'
+            ){
+                if(is_array($item)){
+                    foreach($item as $part => $node){
+                        $hit += $node->appearance;
+                        if($node->count > $count){
+                            $count = $node->count;
+                        }
+                        if(
+                            property_exists($node, 'partition') &&
+                            property_exists($node->partition, 'nr') &&
+                            !in_array($node->partition->nr, $partition_enable, true)){
+                            $partition_enable[] = $node->partition->nr;
+                        }
+                        //might be narrower then -2 (might be 1 after only)
+                        /*
+                        for($i = $node->partition->nr; $i < $node->partition->nr + 2; $i++){
+                            if(!in_array($i, $partition_enable, true)){
+                                $partition_enable[] = $i;
+                            }
+                        }
+                        */
+                        if(!array_key_exists($part, $result_partition)){
+                            $result_partition[$part] = $node->appearance;
+                        } else {
+                            $result_partition[$part] += $node->appearance;
+                        }
+                    }
+                }
+            }
+        }
+        arsort($result_partition, SORT_NATURAL);
+        $result = [];
+        foreach($result_partition as $part => $appearance){
+            for($i = 0; $i < $appearance; $i++){
+                $result[] = $part;
+            }
+        }
+        if(array_key_exists(0, $result)){
+            $key_rand = array_rand($result);
+            $key = $char_to_key[$result[$key_rand]] ?? null;
+            if($count > 0){
+                return (object) [
+                    'key' => $key,
+                    'token' => $result[$key_rand],
+                    'hit' => $hit,
+                    'count' => $count,
+                    'float' => $hit / $count,
+                    'closure' => count($closures),
+                    'partition' => (object) [
+                        'enable' => $partition_enable
+                    ]
+                ];
+            }
+        }
+        return null;
+    }
+
+    private function word_next(array $partition, object $file, array|null $partition_enable, array $search): null|object
+    {
+        $object = $this->object();
+        $closures = [];
+        $result_partition = [];
+        $char_to_key = $object->config('char.to.key');
+        foreach($partition as $partition_nr => $chunk) {
+            if(
+                $partition_enable !== null &&
+                !in_array($partition_nr, $partition_enable, true)
+            ){
+                continue;
+            }
+            $closures[] = function () use (
+                $object,
+                $chunk,
+                $file,
+                $search,
+                $partition_nr
+            ) {
+                $key_to_char = $object->config('key.to.char');
+                $search_count = count($search);
+                $result_closure = [];
+                $skip = 0;
+                $count = 0;
+                foreach ($chunk as $nr => $key) {
+                    $count++;
+                    if ($skip > 0) {
+                        $skip--;
+                        continue;
+                    }
+                    $context_window = [];
+                    for ($i = 0; $i < $search_count; $i++) {
+                        $char = $chunk[$nr + $i] ?? null;
+                        //should speedup search...
+                        if (!in_array($char, $search, true)) {
+                            $skip += $i;
+                            break;
+                        }
+                        $context_window[] = $char;
+                    }
+                    if ($context_window === $search) {
+                        $skip += $search_count - 1;
+                        $part = '';
+                        $max = $nr + $search_count + 128;
+                        for ($i = $nr + $search_count; $i < $max; $i++) {
+                            $part .= $key_to_char[$chunk[$i]] ?? '';
+                            $pos[] = strpos($part, "\t");
+                            $pos[] = strpos($part, "\n");
+                            $pos[] = strpos($part, "\r");
+                            $pos[] = strpos($part, "\v");
+                            $pos[] = strpos($part, "\0");
+                            $pos[] = strpos($part, ' ');
+                            $pos[] = strpos($part, ',');
+                            $pos[] = strpos($part, '.');
+                            $pos[] = strpos($part, ';');
+                            $pos[] = strpos($part, '?');
+                            $pos[] = strpos($part, '!');
+                            $pos[] = strpos($part, ':');
+                            $pos[] = strpos($part, '/');
+                            $pos[] = strpos($part, '\\');
+                            foreach($pos as $key => $value){
+                                if($value === false){
+                                    unset($pos[$key]);
+                                }
+                            }
+                            $pos_min = false;
+                            if($pos){
+                                $pos_min = min($pos);
+                            }
+                            if($pos_min > 0){
+                                $part = substr($part, 0, $pos_min);
+                            }
+                            d($pos_min);
+                        }
+                        d($part);
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
                             $result_closure[$part]->count = $count;
