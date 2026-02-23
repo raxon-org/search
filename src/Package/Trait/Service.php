@@ -245,101 +245,16 @@ trait Service {
                             $next_word = '';
                             $partition_enable = null;
                             $next_word = $this->word_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
-                            ddd($next_word);
                             $ask = $file->node->ask;
-                            $partition_enable = null;
-                            while(true){
-                                $next_token = $this->token_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
-                                if($next_token === null){
-                                    break;
-                                }
-                                $next_token_token = $next_token->token;
-                                $partition_enable = $next_token->partition->enable ?? null;
-                                $pos = [];
-                                $pos[] = strpos($next_token_token, "\t");
-                                $pos[] = strpos($next_token_token, "\n");
-                                $pos[] = strpos($next_token_token, "\r");
-                                $pos[] = strpos($next_token_token, "\v");
-                                $pos[] = strpos($next_token_token, "\0");
-                                $pos[] = strpos($next_token_token, ' ');
-                                $pos[] = strpos($next_token_token, ',');
-                                $pos[] = strpos($next_token_token, '.');
-                                $pos[] = strpos($next_token_token, ';');
-                                $pos[] = strpos($next_token_token, '?');
-                                $pos[] = strpos($next_token_token, '!');
-                                $pos[] = strpos($next_token_token, ':');
-                                $pos[] = strpos($next_token_token, '(');
-                                $pos[] = strpos($next_token_token, ')');
-                                $pos[] = strpos($next_token_token, '{');
-                                $pos[] = strpos($next_token_token, '}');
-                                $pos[] = strpos($next_token_token, '|');;
-                                $pos[] = strpos($next_token_token, '\\');
-                                $pos[] = strpos($next_token_token, '//');
-                                $pos[] = strpos($next_token_token, '<');
-                                $pos[] = strpos($next_token_token, '>');
-                                $pos[] = strpos($next_token_token, '-');
-                                $pos[] = strpos($next_token_token, '_');
-                                $pos[] = strpos($next_token_token, '+');
-                                $pos[] = strpos($next_token_token, '=');
-                                $pos[] = strpos($next_token_token, '`');
-                                $pos[] = strpos($next_token_token, '~');
-                                $pos[] = strpos($next_token_token, '@');
-                                $pos[] = strpos($next_token_token, '#');
-                                $pos[] = strpos($next_token_token, '$');
-                                $pos[] = strpos($next_token_token, '%');
-                                $pos[] = strpos($next_token_token, '^');
-                                $pos[] = strpos($next_token_token, '&');
-                                $pos[] = strpos($next_token_token, '*');
-                                $pos[] = strpos($next_token_token, '');
-                                $pos[] = strpos($next_token_token, '\"');
-                                foreach($pos as $key => $value){
-                                    if($value === false){
-                                        unset($pos[$key]);
-                                    }
-                                }
-                                $pos_min = false;
-                                if($pos){
-                                    $pos_min = min($pos);
-                                }
-                                d($pos_min);
-                                breakpoint($next_word);
-                                if(
-                                    $pos_min === 0 &&
-                                    strlen($next_word) > 1
-                                ){
-                                    $ask->status = 'finish';
-                                    $ask->word = $next_word;
-                                    $data = new Data($ask);
-                                    $data->write($ask->url->stream);
-                                    File::delete($file->url);
-                                    break;
-                                }
-                                elseif($pos_min > 0 && strlen($next_word) >= 1) {
-                                    $next_word .= substr($next_token_token, 0, $pos_min);
-                                    $next_token->token = substr($next_token_token, 0, $pos_min);
-                                    $next_token->key = $char_to_key[$next_token->token] ?? null;
-                                    if(!property_exists($ask, 'stream')){
-                                        $ask->stream = [];
-                                    }
-                                    $ask->stream[] = $next_token;
-                                    $ask->status = 'finish';
-                                    $ask->word = $next_word;
-                                    $data = new Data($ask);
-                                    $data->write($ask->url->stream);
-                                    File::delete($file->url);
-                                    break;
-                                } else {
-                                    $next_word .= $next_token_token;
-                                    $search .= $next_token_token;
-                                    $ask->status = 'progress';
-                                    if(!property_exists($ask, 'stream')){
-                                        $ask->stream = [];
-                                    }
-                                    $ask->stream[] = $next_token;
-                                    $data = new Data($ask);
-                                    $data->write($ask->url->stream);
-                                }
+                            if(!property_exists($ask, 'stream')){
+                                $ask->stream = [];
                             }
+                            $ask->stream[] = $next_word;
+                            $ask->status = 'finish';
+                            $ask->word = $next_word;
+                            $data = new Data($ask);
+                            $data->write($ask->url->stream);
+                            File::delete($file->url);
                             break;
                     }
                 }
@@ -653,6 +568,7 @@ trait Service {
     {
         $split = mb_str_split($text);
         $skip = 0;
+        $search = [];
         foreach ($split as $nr => $char) {
             if ($skip > 0) {
                 $skip--;
