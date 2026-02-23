@@ -87,7 +87,8 @@ trait Service {
                         'hit' => 0,
                         'partition' => (object) [
                             'count' => self::PARTITION_SIZE,
-                        ]
+                        ],
+                        'closure' => self::PARTITION_SIZE
                     ];
                     if($start === true){
                         echo CLi::tput('cursor.position', [0, 0]);
@@ -122,7 +123,8 @@ trait Service {
                         'hit' => 0,
                         'partition' => (object) [
                             'count' => self::PARTITION_SIZE,
-                        ]
+                        ],
+                        'closure' => self::PARTITION_SIZE
                     ];
                     echo CLi::tput('cursor.position', [0, 0]);
                     for($nr = 0; $nr < $rows; $nr++){
