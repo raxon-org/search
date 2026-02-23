@@ -243,6 +243,7 @@ trait Service {
                             break;
                         case 'word':
                             $next_word = '';
+                            $partition_enable = null;
                             $next_word = $this->word_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
                             $ask = $file->node->ask;
                             $partition_enable = null;
