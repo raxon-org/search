@@ -253,6 +253,11 @@ trait Service {
                                 $next_token_token = $next_token->token;
                                 $partition_enable = $next_token->partition->enable ?? null;
                                 $pos = [];
+                                $pos[] = strpos($next_token_token, "\t");
+                                $pos[] = strpos($next_token_token, "\n");
+                                $pos[] = strpos($next_token_token, "\r");
+                                $pos[] = strpos($next_token_token, "\v");
+                                $pos[] = strpos($next_token_token, "\0");
                                 $pos[] = strpos($next_token_token, ' ');
                                 $pos[] = strpos($next_token_token, ',');
                                 $pos[] = strpos($next_token_token, '.');
