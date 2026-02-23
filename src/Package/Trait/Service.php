@@ -101,9 +101,9 @@ trait Service {
                         foreach($stream as $token){
                             echo $token->token;
                             $bytes_count += mb_strlen($token->token);
-                            if(property_exists($token, 'partitions')){
-                                if(property_exists($token->partitions, 'enable')){
-                                    $token->partitions->count = count($token->partitions->enable);
+                            if(property_exists($token, 'partition')){
+                                if(property_exists($token->partition, 'enable')){
+                                    $token->partition->count = count($token->partition->enable);
                                 }
                             }
                         }
@@ -113,7 +113,7 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partitions->count;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count;
                     }
                     usleep(300000);
                 }
@@ -133,9 +133,9 @@ trait Service {
                         foreach($stream as $token){
                             echo $token->token;
                             $bytes_count += mb_strlen($token->token);
-                            if(property_exists($token, 'partitions')){
-                                if(property_exists($token->partitions, 'enable')){
-                                    $token->partitions->count = count($token->partitions->enable);
+                            if(property_exists($token, 'partition')){
+                                if(property_exists($token->partition, 'enable')){
+                                    $token->partition->count = count($token->partition->enable);
                                 }
                             }
                         }
@@ -145,7 +145,7 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partitions->count;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count;
                     }
                     File::copy($ask->url->stream, $ask->url->output);
                     File::delete($ask->url->stream);
