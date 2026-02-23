@@ -250,13 +250,32 @@ trait Service {
                                 }
                                 $next_token_token = $next_token->token;
                                 $partition_enable = $next_token->partition->enable ?? null;
-                                $explode = explode(' ', $next_token_token, 2);
-                                if(array_key_exists(1, $explode)){
-                                    if($explode[0] !== ' '){
-                                        $next_word .= $explode[0];
-                                        $next_token->token = $explode[0];
-                                        $next_token->key = $char_to_key[$explode[0]] ?? null;
+                                $pos = [];
+                                $pos[] = strpos($next_token_token, ' ');
+                                $pos[] = strpos($next_token_token, ',');
+                                $pos[] = strpos($next_token_token, '.');
+                                $pos[] = strpos($next_token_token, ';');
+                                $pos[] = strpos($next_token_token, '?');
+                                $pos[] = strpos($next_token_token, '!');
+                                $pos[] = strpos($next_token_token, ':');
+                                foreach($pos as $key => $value){
+                                    if($value === false){
+                                        unset($pos[$key]);
                                     }
+                                }
+                                $pos_min = min($pos);
+                                if($pos_min === 0){
+                                    $ask->status = 'finish';
+                                    $ask->word = $next_word;
+                                    $data = new Data($ask);
+                                    $data->write($ask->url->stream);
+                                    File::delete($file->url);
+                                    break;
+                                }
+                                elseif($pos_min > 0) {
+                                    $next_word .= substr($next_token_token, 0, $pos_min);
+                                    $next_token->token = substr($next_token_token, 0, $pos_min);
+                                    $next_token->key = $char_to_key[$next_token->token] ?? null;
                                     if(!property_exists($ask, 'stream')){
                                         $ask->stream = [];
                                     }
@@ -268,17 +287,17 @@ trait Service {
                                     File::delete($file->url);
                                     break;
                                 } else {
-                                    $next_word .= $next_token_token;
+                                    $search .= $next_token_token;
+                                    $ask->status = 'progress';
+                                    if(!property_exists($ask, 'stream')){
+                                        $ask->stream = [];
+                                    }
+                                    $ask->stream[] = $next_token;
+                                    $data = new Data($ask);
+                                    $data->write($ask->url->stream);
                                 }
-                                $search .= $next_token_token;
-                                $ask->status = 'progress';
-                                if(!property_exists($ask, 'stream')){
-                                    $ask->stream = [];
-                                }
-                                $ask->stream[] = $next_token;
-                                $data = new Data($ask);
-                                $data->write($ask->url->stream);
                             }
+                            break;
                     }
                 }
             }
