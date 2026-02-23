@@ -22,7 +22,7 @@ trait Service {
     //128 0.86 T/sec
     //64  2.08 T/sec
     //32
-    const PARTITION_SIZE = 32;
+    const PARTITION_SIZE = 512;
 
     /**
      * @throws DirectoryCreateException
@@ -250,7 +250,6 @@ trait Service {
                                 }
                                 $next_token_token = $next_token->token;
                                 $partition_enable = $next_token->partition->enable ?? null;
-                                d($next_token);
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
@@ -293,7 +292,6 @@ trait Service {
         $closures = [];
         $result_partition = [];
         $char_to_key = $object->config('char.to.key');
-        d($partition_enable);
         foreach($partition as $partition_nr => $chunk) {
             if(
                 $partition_enable !== null &&
