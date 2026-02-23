@@ -367,6 +367,12 @@ trait Service {
                         if($node->count > $count){
                             $count = $node->count;
                         }
+                        if(
+                            property_exists($node, 'partition') &&
+                            property_exists($node->partition, 'nr') &&
+                            !in_array($node->partition->nr, $partition_enable, true)){
+                            $partition_enable[] = $node->partition->nr;
+                        }
                         //might be narrower then -2 (might be 1 after only)
                         /*
                         for($i = $node->partition->nr; $i < $node->partition->nr + 2; $i++){
