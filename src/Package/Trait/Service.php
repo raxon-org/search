@@ -409,7 +409,7 @@ trait Service {
                     'count' => $count,
                     'float' => $hit / $count,
                     'closure' => count($closures),
-                    'partition' => [
+                    'partition' => (object) [
                         'enable' => $partition_enable
                     ]
                 ];
