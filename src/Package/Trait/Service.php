@@ -525,34 +525,34 @@ trait Service {
                         $max = $nr + $search_count + 128;
                         for ($i = $nr + $search_count; $i < $max; $i++) {
                             $part .= $key_to_char[$chunk[$i]] ?? '';
-                            $pos[] = strpos($part, "\t");
-                            $pos[] = strpos($part, "\n");
-                            $pos[] = strpos($part, "\r");
-                            $pos[] = strpos($part, "\v");
-                            $pos[] = strpos($part, "\0");
-                            $pos[] = strpos($part, ' ');
-                            $pos[] = strpos($part, ',');
-                            $pos[] = strpos($part, '.');
-                            $pos[] = strpos($part, ';');
-                            $pos[] = strpos($part, '?');
-                            $pos[] = strpos($part, '!');
-                            $pos[] = strpos($part, ':');
-                            $pos[] = strpos($part, '/');
-                            $pos[] = strpos($part, '\\');
-                            foreach($pos as $key => $value){
-                                if($value === false){
-                                    unset($pos[$key]);
-                                }
+                        }
+                        $pos[] = strpos($part, "\t");
+                        $pos[] = strpos($part, "\n");
+                        $pos[] = strpos($part, "\r");
+                        $pos[] = strpos($part, "\v");
+                        $pos[] = strpos($part, "\0");
+                        $pos[] = strpos($part, ' ');
+                        $pos[] = strpos($part, ',');
+                        $pos[] = strpos($part, '.');
+                        $pos[] = strpos($part, ';');
+                        $pos[] = strpos($part, '?');
+                        $pos[] = strpos($part, '!');
+                        $pos[] = strpos($part, ':');
+                        $pos[] = strpos($part, '/');
+                        $pos[] = strpos($part, '\\');
+                        foreach($pos as $key => $value){
+                            if($value === false){
+                                unset($pos[$key]);
                             }
-                            $pos_min = false;
-                            if($pos){
-                                $pos_min = min($pos);
-                            }
-                            d($pos_min);
-                            if($pos_min > 0){
-                                $part = substr($part, 0, $pos_min);
-                                break;
-                            }
+                        }
+                        $pos_min = false;
+                        if($pos){
+                            $pos_min = min($pos);
+                        }
+                        d($pos_min);
+                        if($pos_min > 0){
+                            $part = substr($part, 0, $pos_min);
+                            break;
                         }
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
