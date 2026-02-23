@@ -619,13 +619,8 @@ trait Service {
         }
         if(array_key_exists(0, $result)){
             $key_rand = array_rand($result);
-
-            ddd($result[$key_rand]);
-
-            $key = $char_to_key[$result[$key_rand]] ?? null;
             if($count > 0){
                 return (object) [
-                    'key' => $key,
                     'token' => $result[$key_rand],
                     'hit' => $hit,
                     'count' => $count,
