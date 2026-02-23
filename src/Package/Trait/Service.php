@@ -541,6 +541,8 @@ trait Service {
                         $pos[] = strpos($part, ':');
                         $pos[] = strpos($part, '/');
                         $pos[] = strpos($part, '\\');
+                        $pos[] = strpos($part, '"');
+                        $pos[] = strpos($part, '\'');
                         foreach($pos as $key => $value){
                             if($value === false){
                                 unset($pos[$key]);
