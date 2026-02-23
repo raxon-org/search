@@ -113,7 +113,7 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count  . ', closures: ' . $token->closure;
                     }
                     usleep(300000);
                 }
@@ -145,7 +145,7 @@ trait Service {
                         echo CLi::tput('cursor.position', [0, $rows-1]);
                         echo str_repeat(' ', $columns);
                         echo CLi::tput('cursor.position', [0, $rows-1]);
-                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count;
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count . ', closures: ' . $token->closure;
                     }
                     File::copy($ask->url->stream, $ask->url->output);
                     File::delete($ask->url->stream);
@@ -406,6 +406,7 @@ trait Service {
                     'hit' => $hit,
                     'count' => $count,
                     'float' => $hit / $count,
+                    'closure' => count($closures),
                     'partition' => [
                         'enable' => $partition_enable
                     ]
