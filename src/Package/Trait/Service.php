@@ -558,12 +558,16 @@ trait Service {
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
                             $result_closure[$part]->count = $count;
+                            $result_closure[$part]->search[] = $nr;
                         } else {
                             $result_closure[$part] = (object) [
                                 'appearance' => 1,
                                 'count' => $count,
                                 'partition' => (object) [
                                     'nr' => $partition_nr,
+                                ],
+                                'search' => [
+                                    $nr
                                 ]
                             ];
                         }
@@ -576,6 +580,7 @@ trait Service {
         $hit = 0;
         $count = 0;
         $partition_enable = [];
+        $partition_search = [];
         foreach($list as $key => $item){
             if(
                 $item !== null &&
@@ -593,6 +598,14 @@ trait Service {
                             !in_array($node->partition->nr, $partition_enable, true)){
                             $partition_enable[] = $node->partition->nr;
                         }
+                        if(
+                            property_exists($node, 'search') &&
+                            property_exists($node, 'partition') &&
+                            property_exists($node->partition, 'nr')
+                        ){
+                            $partition_search[$node->partition->nr] = $node->search;
+                        }
+
                         //might be narrower then -2 (might be 1 after only)
                         /*
                         for($i = $node->partition->nr; $i < $node->partition->nr + 2; $i++){
@@ -627,7 +640,8 @@ trait Service {
                     'float' => $hit / $count,
                     'closure' => count($closures),
                     'partition' => (object) [
-                        'enable' => $partition_enable
+                        'enable' => $partition_enable,
+                        'search' => $partition_search
                     ]
                 ];
             }
