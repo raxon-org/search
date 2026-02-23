@@ -233,8 +233,8 @@ trait Service {
                     }
                     switch($file->node->ask->type){
                         case 'token':
-                            $partitions_enable = null;
-                            $next_token = $this->token_next($partition, $file, $partitions_enable, $this->search($search, $char_to_key));
+                            $partition_enable = null;
+                            $next_token = $this->token_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
                             if($next_token !== null){
                                 ddd($key_to_char[$next_token->token]);
                             }
@@ -242,14 +242,15 @@ trait Service {
                         case 'word':
                             $next_word = '';
                             $ask = $file->node->ask;
-                            $partitions_enable = null;
+                            $partition_enable = null;
                             while(true){
-                                $next_token = $this->token_next($partition, $file, $partitions_enable, $this->search($search, $char_to_key));
+                                $next_token = $this->token_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
                                 if($next_token === null){
                                     break;
                                 }
                                 $next_token_token = $next_token->token;
-                                $partitions_enable = $next_token->partitions->enable ?? null;
+                                ddd($next_token);
+                                $partition_enable = $next_token->partitions->enable ?? null;
                                 $explode = explode(' ', $next_token_token, 2);
                                 if(array_key_exists(1, $explode)){
                                     if($explode[0] !== ' '){
