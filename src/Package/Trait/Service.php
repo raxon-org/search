@@ -553,7 +553,6 @@ trait Service {
                                 break;
                             }
                         }
-                        d($part);
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
                             $result_closure[$part]->count = $count;
@@ -618,6 +617,9 @@ trait Service {
         }
         if(array_key_exists(0, $result)){
             $key_rand = array_rand($result);
+
+            ddd($result[$key_rand]);
+
             $key = $char_to_key[$result[$key_rand]] ?? null;
             if($count > 0){
                 return (object) [
