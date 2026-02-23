@@ -292,6 +292,7 @@ trait Service {
         $closures = [];
         $result_partition = [];
         $char_to_key = $object->config('char.to.key');
+        d($partition_enable);
         foreach($partition as $partition_nr => $chunk) {
             if(
                 $partition_enable !== null &&
