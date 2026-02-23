@@ -317,6 +317,7 @@ trait Service {
                                     File::delete($file->url);
                                     break;
                                 } else {
+                                    $next_word .= $next_token_token;
                                     $search .= $next_token_token;
                                     $ask->status = 'progress';
                                     if(!property_exists($ask, 'stream')){
