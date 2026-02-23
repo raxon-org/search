@@ -300,7 +300,7 @@ trait Service {
                                 }
                                 if(
                                     $pos_min === 0 &&
-                                    strlen($next_word) > 0
+                                    strlen($next_word) > 1
                                 ){
                                     $ask->status = 'finish';
                                     $ask->word = $next_word;
@@ -309,7 +309,7 @@ trait Service {
                                     File::delete($file->url);
                                     break;
                                 }
-                                elseif($pos_min > 0) {
+                                elseif($pos_min > 0 && strlen($next_word) >= 1) {
                                     $next_word .= substr($next_token_token, 0, $pos_min);
                                     $next_token->token = substr($next_token_token, 0, $pos_min);
                                     $next_token->key = $char_to_key[$next_token->token] ?? null;
