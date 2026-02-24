@@ -789,7 +789,7 @@ trait Service {
                             }
                             $part[$i] = $key_to_char[$chunk[$i]] ?? '';
                         }
-                        ddd($part);
+                        $part = implode('', $part);
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
                             $result_closure[$part]->count = $count;
