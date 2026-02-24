@@ -265,9 +265,9 @@ trait Service {
                                     break;
                                 case 'sentence':
                                 case 'sentence-list':
-                                    $sentence = Core::object($token->sentence, Core::OBJECT_JSON);
-                                    echo $sentence;
-                                    $bytes_count += mb_strlen($sentence);
+                                    $token_sentence = Core::object($token, Core::OBJECT_JSON);
+                                    echo $token_sentence;
+                                    $bytes_count += mb_strlen($token_sentence);
                                     break;
                             }
                             if(property_exists($token, 'partition')){
@@ -309,9 +309,9 @@ trait Service {
                                     break;
                                 case 'sentence':
                                 case 'sentence-list':
-                                    $token = Core::object($token, Core::OBJECT_JSON);
-                                    echo $token;
-                                    $bytes_count += mb_strlen($token);
+                                    $token_sentence = Core::object($token, Core::OBJECT_JSON);
+                                    echo $token_sentence;
+                                    $bytes_count += mb_strlen($token_sentence);
                                     break;
 
                             }
