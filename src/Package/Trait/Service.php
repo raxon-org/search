@@ -854,6 +854,8 @@ trait Service {
             }
         }
         arsort($result_partition, SORT_NATURAL);
+        ddd($result_partition);
+
         $result = [];
         foreach($result_partition as $part => $appearance){
             for($i = 0; $i < $appearance; $i++){
