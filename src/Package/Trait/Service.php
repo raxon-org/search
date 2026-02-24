@@ -257,8 +257,19 @@ trait Service {
                     echo CLi::tput('cursor.position', [0, 0]);
                     if(is_array($stream)){
                         foreach($stream as $token){
-                            echo $token->token;
-                            $bytes_count += mb_strlen($token->token);
+                            switch($read->get('type')){
+                                case 'word':
+                                case 'token':
+                                    echo $token->token;
+                                    $bytes_count += mb_strlen($token->token);
+                                    break;
+                                case 'sentence':
+                                case 'sentence-list':
+                                    $sentence = Core::object($token->sentence, Core::OBJECT_JSON);
+                                    echo $sentence;
+                                    $bytes_count += mb_strlen($sentence);
+                                    break;
+                            }
                             if(property_exists($token, 'partition')){
                                 if(property_exists($token->partition, 'enable')){
                                     $token->partition->count = count($token->partition->enable);
@@ -292,8 +303,19 @@ trait Service {
                         breakpoint($read);
                         ddd($stream);
                         foreach($stream as $token){
-                            echo $token->token;
-                            $bytes_count += mb_strlen($token->token);
+                            switch($read->get('type')){
+                                case 'word':
+                                case 'token':
+                                    echo $token->token;
+                                    $bytes_count += mb_strlen($token->token);
+                                    break;
+                                case 'sentence':
+                                case 'sentence-list':
+                                    $sentence = Core::object($token->sentence, Core::OBJECT_JSON);
+                                    echo $sentence;
+                                    $bytes_count += mb_strlen($sentence);
+                                    break;
+                            }
                             if(property_exists($token, 'partition')){
                                 if(property_exists($token->partition, 'enable')){
                                     $token->partition->count = count($token->partition->enable);
