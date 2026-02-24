@@ -386,7 +386,7 @@ trait Service {
         while(true){
             $object->data('service', $this);
             $object->config('time.duration', microtime(true) - $object->config('time.start'));
-            if($object->config('time.duration') > 60){
+            if($object->config('time.duration') > 60 * 15){
                 break;
             }
             $dir = new Dir();
@@ -917,7 +917,7 @@ trait Service {
         if(array_key_exists(0, $result)){
             if($count > 0){
                 return (object) [
-                    'sentence' => $result,
+                    'list' => $result,
                     'hit' => $hit,
                     'count' => $count,
                     'float' => $hit / $count,
