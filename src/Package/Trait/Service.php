@@ -860,6 +860,7 @@ trait Service {
                 $result[] = $part;
             }
         }
+        breakpoint($result);
         ddd($result);
         if(array_key_exists(0, $result)){
             $key_rand = array_rand($result);
