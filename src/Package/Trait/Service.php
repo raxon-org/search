@@ -776,6 +776,7 @@ trait Service {
                                 for($j = $i; $j >= $min; $j--){
                                     unset($part[$j]);
                                 }
+                                $min = $nr - $i;
                             }
                         }
                         for($i = $nr; $i < $max; $i++){
@@ -802,7 +803,7 @@ trait Service {
                                     'nr' => $partition_nr,
                                 ],
                                 'search' => [
-                                    $nr
+                                    $min
                                 ]
                             ];
                         }
