@@ -160,6 +160,152 @@ trait Service {
     }
 
     /**
+     * @throws DirectoryCreateException
+     * @throws FileWriteException
+     * @throws ObjectException
+     */
+    public function ask_sentence(object $flags, object $options): void
+    {
+        $options->type = 'sentence';
+        $this->ask($flags, $options);
+    }
+
+    /**
+     * @throws DirectoryCreateException
+     * @throws ObjectException
+     * @throws FileWriteException
+     * @throws Exception
+     */
+    public function ask(object $flags, object $options): void
+    {
+        $object = $this->object();
+        if(!property_exists($options, 'text')){
+            throw new ErrorException('Missing text option');
+        }
+        $dir_input = $object->config('ramdisk.url') . '33/Model/Input/';
+        $dir_output = $object->config('ramdisk.url') . '33/Model/Output/';
+        $dir_stream = $object->config('ramdisk.url') . '33/Model/Stream/';
+        $uuid = Core::uuid();
+        Dir::create($dir_input, Dir::CHMOD);
+        Dir::create($dir_output, Dir::CHMOD);
+        Dir::create($dir_stream, Dir::CHMOD);
+        $ask = (object) [
+            'uuid' => $uuid,
+            'text' => $options->text ?? null,
+            'url'  => (object) [
+                'input' => $dir_input . $uuid . $object->config('extension.json'),
+                'output' => $dir_output . $uuid . $object->config('extension.json'),
+                'stream' => $dir_stream . $uuid . $object->config('extension.json')
+            ],
+            'type' => $options->type ?? 'token',
+            'status' => 'init'
+        ];
+        $data = new Data();
+        $data->set('ask', $ask);
+        $data->write($ask->url->input);
+        $start = true;
+        //wait for output
+        while(true){
+            if(File::exist($ask->url->stream)){
+                $read = $object->data_read($ask->url->stream);
+                if($read === null){
+                    File::delete($ask->url->input);
+                    File::delete($ask->url->stream);
+                }
+                $stream = $read->get('stream');
+                $token_count = 0;
+                if($stream){
+                    $token_count = count($stream);
+                }
+                $bytes_count = 0;
+                $columns = (int) Cli::tput('columns');
+                $rows = (int) Cli::tput('rows');
+                if(
+                    in_array(
+                        $read->get('status'),
+                        [
+                            'init',
+                            'progress'
+                        ]
+                    )
+                ){
+                    $token = (object) [
+                        'hit' => 0,
+                        'partition' => (object) [
+                            'count' => self::PARTITION_SIZE,
+                        ],
+                        'closure' => self::PARTITION_SIZE
+                    ];
+                    if($start === true){
+                        echo CLi::tput('cursor.position', [0, 0]);
+                        for($nr = 0; $nr < $rows; $nr++){
+                            echo str_repeat(' ', $columns);
+                        }
+                        $start = false;
+                    }
+                    echo CLi::tput('cursor.position', [0, 0]);
+                    if(is_array($stream)){
+                        foreach($stream as $token){
+                            echo $token->token;
+                            $bytes_count += mb_strlen($token->token);
+                            if(property_exists($token, 'partition')){
+                                if(property_exists($token->partition, 'enable')){
+                                    $token->partition->count = count($token->partition->enable);
+                                }
+                            }
+                        }
+                    }
+                    $duration = round(microtime(true) - $object->config('time.start'), 2);
+                    if($duration > 0){
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo str_repeat(' ', $columns);
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count  . ', closures: ' . $token->closure;
+                    }
+                    usleep(300000);
+                }
+                elseif($read->get('status') === 'finish'){
+                    $token = (object) [
+                        'hit' => 0,
+                        'partition' => (object) [
+                            'count' => self::PARTITION_SIZE,
+                        ],
+                        'closure' => self::PARTITION_SIZE
+                    ];
+                    echo CLi::tput('cursor.position', [0, 0]);
+                    for($nr = 0; $nr < $rows; $nr++){
+                        echo str_repeat(' ', $columns);
+                    }
+                    echo CLi::tput('cursor.position', [0, 1]);
+                    if(is_array($stream)){
+                        foreach($stream as $token){
+                            echo $token->token;
+                            $bytes_count += mb_strlen($token->token);
+                            if(property_exists($token, 'partition')){
+                                if(property_exists($token->partition, 'enable')){
+                                    $token->partition->count = count($token->partition->enable);
+                                }
+                            }
+                        }
+                    }
+                    $duration = round(microtime(true) - $object->config('time.start'), 2);
+                    if($duration > 0){
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo str_repeat(' ', $columns);
+                        echo CLi::tput('cursor.position', [0, $rows-1]);
+                        echo 'Token count: ' . $token_count . ', Speed: ' . round($token_count / $duration, 2) . ' T/sec, Bytes: '. $bytes_count . ' hit: ' . $token->hit . ', partitions: ' . $token->partition->count . ', closures: ' . $token->closure;
+                    }
+                    File::copy($ask->url->stream, $ask->url->output);
+                    File::delete($ask->url->stream);
+                    break;
+                }
+            } else {
+                usleep(300000);
+            }
+        }
+    }
+
+    /**
      * @throws ObjectException
      * @throws DirectoryCreateException
      * @throws Exception
@@ -238,7 +384,16 @@ trait Service {
                             $partition_enable = null;
                             $next_token = $this->token_next($partition, $file, $partition_enable, $this->search($search, $char_to_key));
                             if($next_token !== null){
-                                ddd($key_to_char[$next_token->token]);
+                                $ask = $file->node->ask;
+                                if(!property_exists($ask, 'stream')){
+                                    $ask->stream = [];
+                                }
+                                $ask->stream[] = $next_token;
+                                $ask->status = 'finish';
+                                $ask->token = $next_token->token;
+                                $data = new Data($ask);
+                                $data->write($ask->url->stream);
+                                File::delete($file->url);
                             }
                             break;
                         case 'word':
@@ -254,6 +409,10 @@ trait Service {
                             $data = new Data($ask);
                             $data->write($ask->url->stream);
                             File::delete($file->url);
+                            break;
+                        case 'sentence':
+                            $partition_enable = null;
+                            $sentence = $this->sentence($partition, $file, $partition_enable, $this->search($search, $char_to_key));
                             break;
                     }
                 }
@@ -544,6 +703,159 @@ trait Service {
                 $result[] = $part;
             }
         }
+        if(array_key_exists(0, $result)){
+            $key_rand = array_rand($result);
+            if($count > 0){
+                return (object) [
+                    'token' => $result[$key_rand],
+                    'hit' => $hit,
+                    'count' => $count,
+                    'float' => $hit / $count,
+                    'closure' => count($closures),
+                    'partition' => (object) [
+                        'enable' => $partition_enable,
+                        'search' => $partition_search
+                    ]
+                ];
+            }
+        }
+        return null;
+    }
+
+    private function sentence(array $partition, object $file, array|null $partition_enable, array $search): null|object
+    {
+        $object = $this->object();
+        $closures = [];
+        $result_partition = [];
+        $char_to_key = $object->config('char.to.key');
+        foreach($partition as $partition_nr => $chunk) {
+            if(
+                $partition_enable !== null &&
+                !in_array($partition_nr, $partition_enable, true)
+            ){
+                continue;
+            }
+            $closures[] = function () use (
+                $object,
+                $chunk,
+                $file,
+                $search,
+                $partition_nr
+            ) {
+                $key_to_char = $object->config('key.to.char');
+                $search_count = count($search);
+                $result_closure = [];
+                $skip = 0;
+                $count = 0;
+                foreach ($chunk as $nr => $key) {
+                    $count++;
+                    if ($skip > 0) {
+                        $skip--;
+                        continue;
+                    }
+                    $context_window = [];
+                    for ($i = 0; $i < $search_count; $i++) {
+                        $char = $chunk[$nr + $i] ?? null;
+                        //should speedup search...
+                        if (!in_array($char, $search, true)) {
+                            $skip += $i;
+                            break;
+                        }
+                        $context_window[] = $char;
+                    }
+                    if ($context_window === $search) {
+                        $skip += $search_count - 1;
+                        $part = '';
+                        $min = $nr - 128;
+                        $max = $nr + $search_count + 128;
+                        for($i = $min; $i < $max; $i++){
+                            $part .= $key_to_char[$chunk[$i]] ?? '';
+                            if($i === $nr){
+                                while($pos = strpos($part, "\n")){
+                                    $part = substr($part, $pos + 1);
+                                }
+                            }
+                        }
+                        $pos = strpos($part, "\n");
+                        if($pos !== false){
+                            $part = substr($part, 0, $pos);
+                        }
+                        if (array_key_exists($part, $result_closure)) {
+                            $result_closure[$part]->appearance++;
+                            $result_closure[$part]->count = $count;
+                            $result_closure[$part]->search[] = $nr;
+                        } else {
+                            $result_closure[$part] = (object) [
+                                'appearance' => 1,
+                                'count' => $count,
+                                'partition' => (object) [
+                                    'nr' => $partition_nr,
+                                ],
+                                'search' => [
+                                    $nr
+                                ]
+                            ];
+                        }
+                    }
+                }
+                return $result_closure;
+            };
+        }
+        $list = Parallel::new()->execute($closures);
+        $hit = 0;
+        $count = 0;
+        $partition_enable = [];
+        $partition_search = [];
+        foreach($list as $key => $item){
+            if(
+                $item !== null &&
+                $item !== 'progress'
+            ){
+                if(is_array($item)){
+                    foreach($item as $part => $node){
+                        $hit += $node->appearance;
+                        if($node->count > $count){
+                            $count = $node->count;
+                        }
+                        if(
+                            property_exists($node, 'partition') &&
+                            property_exists($node->partition, 'nr') &&
+                            !in_array($node->partition->nr, $partition_enable, true)){
+                            $partition_enable[] = $node->partition->nr;
+                        }
+                        if(
+                            property_exists($node, 'search') &&
+                            property_exists($node, 'partition') &&
+                            property_exists($node->partition, 'nr')
+                        ){
+                            $partition_search[$node->partition->nr] = $node->search;
+                        }
+
+                        //might be narrower then -2 (might be 1 after only)
+                        /*
+                        for($i = $node->partition->nr; $i < $node->partition->nr + 2; $i++){
+                            if(!in_array($i, $partition_enable, true)){
+                                $partition_enable[] = $i;
+                            }
+                        }
+                        */
+                        if(!array_key_exists($part, $result_partition)){
+                            $result_partition[$part] = $node->appearance;
+                        } else {
+                            $result_partition[$part] += $node->appearance;
+                        }
+                    }
+                }
+            }
+        }
+        arsort($result_partition, SORT_NATURAL);
+        $result = [];
+        foreach($result_partition as $part => $appearance){
+            for($i = 0; $i < $appearance; $i++){
+                $result[] = $part;
+            }
+        }
+        ddd($result);
         if(array_key_exists(0, $result)){
             $key_rand = array_rand($result);
             if($count > 0){
