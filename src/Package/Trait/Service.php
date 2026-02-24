@@ -782,8 +782,7 @@ trait Service {
                             $part = substr($part, 0, $pos);
                         }
                         if(empty($part)){
-                            d($pos);
-                            d($chunk);
+                            d($pos);;
                             breakpoint($nr);
 
                         }
