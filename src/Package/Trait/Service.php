@@ -776,14 +776,16 @@ trait Service {
                                 }
                             }
                         }
-                        if(empty($part)){
-                            d($chunk);
-                            breakpoint($nr);
-
-                        }
+                        d($part);
                         $pos = strpos($part, "\n");
                         if($pos !== false){
                             $part = substr($part, 0, $pos);
+                        }
+                        if(empty($part)){
+                            d($pos);
+                            d($chunk);
+                            breakpoint($nr);
+
                         }
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
