@@ -289,7 +289,7 @@ trait Service {
                     }
                     echo CLi::tput('cursor.position', [0, 1]);
                     if(is_array($stream)){
-                        breakpoint($read->type);
+                        breakpoint($read);
                         ddd($stream);
                         foreach($stream as $token){
                             echo $token->token;
