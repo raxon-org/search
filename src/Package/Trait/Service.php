@@ -776,6 +776,11 @@ trait Service {
                                 }
                             }
                         }
+                        if(empty($part)){
+                            d($chunk);
+                            breakpoint($nr);
+
+                        }
                         $pos = strpos($part, "\n");
                         if($pos !== false){
                             $part = substr($part, 0, $pos);
