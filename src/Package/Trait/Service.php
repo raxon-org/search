@@ -765,27 +765,31 @@ trait Service {
                     }
                     if ($context_window === $search) {
                         $skip += $search_count - 1;
-                        $part = '';
-                        $min = $nr - 128;
-                        $max = $nr + $search_count + 128;
-                        for($i = $min; $i < $max; $i++){
-                            $part .= $key_to_char[$chunk[$i]] ?? '';
-                            if($i === $nr){
-                                while($pos = strpos($part, "\n")){
-                                    $part = substr($part, $pos + 1);
+                        $part = [];
+                        $min = $nr - 512;
+                        $max = $nr + $search_count + 512;
+                        for($i = $min; $i < $nr; $i++){
+                            $part[$i] = $key_to_char[$chunk[$i]] ?? '';
+                        }
+                        for($i = $nr - 1; $i >= $min; $i--){
+                            if(array_key_exists($i, $part) && $part[$i] === "\n"){
+                                for($j = $i; $j >= $min; $j--){
+                                    unset($part[$j]);
                                 }
                             }
                         }
-                        d($part);
-                        $pos = strpos($part, "\n");
-                        if($pos !== false){
-                            $part = substr($part, 0, $pos);
+                        for($i = $nr; $i < $max; $i++){
+                            if(
+                                array_key_exists($i, $chunk) &&
+                                array_key_exists($chunk[$i], $key_to_char) &&
+                                ($i > $nr + $search_count) &&
+                                $key_to_char[$chunk[$i]] === "\n"
+                            ){
+                                break;
+                            }
+                            $part[$i] = $key_to_char[$chunk[$i]] ?? '';
                         }
-                        if(empty($part)){
-                            d($pos);;
-                            breakpoint($nr);
-
-                        }
+                        ddd($part);
                         if (array_key_exists($part, $result_closure)) {
                             $result_closure[$part]->appearance++;
                             $result_closure[$part]->count = $count;
