@@ -289,6 +289,8 @@ trait Service {
                     }
                     echo CLi::tput('cursor.position', [0, 1]);
                     if(is_array($stream)){
+                        d($read);
+                        ddd($stream);
                         foreach($stream as $token){
                             echo $token->token;
                             $bytes_count += mb_strlen($token->token);
