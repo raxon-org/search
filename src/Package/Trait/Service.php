@@ -454,7 +454,7 @@ trait Service {
                             }
                             $ask->stream[] = $sentence_list;
                             $ask->status = 'finish';
-                            $ask->sentence = $sentence_list->sentence;
+                            $ask->sentence = $sentence_list->list;
                             $data = new Data($ask);
                             $data->write($ask->url->stream);
                             File::delete($file->url);
