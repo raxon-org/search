@@ -164,6 +164,17 @@ trait Service {
      * @throws FileWriteException
      * @throws ObjectException
      */
+    public function ask_sentence_list(object $flags, object $options): void
+    {
+        $options->type = 'sentence-list';
+        $this->ask($flags, $options);
+    }
+
+    /**
+     * @throws DirectoryCreateException
+     * @throws FileWriteException
+     * @throws ObjectException
+     */
     public function ask_sentence(object $flags, object $options): void
     {
         $options->type = 'sentence';
@@ -410,9 +421,20 @@ trait Service {
                             $data->write($ask->url->stream);
                             File::delete($file->url);
                             break;
-                        case 'sentence':
+                        case 'sentence-list':
+                        case 'sentence_list':
                             $partition_enable = null;
-                            $sentence = $this->sentence($partition, $file, $partition_enable, $this->search($search, $char_to_key));
+                            $sentence_list = $this->sentence_list($partition, $file, $partition_enable, $this->search($search, $char_to_key));
+                            $ask = $file->node->ask;
+                            if(!property_exists($ask, 'stream')){
+                                $ask->stream = [];
+                            }
+                            $ask->stream[] = $sentence_list;
+                            $ask->status = 'finish';
+                            $ask->sentence = $sentence_list->sentence;
+                            $data = new Data($ask);
+                            $data->write($ask->url->stream);
+                            File::delete($file->url);
                             break;
                     }
                 }
@@ -722,7 +744,7 @@ trait Service {
         return null;
     }
 
-    private function sentence(array $partition, object $file, array|null $partition_enable, array $search): null|object
+    private function sentence_list(array $partition, object $file, array|null $partition_enable, array $search): null|object
     {
         $object = $this->object();
         $closures = [];
@@ -777,6 +799,7 @@ trait Service {
                                     unset($part[$j]);
                                 }
                                 $min = $nr - $i;
+                                break;
                             }
                         }
                         for($i = $nr; $i < $max; $i++){
@@ -860,21 +883,18 @@ trait Service {
             }
         }
         arsort($result_partition, SORT_NATURAL);
-        ddd($result_partition);
-
         $result = [];
         foreach($result_partition as $part => $appearance){
-            for($i = 0; $i < $appearance; $i++){
-                $result[] = $part;
-            }
+            $result[] = (object) [
+                'sentence' => $part,
+                'appearance' => $appearance,
+            ];
         }
-        breakpoint($result);
-        ddd($result);
+
         if(array_key_exists(0, $result)){
-            $key_rand = array_rand($result);
             if($count > 0){
                 return (object) [
-                    'token' => $result[$key_rand],
+                    'sentence' => $result,
                     'hit' => $hit,
                     'count' => $count,
                     'float' => $hit / $count,
