@@ -309,10 +309,11 @@ trait Service {
                                     break;
                                 case 'sentence':
                                 case 'sentence-list':
-                                    $sentence = Core::object($token->sentence, Core::OBJECT_JSON);
-                                    echo $sentence;
-                                    $bytes_count += mb_strlen($sentence);
+                                    $token = Core::object($token, Core::OBJECT_JSON);
+                                    echo $token;
+                                    $bytes_count += mb_strlen($token);
                                     break;
+
                             }
                             if(property_exists($token, 'partition')){
                                 if(property_exists($token->partition, 'enable')){
