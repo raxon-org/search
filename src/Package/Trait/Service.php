@@ -300,8 +300,6 @@ trait Service {
                     }
                     echo CLi::tput('cursor.position', [0, 1]);
                     if(is_array($stream)){
-                        breakpoint($read);
-                        ddd($stream);
                         foreach($stream as $token){
                             switch($read->get('type')){
                                 case 'word':
