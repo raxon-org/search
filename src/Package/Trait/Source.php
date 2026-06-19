@@ -28,8 +28,10 @@ trait Source {
         ];
         $url = $object->config('project.dir.root');
         $list = $this->dir_read($url, $options_dir_read);
-        d(count($list));
-        dd($list);
+        $url_dictionary = $object->config('controller.dir.data') . 'Oxford.txt';
+        $list_words = explode("\n", File::read($url_dictionary));
+        breakpoint(count($list_words));
+        dd($list_words);
     }
 
     public function dir_read(string $url, array $options=[]): array
