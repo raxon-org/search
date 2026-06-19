@@ -5,6 +5,7 @@ use Exception;
 use Raxon\Module\Cli;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
+use Raxon\Module\Parallel;
 
 
 trait Source {
@@ -72,18 +73,19 @@ trait Source {
                 };
             }
             $list = Parallel::new()->execute($closures);
-            foreach($list as $key => $item){
-                if(
+            foreach ($list as $key => $item) {
+                if (
                     $item !== null &&
                     $item !== 'progress'
-                ){
-                $result[] = $item;
-                $count++;
-                $done++;
+                ) {
+                    $result[] = $item;
+                    $count++;
+                    $done++;
+                }
             }
         }
-    }
-    $string->{'#parallel'} = $result;
+        return $result;
+        /*
 
 
 
@@ -111,6 +113,7 @@ trait Source {
 
         }
         return $list_words;
+        */
     }
 
 
