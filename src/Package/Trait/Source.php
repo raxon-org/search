@@ -27,8 +27,8 @@ trait Source {
             ]
         ];
         $url = $object->config('project.dir.root');
-        ddd($url);
         $list = $this->dir_read($url, $options_dir_read);
+        d(count($list));
         dd($list);
     }
 
