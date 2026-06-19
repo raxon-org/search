@@ -73,7 +73,7 @@ trait Source {
             }
             $closures_chunks = array_chunk($closures, 16);
             foreach($closures_chunks as $closures_chunk){
-                $list = Parallel::new()->execute($closures_chunks);
+                $list = Parallel::new()->execute($closures_chunk);
                 foreach ($list as $key => $item) {
                     if (
                         $item !== null &&
