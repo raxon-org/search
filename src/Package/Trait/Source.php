@@ -3,6 +3,7 @@ namespace Package\Raxon\Search\Trait;
 
 use Exception;
 use Raxon\Module\Cli;
+use Raxon\Module\Core;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
 use Raxon\Module\Parallel;
@@ -97,15 +98,16 @@ trait Source {
                 }
                 $percentage = round(($count / $count_total), 2);
                 $duration = microtime(true) - $start;
+                $duration = Core::time_format($duration, '');
                 $eta = 'calculating...';
                 if($percentage > 0){
                     $ttl = $duration / $percentage;
                     $eta = $ttl * ($count_total - $count);
-                    $eta = time_format($eta, '');
+                    $eta = Core::time_format($eta, '');
                 }
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% files elapsed: ' . time_format($duration, '') .', E.T.A.:' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
             }
         }
         return $result;
