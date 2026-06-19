@@ -2,6 +2,7 @@
 namespace Package\Raxon\Search\Trait;
 
 use Exception;
+use Raxon\Module\Cli;
 use Raxon\Module\Dir;
 use Raxon\Module\File;
 
@@ -41,6 +42,9 @@ trait Source {
     public function read_words(array $list): array
     {
         $list_words = [];
+        $count = count($list);
+        echo 'Read ' . $count . ' files' . PHP_EOL;
+        $counter = 0;
         foreach($list as $file){
             $file->read = File::read($file->url);
             $words = explode(' ', $file->read);
@@ -49,6 +53,12 @@ trait Source {
                     $list_words[] = $word;
                 }
             }
+            $counter++;
+            if($count > 1){
+                echo Cli::tput('cursor.up', 1);
+                echo 'Read ' . round($counter / $count) . ' files' . PHP_EOL;
+            }
+
         }
         return $list_words;
     }
