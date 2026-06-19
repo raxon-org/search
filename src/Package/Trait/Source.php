@@ -91,7 +91,13 @@ trait Source {
                         $item !== null &&
                         $item !== 'progress'
                     ) {
-                        $result[] = $item;
+                        if(is_array($item)){
+                            foreach($item as $word){
+                                if(!in_array($word, $list_words, true)){
+                                    $list_words[] = $word;
+                                }
+                            }
+                        }
                         $count++;
                         $done++;
                     }
@@ -101,7 +107,7 @@ trait Source {
                 $eta = 'calculating...';
                 if($percentage > 0){
                     $ttl = $duration / $percentage;
-                    $eta = $ttl * ($count_total - $count);
+                    $eta = $ttl - $duration;
                     $eta = Core::time_format($eta, '');
                 }
                 $duration = Core::time_format($duration, '');
@@ -110,7 +116,7 @@ trait Source {
                 echo 'Read ' .  round($percentage * 100, 2) . '% files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
             }
         }
-        return $result;
+        return $list_words;
         /*
 
 
