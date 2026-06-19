@@ -56,6 +56,7 @@ trait Source {
             $counter++;
             if($count > 1){
                 echo Cli::tput('cursor.up', 1);
+                echo Cli::tput('erase.line');
                 echo 'Read ' . round(($counter / $count) * 100, 2) . '% files' . PHP_EOL;
             }
 
