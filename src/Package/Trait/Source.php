@@ -30,7 +30,9 @@ trait Source {
         $list = $this->dir_read($url, $options_dir_read);
         $url_dictionary = $object->config('controller.dir.data') . 'Oxford.txt';
         $list_words = explode("\n", File::read($url_dictionary));
-        $list_application = $this->read_words($list);
+        $list_words_application = $this->read_words($list);
+        breakpoint(count($list_words_application));
+        dd($list_words_application);
 
         breakpoint(count($list_words));
         dd($list_words);
@@ -40,10 +42,13 @@ trait Source {
     {
         $list_words = [];
         foreach($list as $file){
-            dd($file);
-
-
-//            $list_words[] = $file->name;
+            $file->read = File::read($file->url);
+            $words = explode(' ', $file->read);
+            foreach($words as $word){
+                if(!in_array($word, $list_words, true)){
+                    $list_words[] = $word;
+                }
+            }
         }
         return $list_words;
     }
