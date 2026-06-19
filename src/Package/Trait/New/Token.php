@@ -1,0 +1,402 @@
+<?php
+namespace Package\Raxon\Search\Trait;
+
+use Error;
+use ErrorException;
+use Exception;
+use Raxon\Config;
+use Raxon\Exception\DirectoryCreateException;
+use Raxon\Exception\ObjectException;
+use Raxon\Module\Cli;
+use Raxon\Module\Core;
+use Raxon\Module\Data;
+use Raxon\Module\Dir;
+use Raxon\Module\File;
+use Raxon\Module\SharedMemory;
+use Raxon\Module\Time;
+
+trait Token {
+
+    public function dict_6(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $spec = [];
+        $spec[] = ' ';
+        $spec[] = "\n";
+        $spec[] = "\r";
+        $spec[] = "\t";
+        $spec[] = "\v";
+        $spec[] = "\0";
+        $spec[] = 'a';
+        $spec[] = 'b';
+        $spec[] = 'c';
+        $spec[] = 'd';
+        $spec[] = 'e';
+        $spec[] = 'f';
+        $spec[] = 'g';
+        $spec[] = 'h';
+        $spec[] = 'i';
+        $spec[] = 'j';
+        $spec[] = 'k';
+        $spec[] = 'l';
+        $spec[] = 'm';
+        $spec[] = 'n';
+        $spec[] = 'o';
+        $spec[] = 'p';
+        $spec[] = 'q';
+        $spec[] = 'r';
+        $spec[] = 's';
+        $spec[] = 't';
+        $spec[] = 'u';
+        $spec[] = 'v';
+        $spec[] = 'w';
+        $spec[] = 'x';
+        $spec[] = 'y';
+        $spec[] = 'z';
+        $spec[] = 'A';
+        $spec[] = 'B';
+        $spec[] = 'C';
+        $spec[] = 'D';
+        $spec[] = 'E';
+        $spec[] = 'F';
+        $spec[] = 'G';
+        $spec[] = 'H';
+        $spec[] = 'I';
+        $spec[] = 'J';
+        $spec[] = 'K';
+        $spec[] = 'L';
+        $spec[] = 'M';
+        $spec[] = 'N';
+        $spec[] = 'O';
+        $spec[] = 'P';
+        $spec[] = 'Q';
+        $spec[] = 'R';
+        $spec[] = 'S';
+        $spec[] = 'T';
+        $spec[] = 'U';
+        $spec[] = 'V';
+        $spec[] = 'W';
+        $spec[] = 'X';
+        $spec[] = 'Y';
+        $spec[] = 'Z';
+        $spec[] = '0';
+        $spec[] = '1';
+        $spec[] = '2';
+        $spec[] = '3';
+        $spec[] = '4';
+        $spec[] = '5';
+        $spec[] = '6';
+        $spec[] = '7';
+        $spec[] = '8';
+        $spec[] = '9';
+        $spec[] = '`';
+        $spec[] = '~';
+        $spec[] = '!';
+        $spec[] = '@';
+        $spec[] = '#';
+        $spec[] = '$';
+        $spec[] = '%';
+        $spec[] = '^';
+        $spec[] = '&';
+        $spec[] = '*';
+        $spec[] = '(';
+        $spec[] = ')';
+        $spec[] = '-';
+        $spec[] = '_';
+        $spec[] = '=';
+        $spec[] = '+';
+        $spec[] = '[';
+        $spec[] = ']';
+        $spec[] = '{';
+        $spec[] = '}';
+        $spec[] = ';';
+        $spec[] = ':';
+        $spec[] = '\'';
+        $spec[] = '"';
+        $spec[] = '<';
+        $spec[] = '>';
+        $spec[] = ',';
+        $spec[] = '.';
+        $spec[] = '/';
+        $spec[] = '?';
+
+        $count = count($spec);
+
+       d($count);
+
+
+    }
+
+    /**
+     * @throws ObjectException
+     * @throws DirectoryCreateException
+     * @throws Exception
+     */
+    public function spec(object $flags, object $options): void
+    {
+        $object = $this->object();
+//        $encoded = htmlentities($string, ENT_QUOTES, 'UTF-8');
+
+
+        $spec = [];
+        $spec[] = ' ';
+        $spec[] = '  ';
+        $spec[] = '   ';
+        $spec[] = '    ';
+        $spec[] = '        ';
+        $spec[] = '<EOF>';
+        $spec[] = '<HEADER_START>';
+        $spec[] = '<HEADER_END>';
+        $spec[] = "\n";
+        $spec[] = "\r";
+        $spec[] = "\t";
+        $spec[] = "\v";
+        $spec[] = "\0";
+        $spec[] = 'a';
+        $spec[] = 'b';
+        $spec[] = 'c';
+        $spec[] = 'd';
+        $spec[] = 'e';
+        $spec[] = 'f';
+        $spec[] = 'g';
+        $spec[] = 'h';
+        $spec[] = 'i';
+        $spec[] = 'j';
+        $spec[] = 'k';
+        $spec[] = 'l';
+        $spec[] = 'm';
+        $spec[] = 'n';
+        $spec[] = 'o';
+        $spec[] = 'p';
+        $spec[] = 'q';
+        $spec[] = 'r';
+        $spec[] = 's';
+        $spec[] = 't';
+        $spec[] = 'u';
+        $spec[] = 'v';
+        $spec[] = 'w';
+        $spec[] = 'x';
+        $spec[] = 'y';
+        $spec[] = 'z';
+        $spec[] = 'A';
+        $spec[] = 'B';
+        $spec[] = 'C';
+        $spec[] = 'D';
+        $spec[] = 'E';
+        $spec[] = 'F';
+        $spec[] = 'G';
+        $spec[] = 'H';
+        $spec[] = 'I';
+        $spec[] = 'J';
+        $spec[] = 'K';
+        $spec[] = 'L';
+        $spec[] = 'M';
+        $spec[] = 'N';
+        $spec[] = 'O';
+        $spec[] = 'P';
+        $spec[] = 'Q';
+        $spec[] = 'R';
+        $spec[] = 'S';
+        $spec[] = 'T';
+        $spec[] = 'U';
+        $spec[] = 'V';
+        $spec[] = 'W';
+        $spec[] = 'X';
+        $spec[] = 'Y';
+        $spec[] = 'Z';
+        $spec[] = '0';
+        $spec[] = '1';
+        $spec[] = '2';
+        $spec[] = '3';
+        $spec[] = '4';
+        $spec[] = '5';
+        $spec[] = '6';
+        $spec[] = '7';
+        $spec[] = '8';
+        $spec[] = '9';
+        $spec[] = '`';
+        $spec[] = '~';
+        $spec[] = '!';
+        $spec[] = '@';
+        $spec[] = '#';
+        $spec[] = '$';
+        $spec[] = '%';
+        $spec[] = '^';
+        $spec[] = '&';
+        $spec[] = '*';
+        $spec[] = '(';
+        $spec[] = ')';
+        $spec[] = '-';
+        $spec[] = '_';
+        $spec[] = '=';
+        $spec[] = '+';
+        $spec[] = '[';
+        $spec[] = ']';
+        $spec[] = '{';
+        $spec[] = '}';
+        $spec[] = ';';
+        $spec[] = ':';
+        $spec[] = '\'';
+        $spec[] = '"';
+        $spec[] = '<';
+        $spec[] = '>';
+        $spec[] = ',';
+        $spec[] = '.';
+        $spec[] = '/';
+        $spec[] = '?';
+
+        $url_spec = $object->config('controller.dir.data') . 'Spec.json';
+        $url_output = $object->config('controller.dir.data') . 'Model.json';
+        File::delete($url_spec);
+        File::delete($url_output);
+        File::write($url_spec, Core::object($spec, Core::JSON));
+        $dir = new Dir();
+        $read = $dir->read('/Application', true);
+        $model = [];
+        if($read){
+            foreach($read as $file){
+                if($file->type === File::TYPE){
+                    $file->extension = File::extension($file->url);
+                    if(
+                        in_array(
+                            $file->extension,
+                            [
+                                'php',
+                                'html',
+                                'css',
+                                'js',
+                                'tpl',
+                                '.md'
+                            ], true
+                        )
+                    ){
+                        $file->read = File::read($file->url);
+                        $file = $this->transform($file, $spec);
+                        if(property_exists($file, 'transform')){
+                            foreach ($file->transform as $token) {
+                                $model[] = $token;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        File::write($url_output, Core::object($model, Core::JSON));
+    }
+
+    /**
+     * @throws ObjectException
+     */
+    public function transform(object $file, array $spec): object
+    {
+        $object = $this->object();
+        $char_to_key = $object->config('char.to.key');
+        if($char_to_key === null){
+            $char_to_key = [];
+            foreach($spec as $nr => $char){
+                $char_to_key[$char] = $nr;
+            }
+            $object->config('char.to.key', $char_to_key);
+            $object->config('key.to.char', $spec);
+        }
+        $header = [];
+        $header['url'] = $file->url;
+        $header['name'] = $file->name;
+        $header['type'] = $file->type;
+        $header['mtime'] = File::mtime($file->url);
+        $header['size'] = File::size($file->url);
+        $header['extension'] = $file->extension;;
+        $header = Core::object($header, Core::JSON_LINE);
+
+        $transform = [];
+        $transform[] = $char_to_key['<HEADER_START>'] ?? null;
+        $split = mb_str_split($header);
+        foreach($split as $nr => $char){
+            $block = [];
+            $block[] = $char;
+            $block[] = $split[$nr + 1] ?? null;
+            $block[] = $split[$nr + 2] ?? null;
+            $block[] = $split[$nr + 3] ?? null;
+            $block[] = $split[$nr + 4] ?? null;
+            $block[] = $split[$nr + 5] ?? null;
+            $block[] = $split[$nr + 6] ?? null;
+            $block[] = $split[$nr + 7] ?? null;
+            $block[] = $split[$nr + 8] ?? null;
+            $block[] = $split[$nr + 9] ?? null;
+            $block[] = $split[$nr + 10] ?? null;
+            $block[] = $split[$nr + 11] ?? null;
+            $block[] = $split[$nr + 12] ?? null;
+            $block[] = $split[$nr + 13] ?? null;
+            $block[] = $split[$nr + 14] ?? null;
+            $block[] = $split[$nr + 15] ?? null;
+            $block[] = $split[$nr + 16] ?? null;
+            $block[] = $split[$nr + 17] ?? null;
+            $block[] = $split[$nr + 18] ?? null;
+            $block[] = $split[$nr + 19] ?? null;
+            $block[] = $split[$nr + 20] ?? null;
+            $block[] = $split[$nr + 21] ?? null;
+            $block[] = $split[$nr + 22] ?? null;
+            $block[] = $split[$nr + 23] ?? null;
+            $block[] = $split[$nr + 24] ?? null;
+            $block[] = $split[$nr + 25] ?? null;
+            $block[] = $split[$nr + 26] ?? null;
+            $block[] = $split[$nr + 27] ?? null;
+            $block[] = $split[$nr + 28] ?? null;
+            $block[] = $split[$nr + 29] ?? null;
+            $block[] = $split[$nr + 30] ?? null;
+            $block[] = $split[$nr + 31] ?? null;
+            $block[] = $split[$nr + 32] ?? null;
+            $block[] = $split[$nr + 33] ?? null;
+            $block[] = $split[$nr + 34] ?? null;
+            $block[] = $split[$nr + 35] ?? null;
+            $block[] = $split[$nr + 36] ?? null;
+            $block[] = $split[$nr + 37] ?? null;
+            $block[] = $split[$nr + 38] ?? null;
+            $block[] = $split[$nr + 39] ?? null;
+            $block[] = $split[$nr + 40] ?? null;
+            $block[] = $split[$nr + 41] ?? null;
+            $block[] = $split[$nr + 42] ?? null;
+            $block[] = $split[$nr + 43] ?? null;
+            $block[] = $split[$nr + 44] ?? null;
+            $block[] = $split[$nr + 45] ?? null;
+            $block[] = $split[$nr + 46] ?? null;
+            $block[] = $split[$nr + 47] ?? null;
+            $block[] = $split[$nr + 48] ?? null;
+            $block[] = $split[$nr + 49] ?? null;
+            $block[] = $split[$nr + 50] ?? null;
+            $block[] = $split[$nr + 51] ?? null;
+            $block[] = $split[$nr + 52] ?? null;
+            $block[] = $split[$nr + 53] ?? null;
+            $block[] = $split[$nr + 54] ?? null;
+            $block[] = $split[$nr + 55] ?? null;
+            $block[] = $split[$nr + 56] ?? null;
+            $block[] = $split[$nr + 57] ?? null;
+            $block[] = $split[$nr + 58] ?? null;
+            $block[] = $split[$nr + 59] ?? null;
+            $block[] = $split[$nr + 60] ?? null;
+            $block[] = $split[$nr + 61] ?? null;
+            $block[] = $split[$nr + 62] ?? null;
+            $block[] = $split[$nr + 63] ?? null;
+
+            ddd($block);
+
+            if(array_key_exists($char, $char_to_key)){
+                $transform[] = $char_to_key[$char];
+            }
+        }
+        $transform[] = $char_to_key['<HEADER_END>'] ?? null;
+        $split = mb_str_split($file->read);
+        foreach($split as $nr => $char){
+            if(array_key_exists($char, $char_to_key)){
+                $transform[] = $char_to_key[$char];
+            }
+        }
+        $transform[] = $char_to_key['<EOF>'] ?? null;
+        $file->transform = $transform;
+        return $file;
+    }
+
+
+}
+
+
