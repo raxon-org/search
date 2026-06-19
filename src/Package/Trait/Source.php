@@ -51,7 +51,6 @@ trait Source {
         $object = $this->object();
         $chunks = array_chunk($list, $threads);
         $chunk_count = count($chunks);
-        ddd($chunk_count);
         $count = 0;
         $done = 0;
         $result = [];
@@ -72,15 +71,18 @@ trait Source {
                     return null;
                 };
             }
-            $list = Parallel::new()->execute($closures);
-            foreach ($list as $key => $item) {
-                if (
-                    $item !== null &&
-                    $item !== 'progress'
-                ) {
-                    $result[] = $item;
-                    $count++;
-                    $done++;
+            $closures_chunks = array_chunk($closures, 16);
+            foreach($closures_chunks as $closures_chunk){
+                $list = Parallel::new()->execute($closures_chunks);
+                foreach ($list as $key => $item) {
+                    if (
+                        $item !== null &&
+                        $item !== 'progress'
+                    ) {
+                        $result[] = $item;
+                        $count++;
+                        $done++;
+                    }
                 }
             }
         }
