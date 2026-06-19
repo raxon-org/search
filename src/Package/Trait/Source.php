@@ -122,7 +122,7 @@ trait Source {
                 $duration = Core::time_format($duration, '');
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% ('. $count . '/' . $count_total .') files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
             }
         }
         return $list_words;
