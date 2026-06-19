@@ -8,6 +8,7 @@ use Raxon\Module\Dir;
 use Raxon\Module\File;
 use Raxon\Module\Filter;
 use Raxon\Module\Parallel;
+use Raxon\Module\Sort;
 
 
 trait Source {
@@ -77,6 +78,7 @@ trait Source {
                                 $search = $this->array_binarysearch_record($list_words, $word);
                                 if($search === false){
                                     $list_words[] = $word;
+                                    asort($list_words, SORT_NATURAL);
                                 }
                             }
                             return $list_words;
@@ -98,6 +100,7 @@ trait Source {
                                 $search = $this->array_binarysearch_record($list_words, $word);
                                 if($search === false){
                                     $list_words[] = $word;
+                                    asort($list_words, SORT_NATURAL);
                                 }
                             }
                         }
