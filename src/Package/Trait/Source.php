@@ -38,9 +38,16 @@ trait Source {
         $list = [];
         if($files){
             foreach ($files as $file){
-                $file->extension = File::extension($file->url);
-                ddd($file);
-                $list[] = $file;
+                if($file->type === File::TYPE){
+                    $file->extension = File::extension($file->url);
+                    d($options);
+                    ddd($file);
+                    $list[] = $file;
+                }
+
+
+
+
             }
         }
         return $list;
