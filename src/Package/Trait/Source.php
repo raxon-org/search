@@ -43,9 +43,54 @@ trait Source {
     {
         $list_words = [];
         $count = count($list);
+        $start = microtime(true);
         echo 'Read ' . $count . ' files' . PHP_EOL;
         $counter = 0;
-        foreach($list as $file){
+        $threads = 8;
+        $object = $this->object();
+        $chunks = array_chunk($list, $threads);
+        $chunk_count = count($chunks);
+        ddd($chunk_count);
+        $count = 0;
+        $done = 0;
+        $result = [];
+        foreach($chunks as $chunk_nr => $chunk) {
+            $closures = [];
+            $forks = count($chunk);
+            for ($i = 0; $i < $forks; $i++) {
+                $closures[] = function () use (
+                    $object,
+                    $chunk,
+                    $chunk_nr,
+                    $chunk_count,
+                    $i,
+                ) {
+                    if (array_key_exists($i, $chunk)) {
+                        ddd($chunk[$i]);
+                    }
+                    return null;
+                };
+            }
+            $list = Parallel::new()->execute($closures);
+            foreach($list as $key => $item){
+                if(
+                    $item !== null &&
+                    $item !== 'progress'
+                ){
+                $result[] = $item;
+                $count++;
+                $done++;
+            }
+        }
+    }
+    $string->{'#parallel'} = $result;
+
+
+
+
+
+
+            //use spatie fork
             $file->read = File::read($file->url);
             $words = explode(' ', $file->read);
             foreach($words as $word){
@@ -57,7 +102,11 @@ trait Source {
             if($count > 1){
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' . round(($counter / $count) * 100, 2) . '% files' . PHP_EOL;
+                $duration = microtime(true) - $start;
+
+                $percentage = round(($counter / $count) * 100, 2);
+                $percentage_negative = 100 - $percentage;
+                echo 'Read ' .  $percentage . '% files elapsed: ' . time_format($duration, '') . PHP_EOL;
             }
 
         }
