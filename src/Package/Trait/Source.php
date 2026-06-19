@@ -26,7 +26,8 @@ trait Source {
                 'rax'
             ]
         ];
-        $url = '/Application/';
+        $url = $object->config('project.dir.root');
+        ddd($url);
         $list = $this->dir_read($url, $options_dir_read);
         dd($list);
     }
@@ -40,17 +41,12 @@ trait Source {
             foreach ($files as $file){
                 if($file->type === File::TYPE){
                     $file->extension = File::extension($file->url);
-                    d($options);
-                    ddd($file);
-                    $list[] = $file;
+                    if(in_array($file->extension, $options['extension'], true)){
+                        $list[] = $file;
+                    }
                 }
-
-
-
-
             }
         }
         return $list;
-
     }
 }
