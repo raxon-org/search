@@ -56,7 +56,7 @@ trait Source {
             $counter++;
             if($count > 1){
                 echo Cli::tput('cursor.up', 1);
-                echo 'Read ' . round($counter / $count) . ' files' . PHP_EOL;
+                echo 'Read ' . round(($counter / $count) * 100, 2) . '% files' . PHP_EOL;
             }
 
         }
