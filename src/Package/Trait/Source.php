@@ -43,9 +43,9 @@ trait Source {
     public function read_words(array $list): array
     {
         $list_words = [];
-        $count = count($list);
+        $count_total = count($list);
         $start = microtime(true);
-        echo 'Read ' . $count . ' files' . PHP_EOL;
+        echo 'Read ' . $count_total . ' files' . PHP_EOL;
         $counter = 0;
         $threads = 8;
         $object = $this->object();
@@ -66,7 +66,18 @@ trait Source {
                     $i,
                 ) {
                     if (array_key_exists($i, $chunk)) {
-                        ddd($chunk[$i]);
+                        $file = $chunk[$i] ?? false;
+                        if($file){
+                            $list_words = [];
+                            $read = File::read($file->url);
+                            $words = explode(' ', $read);
+                            foreach($words as $word){
+                                if(!in_array($word, $list_words, true)){
+                                    $list_words[] = $word;
+                                }
+                            }
+                            return $list_words;
+                        }
                     }
                     return null;
                 };
@@ -84,6 +95,14 @@ trait Source {
                         $done++;
                     }
                 }
+                $percentage = round(($count / $count_total), 2);
+                $duration = microtime(true) - $start;
+                $ttl = $duration / $percentage;
+                $eta = $ttl * ($count_total - $count);
+                $eta = time_format($eta, '');
+                echo Cli::tput('cursor.up', 1);
+                echo Cli::tput('erase.line');
+                echo 'Read ' .  round($percentage * 100, 2) . '% files elapsed: ' . time_format($duration, '') .', E.T.A.:' . $eta . PHP_EOL;
             }
         }
         return $result;
