@@ -74,7 +74,8 @@ trait Source {
                             $read = File::read($file->url);
                             $words = explode(' ', $read);
                             foreach($words as $word){
-                                if(!in_array($word, $list_words, true)){
+                                $search = $this->array_binarysearch_record($list_words, $word);
+                                if($search === false){
                                     $list_words[] = $word;
                                 }
                             }
@@ -95,13 +96,7 @@ trait Source {
                         if(is_array($item)){
                             foreach($item as $word){
                                 $search = $this->array_binarysearch_record($list_words, $word);
-                                d($search);
-                                $list_words[] = $word;
-                                $search = $this->array_binarysearch_record($list_words, $word);
-                                ddd($search);
-
-
-                                if(!in_array($word, $list_words, true)){
+                                if($search === false){
                                     $list_words[] = $word;
                                 }
                             }
