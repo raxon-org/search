@@ -114,7 +114,7 @@ trait Source {
                 }
                 $percentage = round(($count / $count_total), 2);
                 $duration = microtime(true) - $start;
-                $eta = 'calculating...';
+                $eta = 'Calculating...';
                 if($percentage > 0){
                     $ttl = $duration / $percentage;
                     $eta = $ttl - $duration;
@@ -123,7 +123,7 @@ trait Source {
                 $duration = Core::time_format($duration, '');
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% ('. $count . '/' . $count_total .', words:'. $word_count .') files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words:'. $word_count .') Elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
             }
         }
         $list_words = array_unique($list_words);
