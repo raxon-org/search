@@ -123,7 +123,7 @@ trait Source {
                 $duration = Core::time_format($duration, '');
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words:'. $word_count .') Elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words:'. $word_count .') Elapsed: ' . $duration .', E.T.A.: ' . $eta . PHP_EOL;
             }
         }
         $list_words = array_unique($list_words);
