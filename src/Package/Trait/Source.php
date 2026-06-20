@@ -103,16 +103,6 @@ trait Source {
                             foreach($item as $word){
                                 $list_words[] = $word;
                                 $word_count++;
-//                                if(!in_array($word, $list_words, true)){
-//
-//                                }
-                                /*
-                                $search = $this->array_binarysearch_record($list_words, $word);
-                                if($search === false){
-                                    $list_words[] = $word;
-                                    asort($list_words, SORT_NATURAL);
-                                }
-                                */
                             }
                         }
                         $count++;
@@ -130,40 +120,11 @@ trait Source {
                 $duration = Core::time_format($duration, '');
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words:'. $word_count .') Elapsed: ' . $duration .', E.T.A.: ' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words:'. Core::number_format($word_count) .') Elapsed: ' . $duration .', E.T.A.: ' . $eta . PHP_EOL;
             }
         }
         $list_words = array_unique($list_words);
         return $list_words;
-        /*
-
-
-
-
-
-
-            //use spatie fork
-            $file->read = File::read($file->url);
-            $words = explode(' ', $file->read);
-            foreach($words as $word){
-                if(!in_array($word, $list_words, true)){
-                    $list_words[] = $word;
-                }
-            }
-            $counter++;
-            if($count > 1){
-                echo Cli::tput('cursor.up', 1);
-                echo Cli::tput('erase.line');
-                $duration = microtime(true) - $start;
-
-                $percentage = round(($counter / $count) * 100, 2);
-                $percentage_negative = 100 - $percentage;
-                echo 'Read ' .  $percentage . '% files elapsed: ' . time_format($duration, '') . PHP_EOL;
-            }
-
-        }
-        return $list_words;
-        */
     }
 
 
