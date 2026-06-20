@@ -21,6 +21,9 @@ trait Source {
         //read code files in /mnt/Vps3/Mount/Shared/
         //read code files in /mnt/Vps3/Mount/Package/
 
+//        $url_dictionary = $object->config('controller.dir.data') . 'Oxford.txt';
+//        $list_words = explode("\n", File::read($url_dictionary));
+
         $options_dir_read = [
             'extension' => [
                 'php',
@@ -31,16 +34,20 @@ trait Source {
                 'rax'
             ]
         ];
-        $url = $object->config('project.dir.root');
-        $list = $this->dir_read($url, $options_dir_read);
-        $url_dictionary = $object->config('controller.dir.data') . 'Oxford.txt';
-        $list_words = explode("\n", File::read($url_dictionary));
-        $list_words_application = $this->read_words($list);
-        breakpoint(count($list_words_application));
-        dd($list_words_application);
+//        $url = $object->config('project.dir.root');
+//        $list = $this->dir_read($url, $options_dir_read);
+//        $list_words_application = $this->read_words($list);
+        $url_domain = $object->config('project.dir.domain');
+        $list_domain = $this->dir_read($url_domain, $options_dir_read);
+        $list_words_domain = $this->read_words($list_domain);
 
-        breakpoint(count($list_words));
-        dd($list_words);
+
+
+        breakpoint(count($list_words_domain));
+        dd($list_words_domain);
+
+//        breakpoint(count($list_words));
+//        dd($list_words);
     }
 
     public function read_words(array $list): array
