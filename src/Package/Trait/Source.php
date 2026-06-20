@@ -16,6 +16,9 @@ trait Source {
     public function dictionary_create(object $flags, object $options): void
     {
         $object = $this->object();
+        if(!property_exists($options, 'parallel')){
+            $options->parallel = 16;
+        }
         //read code files in /Application (php, js, css, tpl, html)
         //read code files in /mnt/Vps3/Mount/Domain/
         //read code files in /mnt/Vps3/Mount/Shared/
@@ -36,21 +39,26 @@ trait Source {
         ];
 //        $url = $object->config('project.dir.root');
 //        $list = $this->dir_read($url, $options_dir_read);
-//        $list_words_application = $this->read_words($list);
+//        $list_words_application = $this->read_words($flags, $options, $list);
         $url_domain = $object->config('project.dir.domain');
         $list_domain = $this->dir_read($url_domain, $options_dir_read);
-        $list_words_domain = $this->read_words($list_domain);
+        $list_words_domain = $this->read_words($flags, $options, $list_domain);
 
+        $url_package = $object->config('project.dir.package');
+        $list_package = $this->dir_read($url_package, $options_dir_read);
+        $list_words_package = $this->read_words($flags, $options, $list_package);
 
+        breakpoint(count($list_words_package));
+        dd($list_words_package);
 
-        breakpoint(count($list_words_domain));
-        dd($list_words_domain);
+//        breakpoint(count($list_words_domain));
+//        dd($list_words_domain);
 
 //        breakpoint(count($list_words));
 //        dd($list_words);
     }
 
-    public function read_words(array $list): array
+    public function read_words(object $flags, object $options, array $list): array
     {
         $list_words = [];
         $word_count = 0;
@@ -91,7 +99,7 @@ trait Source {
                     return null;
                 };
             }
-            $closures_chunks = array_chunk($closures, 16);
+            $closures_chunks = array_chunk($closures, $options->parallel);
             foreach($closures_chunks as $closures_chunk){
                 $list = Parallel::new()->execute($closures_chunk);
                 foreach ($list as $key => $item) {
@@ -120,11 +128,10 @@ trait Source {
                 $duration = Core::time_format($duration, '');
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words:'. Core::number_format($word_count) .') Elapsed: ' . $duration .', E.T.A.: ' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% (Files: '. $count . '/' . $count_total .', Words: '. Core::number_format($word_count) .') Elapsed: ' . $duration .', E.T.A.: ' . $eta . PHP_EOL;
             }
         }
-        $list_words = array_unique($list_words);
-        return $list_words;
+        return array_unique($list_words);
     }
 
 
