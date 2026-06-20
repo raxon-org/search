@@ -46,6 +46,7 @@ trait Source {
     public function read_words(array $list): array
     {
         $list_words = [];
+        $word_count = 0;
         $count_total = count($list);
         $start = microtime(true);
         echo 'Read ' . $count_total . ' files' . PHP_EOL;
@@ -75,9 +76,7 @@ trait Source {
                             $read = File::read($file->url);
                             $words = explode(' ', $read);
                             foreach($words as $word){
-                                if(!in_array($word, $list_words, true)){
-                                    $list_words[] = $word;
-                                }
+                                $list_words[] = $word;
                             }
                             return $list_words;
                         }
@@ -95,9 +94,11 @@ trait Source {
                     ) {
                         if(is_array($item)){
                             foreach($item as $word){
-                                if(!in_array($word, $list_words, true)){
-                                    $list_words[] = $word;
-                                }
+                                $list_words[] = $word;
+                                $word_count++;
+//                                if(!in_array($word, $list_words, true)){
+//
+//                                }
                                 /*
                                 $search = $this->array_binarysearch_record($list_words, $word);
                                 if($search === false){
@@ -122,9 +123,10 @@ trait Source {
                 $duration = Core::time_format($duration, '');
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Read ' .  round($percentage * 100, 2) . '% ('. $count . '/' . $count_total .') files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
+                echo 'Read ' .  round($percentage * 100, 2) . '% ('. $count . '/' . $count_total .', words:'. $word_count .') files elapsed: ' . $duration .', E.T.A.:' . $eta . PHP_EOL;
             }
         }
+        $list_words = array_unique($list_words);
         return $list_words;
         /*
 
