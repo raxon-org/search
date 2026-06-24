@@ -63,6 +63,9 @@ trait Source {
     {
         $object = $this->object();
         $target = $object->config('project.dir.data') . 'Search/Data.jsonl';
+        if(!File::exist($target)){
+            File::touch($target);
+        }
         foreach($list as $file){
             File::append($target, Core::object($file, Core::JSON_LINE));
         }
