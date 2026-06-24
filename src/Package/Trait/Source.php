@@ -90,10 +90,11 @@ trait Source {
                             $record[] = implode('', $collection);
                         }
                     }
-                    $result[$key] = implode('', $record);
+                    $result[$key] = $record;
                     $record = [];
                 }
                 $file->chunks = $result;
+                ddd($file);
             } else {
                 ddd($file);
             }
