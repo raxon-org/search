@@ -130,15 +130,15 @@ trait Source {
                     }
                 }
                 $chunks_count = count($chunks);
-                d($chunks_count);
-                ddd($chunks);
                 $result = [];
-                for($i = 0; $i < $chunks_count; $i++){
-                    $max = $i + 4;
+                for($i = 5; $i < $chunks_count; $i++){
+                    $max = $i + 15;
                     for($j = $i; $j < $max; $j++){
                         $result[$i][$j] = $chunks[$j] ?? null;
                     }
                 }
+                d(count($result));
+                dd($result);
                 $record = [];
                 foreach($result as $key => $chunk){
                     foreach($chunk as $k => $collection){
