@@ -64,7 +64,7 @@ trait Source {
         $object = $this->object();
         $target = $object->config('project.dir.data') . 'Search/Data.jsonl';
         foreach($list as $file){
-            dd($file);
+            File::append($target, Core::object($file, Core::JSON_LINE));
         }
     }
 
