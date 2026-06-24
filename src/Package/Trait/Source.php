@@ -16,7 +16,30 @@ trait Source {
     public function create_chunks(object $flags, object $options): void
     {
         $object = $this->object();
-        $url = $object->config('project.dir.root');
+        $extension = [
+            'php',
+            'js',
+            'css',
+            'tpl',
+            'html',
+            'rax'
+        ];
+        $url_root = $object->config('project.dir.root');
+        $url_domain = $object->config('project.dir.domain');
+        $url_package = $object->config('project.dir.package');
+        $url_shared = $object->config('project.dir.shared');
+        $list_root = $this->dir_read($url_root, $extension);
+        $list_domain = $this->dir_read($url_domain, $extension);
+        $list_package = $this->dir_read($url_package, $extension);
+        $list_shared = $this->dir_read($url_shared, $extension);
+        breakpoint(count($list_root));
+        breakpoint(count($list_domain));
+        breakpoint(count($list_package));
+        breakpoint(count($list_shared));
+
+    }
+
+    public function read_directory(string $url, array $extension=[]){
         $dir = new Dir();
         $files = $dir->read($url, true);
         $list = [];
@@ -24,12 +47,13 @@ trait Source {
             foreach ($files as $file){
                 if($file->type === File::TYPE){
                     $file->extension = File::extension($file->url);
-                    $list[] = $file;
+                    if(in_array($file->extension, $extension, true)){
+                        $list[] = $file;
+                    }
                 }
             }
         }
-        breakpoint(count($list));
-        ddd($list);
+        return $list;
     }
 
 
