@@ -112,6 +112,7 @@ trait Source {
     {
         $total = count($list);
         $current = 0;
+        $total_chunks = 0;
         foreach($list as $file){
             if(count($file->chunks) > 1){
                 $chunks = [];
@@ -154,9 +155,10 @@ trait Source {
             }
             $current++;
             $percentage = round(($current / $total) * 100, 2);
+            $total_chunks += count($file->chunks);
             echo Cli::tput('cursor.up', 1);
             echo Cli::tput('erase.line');
-            echo 'Preparing ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
+            echo 'Preparing ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .' Total chunks:' . $total_chunks .')' . PHP_EOL;
         }
         return $list;
     }
@@ -166,6 +168,12 @@ trait Source {
         $current = 0;
         $total = count($list);
         foreach($list as $file){
+            $meta = (object) [
+                'url' => $file->url,
+                'name' => $file->name,
+                'extension' => $file->extension,
+                'size' => $file->size,
+            ];
             $read = File::read($file->url);
             $split = mb_str_split($read);
             $count = count($split);
@@ -175,23 +183,30 @@ trait Source {
             $line = [];
             $line_nr = 0;
             $line_length = 0;
+            $column_nr = 0;
             for($i = 0; $i < $count; $i++){
                 $char = $split[$i];
                 $line[] = $char;
-                $line_length++;
-                if($line_length > 80){
-                    $line_length = 0;
-                    $line_nr++;
-                    $chunk[] = implode('',$line);
-                    $chunk_length++;
+                $column_nr++;
+                if($column_nr > 80){
+                    $meta->line_number = $line_nr;
+                    $meta->column_number = $column_nr;
+                    $meta->chunk_length =$chunk_length;
+                    $chunk[] = implode('',$line)  .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                     $line = [];
+                    $column_nr = 0;
+                    $line_nr++;
+                    $chunk_length++;
                 }
                 if($char === "\n"){
-                    $line_length = 0;
-                    $line_nr++;
-                    $chunk[] = implode('', $line);
-                    $chunk_length++;
+                    $meta->line_number = $line_nr;
+                    $meta->column_number = $column_nr;
+                    $meta->chunk_length = $chunk_length;
+                    $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                     $line = [];
+                    $column_nr = 0;
+                    $line_nr++;
+                    $chunk_length++;
                 }
                 if($chunk_length >= 30){
                     $chunks[] = $chunk;
@@ -199,8 +214,11 @@ trait Source {
                     $chunk_length = 0;
                 }
             }
-            if($line_length > 0){
-                $chunk[] = implode('', $line);
+            if($column_nr > 0){
+                $meta->line_number = $line_nr;
+                $meta->column_number = $column_nr;
+                $meta->chunk_length = $chunk_length;
+                $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                 $chunk_length++;
                 $chunks[] = $chunk;
             }
