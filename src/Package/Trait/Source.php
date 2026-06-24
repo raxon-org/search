@@ -96,7 +96,7 @@ trait Source {
                 $file->chunks = $result;
                 ddd($file);
             } else {
-                ddd($file);
+//                ddd($file);
             }
         }
         return $list;
