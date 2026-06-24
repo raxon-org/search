@@ -64,7 +64,37 @@ trait Source {
         foreach($list as $file){
             $read = File::read($file->url);
             $split = mb_str_split($read);
-            d($split);
+            $count = count($split);
+            $chunks = [];
+            $chunk = [];
+            $chunk_length = 0;
+            $line = [];
+            $line_nr = 0;
+            $line_length = 0;
+            for($i = 0; $i < $count; $i++){
+                $char = $split[$i];
+                $line[] = $char;
+                $line_length++;
+                if($line_length > 80){
+                    $line_length = 0;
+                    $line_nr++;
+                    $chunk[] = $line;
+                    $chunk_length++;
+                    $line = [];
+                }
+                if($char === "\n"){
+                    $line_length = 0;
+                    $line_nr++;
+                    $chunk[] = $line;
+                    $chunk_length++;
+                    $line = [];
+                }
+                if($chunk_length >= 30){
+                    $chunks[] = $chunk;
+                    $chunk = [];
+                }
+            }
+            d($chunks);
             dd($file);
         }
     }
