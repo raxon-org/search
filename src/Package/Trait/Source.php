@@ -86,7 +86,9 @@ trait Source {
                 $record = [];
                 foreach($list as $key => $chunk){
                     foreach($chunk as $k => $collection){
-                        $record[] = implode('', $collection);
+                        if(is_array($collection)){
+                            $record[] = implode('', $collection);
+                        }
                     }
                     $list[$key] = implode('', $record);
                     $record = [];
