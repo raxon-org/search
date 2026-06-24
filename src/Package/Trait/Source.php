@@ -55,6 +55,7 @@ trait Source {
 //        $list_package = $this->chunk_list($list_package);
         $list_shared = $this->chunk_list($list_shared);
         $list_shared = $this->chunk_list_multiply($list_shared);
+        ddd($list_shared);
     }
 
     public function chunk_list_multiply(array $list): array
@@ -94,7 +95,6 @@ trait Source {
                     $record = [];
                 }
                 $file->chunks = $result;
-                ddd($file);
             } else {
                 foreach($file->chunks as $nr => $file_chunk){
                     $file->chunks[$nr] = implode('', $file_chunk);
