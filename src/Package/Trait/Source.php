@@ -62,9 +62,19 @@ trait Source {
     public function chunk_list_write(array $list): void
     {
         $object = $this->object();
-        $target = $object->config('project.dir.data') . 'Search/Data.jsonl';
+        $dir = $object->config('project.dir.data') . 'Search/';
+        $target = $dir . 'Data.jsonl';
+        if(!File::exist($dir)){
+            Dir::create($dir, Dir::CHMOD);
+            File::permission($object, [
+                'dir' => $dir
+            ]);
+        }
         if(!File::exist($target)){
             File::touch($target);
+            File::permission($object, [
+                'file' => $target
+            ]);
         }
         foreach($list as $file){
             File::append($target, Core::object($file, Core::JSON_LINE));
