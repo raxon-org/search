@@ -132,7 +132,7 @@ trait Source {
                 $chunks_count = count($chunks);
                 $result = [];
                 for($i = 0; $i < $chunks_count; $i++){
-                    $max = $i + 6;
+                    $max = $i + 4;
                     for($j = $i; $j < $max; $j++){
                         $result[$i][$j] = $chunks[$j] ?? null;
                     }
@@ -208,7 +208,7 @@ trait Source {
                     $line_nr++;
                     $chunk_length++;
                 }
-                if($chunk_length >= 30){
+                if($chunk_length >= 20){
                     $chunks[] = $chunk;
                     $chunk = [];
                     $chunk_length = 0;
