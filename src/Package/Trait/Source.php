@@ -60,7 +60,8 @@ trait Source {
         */
     }
 
-    public function chunk_list(array $list){
+    public function chunk_list(array $list): array
+    {
         foreach($list as $file){
             $read = File::read($file->url);
             $split = mb_str_split($read);
@@ -95,9 +96,12 @@ trait Source {
                     $chunk_length = 0;
                 }
             }
-            d($chunks);
-            dd($file);
+            $file->chunks = $chunks;
+            if(count($chunks) > 1){
+                ddd($file);
+            }
         }
+        return $list;
     }
 
     public function dir_read(string $url, array $extension=[]){
