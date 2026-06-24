@@ -13,6 +13,9 @@ use Raxon\Module\Sort;
 
 trait Source {
 
+    /**
+     * @throws Exception
+     */
     public function create_chunks(object $flags, object $options): void
     {
         /**
@@ -39,7 +42,8 @@ trait Source {
             'css',
             'tpl',
             'html',
-            'rax'
+            'rax',
+            'md'
         ];
         $url_root = $object->config('project.dir.root');
         $url_domain = $object->config('project.dir.domain');
@@ -96,12 +100,10 @@ trait Source {
         foreach($list as $file){
             File::append($target, Core::object($file, Core::JSON_LINE));
             $current++;
-            if($current % 4 === 0){
-                $percentage = round(($current / $count) * 100, 2);
-                echo Cli::tput('cursor.up', 1);
-                echo Cli::tput('erase.line');
-                echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $count .')' . PHP_EOL;
-            }
+            $percentage = round(($current / $count) * 100, 2);
+            echo Cli::tput('cursor.up', 1);
+            echo Cli::tput('erase.line');
+            echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $count .')' . PHP_EOL;
         }
     }
 
@@ -151,12 +153,10 @@ trait Source {
                 }
             }
             $current++;
-            if($current % 4 === 0){
-                $percentage = round(($current / $total) * 100, 2);
-                echo Cli::tput('cursor.up', 1);
-                echo Cli::tput('erase.line');
-                echo 'Preparing ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
-            }
+            $percentage = round(($current / $total) * 100, 2);
+            echo Cli::tput('cursor.up', 1);
+            echo Cli::tput('erase.line');
+            echo 'Preparing ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
         }
         return $list;
     }
@@ -206,12 +206,10 @@ trait Source {
             }
             $file->chunks = $chunks;
             $current++;
-            if($current % 4 === 0){
-                $percentage = round(($current / $total) * 100, 2);
-                echo Cli::tput('cursor.up', 1);
-                echo Cli::tput('erase.line');
-                echo 'Chunking ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
-            }
+            $percentage = round(($current / $total) * 100, 2);
+            echo Cli::tput('cursor.up', 1);
+            echo Cli::tput('erase.line');
+            echo 'Chunking ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
         }
         return $list;
     }
