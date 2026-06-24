@@ -199,6 +199,7 @@ trait Source {
             $count = count($split);
             $chunks = [];
             $chunk = [];
+            $chunk[] = '{{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
             $chunk_length = 0;
             $line = [];
             $line_nr = 0;
@@ -209,9 +210,9 @@ trait Source {
                 $line[] = $char;
                 $column_nr++;
                 if($column_nr > 80){
+                    $meta = (object) [];
                     $meta->line_number = $line_nr;
                     $meta->column_number = $column_nr;
-                    $meta->chunk_length =$chunk_length;
                     $chunk[] = implode('',$line)  .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                     $line = [];
                     $column_nr = 0;
@@ -219,10 +220,35 @@ trait Source {
                     $chunk_length++;
                 }
                 if($char === "\n"){
+                    $meta = (object) [];
                     $meta->line_number = $line_nr;
                     $meta->column_number = $column_nr;
-                    $meta->chunk_length = $chunk_length;
-                    $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+                    $line = implode('', $line);
+                    if($file->extension === 'php'){
+                        $meta->in = (object) [
+                            'namespace' => null,
+                            'class' => null,
+                            'function' => null,
+                        ];
+                        $in_namespace = $this->in_namespace($line);
+                        if($in_namespace){
+                            $meta->in->namespace = $in_namespace;
+                        }
+                        $in_class = $this->in_class($line);
+                        if($in_class){
+                            $meta->in->class = $in_class;
+                        }
+                        $in_function = $this->in_function($line);
+                        if($in_function){
+                            $meta->in->function = $in_function;
+                        }
+                    }
+                    $chunk[] = $line .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+
+//                    $class = $this->is_class($line);
+//                    $function = $this->is_function($line);
+//                    $prototype = $this->is_prototype($line);
+//                    $module = $this->is_module($line);
                     $line = [];
                     $column_nr = 0;
                     $line_nr++;
@@ -235,9 +261,16 @@ trait Source {
                 }
             }
             if($column_nr > 0){
+                $meta = (object) [];
                 $meta->line_number = $line_nr;
                 $meta->column_number = $column_nr;
-                $meta->chunk_length = $chunk_length;
+                $meta->in = (object) [
+                    'function' => null,     //js & php
+                    'class' => null,        //php
+                    'namespace' => null,    //php
+                    "prototype" => null,    //js
+                    "module" => null,       //js
+                ];
                 $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                 $chunk_length++;
                 $chunks[] = $chunk;
@@ -250,6 +283,27 @@ trait Source {
             echo 'Chunking ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
         }
         return $list;
+    }
+
+    public function in_namespace(string $line): ?string
+    {
+        $pattern = '/namespace\s+([a-zA-Z0-9_]+);/';
+        preg_match($pattern, $line, $matches);
+        return $matches[1] ?? null;
+    }
+
+    public function in_class(string $line): ?string
+    {
+        $pattern = '/class\s+([a-zA-Z0-9_])+/';
+        preg_match($pattern, $line, $matches);
+        return $matches[1] ?? null;
+    }
+
+    public function in_function(string $line): ?string
+    {
+        $pattern = '/function\s+([a-zA-Z0-9_])+/';
+        preg_match($pattern, $line, $matches);
+        return $matches[1] ?? null;
     }
 
     public function dir_read(string $url, array $extension=[]){
