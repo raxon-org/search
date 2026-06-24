@@ -83,6 +83,9 @@ trait Source {
                         $list[$i][$j] = $chunks[$j] ?? null;
                     }
                 }
+                foreach($list as $key => $chunk){
+                    $list[$key] = implode('', $chunk);
+                }
                 ddd($list);
             }
         }
