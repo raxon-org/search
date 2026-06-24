@@ -75,7 +75,15 @@ trait Source {
                         }
                     }
                 }
-                ddd($chunks);
+                $chunks_count = count($chunks);
+                $list = [];
+                for($i = 0; $i < $chunks_count; $i++){
+                    $max = $i + 6;
+                    for($j = $i; $j < $max; $j++){
+                        $list[$i][$j] = $chunks[$j] ?? null;
+                    }
+                }
+                ddd($list);
             }
         }
         return $list;
