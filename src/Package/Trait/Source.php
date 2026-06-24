@@ -220,16 +220,32 @@ trait Source {
                     $chunk_length++;
                 }
                 if($char === "\n"){
-                    $meta = (object) [];
+                    if(
+                        property_exists($meta, 'in') &&
+                        property_exists($meta->in, 'namespace') &&
+                        property_exists($meta->in, 'class') &&
+                        property_exists($meta->in, 'function')
+                    ){
+                        $meta = (object) [
+                            'in' => (object) [
+                                'namespace' => $meta->in->namespace,
+                                'class' => $meta->in->class,
+                                'function' => $meta->in->function,
+                            ]
+                        ];
+                    } else {
+                        $meta = (object) [
+                            'in' => (object) [
+                                'namespace' => null,
+                                'class' => null,
+                                'function' => null,
+                            ]
+                        ];
+                    }
                     $meta->line_number = $line_nr;
                     $meta->column_number = $column_nr;
                     $line = implode('', $line);
                     if($file->extension === 'php'){
-                        $meta->in = (object) [
-                            'namespace' => null,
-                            'class' => null,
-                            'function' => null,
-                        ];
                         $in_namespace = $this->in_namespace($line);
                         if($in_namespace){
                             $meta->in->namespace = $in_namespace;
