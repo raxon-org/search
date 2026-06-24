@@ -83,9 +83,13 @@ trait Source {
                         $list[$i][$j] = $chunks[$j] ?? null;
                     }
                 }
+                $record = [];
                 foreach($list as $key => $chunk){
-                    ddd($chunk);
-                    $list[$key] = implode('', $chunk);
+                    foreach($chunk as $k => $line){
+                        $record[] = $line;
+                    }
+                    ddd($record);
+//                    $list[$key] = implode('', $chunk);
                 }
                 ddd($list);
             }
