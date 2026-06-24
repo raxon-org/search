@@ -307,7 +307,11 @@ trait Source {
         if($result === null){
             $pattern = '/function+/';
             preg_match($pattern, $line, $matches);
-            $result = $matches[1] ?? null;
+            if($matches && count($matches) > 0){
+                $result = 'anonymous';
+            } else {
+                $result = null;
+            }
         }
         return $result;
 
