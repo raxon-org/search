@@ -108,6 +108,8 @@ trait Source {
 
     public function chunk_list_multiply(array $list): array
     {
+        $total = count($list);
+        $current = 0;
         foreach($list as $file){
             if(count($file->chunks) > 1){
                 $chunks = [];
@@ -148,12 +150,21 @@ trait Source {
                     $file->chunks[$nr] = implode('', $file_chunk);
                 }
             }
+            $current++;
+            if($current % 4 === 0){
+                $percentage = round(($current / $total) * 100, 2);
+                echo Cli::tput('cursor.up', 1);
+                echo Cli::tput('erase.line');
+                echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
+            }
         }
         return $list;
     }
 
     public function chunk_list(array $list): array
     {
+        $current = 0;
+        $total = count($list);
         foreach($list as $file){
             $read = File::read($file->url);
             $split = mb_str_split($read);
@@ -194,6 +205,13 @@ trait Source {
                 $chunks[] = $chunk;
             }
             $file->chunks = $chunks;
+            $current++;
+            if($current % 4 === 0){
+                $percentage = round(($current / $total) * 100, 2);
+                echo Cli::tput('cursor.up', 1);
+                echo Cli::tput('erase.line');
+                echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
+            }
         }
         return $list;
     }
