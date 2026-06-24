@@ -137,6 +137,11 @@ trait Source {
                     $chunk_length = 0;
                 }
             }
+            if($line_length > 0){
+                $chunk[] = implode('', $line);
+                $chunk_length++;
+                $chunks[] = $chunk;
+            }
             $file->chunks = $chunks;
         }
         return $list;
