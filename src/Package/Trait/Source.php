@@ -93,7 +93,9 @@ trait Source {
                     $result[$key] = implode('', $record);
                     $record = [];
                 }
-                ddd($result);
+                $file->chunks = $result;
+            } else {
+                ddd($file);
             }
         }
         return $list;
