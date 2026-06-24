@@ -131,7 +131,8 @@ trait Source {
                 }
                 $chunks_count = count($chunks);
                 $result = [];
-                for($i = 5; $i < $chunks_count; $i++){
+                dd($chunks);
+                for($i = 0; $i < $chunks_count; $i++){
                     $max = $i + 15;
                     for($j = $i; $j < $max; $j++){
                         $result[$i][$j] = $chunks[$j] ?? null;
