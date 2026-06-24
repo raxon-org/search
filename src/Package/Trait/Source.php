@@ -55,8 +55,19 @@ trait Source {
 //        $list_package = $this->chunk_list($list_package);
         $list_shared = $this->chunk_list($list_shared);
         $list_shared = $this->chunk_list_multiply($list_shared);
+        $this->chunk_list_write($list_shared);
         ddd($list_shared);
     }
+
+    public function chunk_list_write(array $list): void
+    {
+        $object = $this->object();
+        $target = $object->config('project.dir.data') . 'Search/Data.jsonl';
+        foreach($list as $file){
+            dd($file);
+        }
+    }
+
 
     public function chunk_list_multiply(array $list): array
     {
