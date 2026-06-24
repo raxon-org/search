@@ -122,7 +122,7 @@ trait Source {
                     foreach($file_chunk as $line){
                         $chunk[] = $line;
                         $chunk_length++;
-                        if($chunk_length >= 5){
+                        if($chunk_length >= 10){
                             $chunks[] = $chunk;
                             $chunk_length = 0;
                             $chunk = [];
@@ -130,6 +130,8 @@ trait Source {
                     }
                 }
                 $chunks_count = count($chunks);
+                d($chunks_count);
+                ddd($chunks);
                 $result = [];
                 for($i = 0; $i < $chunks_count; $i++){
                     $max = $i + 4;
