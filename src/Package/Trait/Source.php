@@ -303,7 +303,16 @@ trait Source {
     {
         $pattern = '/function\s+([a-zA-Z0-9_])+/';
         preg_match($pattern, $line, $matches);
-        return $matches[1] ?? null;
+        $result = $matches[1] ?? null;
+        if($result === null){
+            $pattern = '/function+/';
+            preg_match($pattern, $line, $matches);
+            $result = $matches[1] ?? null;
+        }
+        return $result;
+
+
+
     }
 
     public function dir_read(string $url, array $extension=[]){
