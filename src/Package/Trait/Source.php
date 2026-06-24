@@ -78,14 +78,14 @@ trait Source {
                 if($line_length > 80){
                     $line_length = 0;
                     $line_nr++;
-                    $chunk[] = $line;
+                    $chunk[] = implode('',$line);
                     $chunk_length++;
                     $line = [];
                 }
                 if($char === "\n"){
                     $line_length = 0;
                     $line_nr++;
-                    $chunk[] = $line;
+                    $chunk[] = implode('', $line);
                     $chunk_length++;
                     $line = [];
                 }
