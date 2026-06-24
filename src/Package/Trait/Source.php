@@ -15,6 +15,23 @@ trait Source {
 
     public function create_chunks(object $flags, object $options): void
     {
+        /**
+         * chunks of 30 lines with column 80
+         * every 5 lines a new chunk
+         * need meta data for each chunk:
+         * - start line
+         * - end line
+         * - file name
+         * - file path
+         * - file extension
+         * - file size
+         * - in namespace
+         * - in class
+         * - in function
+         *
+         *
+         *
+         */
         $object = $this->object();
         $extension = [
             'php',
@@ -32,11 +49,24 @@ trait Source {
         $list_domain = $this->dir_read($url_domain, $extension);
         $list_package = $this->dir_read($url_package, $extension);
         $list_shared = $this->dir_read($url_shared, $extension);
+
+        $this->chunk_list($list_root);
+
+        /*
         breakpoint(count($list_root));
         breakpoint(count($list_domain));
         breakpoint(count($list_package));
         breakpoint(count($list_shared));
+        */
+    }
 
+    public function chunk_list(array $list){
+        foreach($list as $file){
+            $read = File::read($file->url);
+            $split = mb_str_split($read);
+            d($split);
+            dd($file);
+        }
     }
 
     public function dir_read(string $url, array $extension=[]){
