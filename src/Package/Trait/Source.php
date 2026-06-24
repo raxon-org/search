@@ -76,24 +76,24 @@ trait Source {
                     }
                 }
                 $chunks_count = count($chunks);
-                $list = [];
+                $result = [];
                 for($i = 0; $i < $chunks_count; $i++){
                     $max = $i + 6;
                     for($j = $i; $j < $max; $j++){
-                        $list[$i][$j] = $chunks[$j] ?? null;
+                        $result[$i][$j] = $chunks[$j] ?? null;
                     }
                 }
                 $record = [];
-                foreach($list as $key => $chunk){
+                foreach($result as $key => $chunk){
                     foreach($chunk as $k => $collection){
                         if(is_array($collection)){
                             $record[] = implode('', $collection);
                         }
                     }
-                    $list[$key] = implode('', $record);
+                    $result[$key] = implode('', $record);
                     $record = [];
                 }
-                ddd($list);
+                ddd($result);
             }
         }
         return $list;
