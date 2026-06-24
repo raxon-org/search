@@ -94,6 +94,7 @@ trait Source {
                     $record = [];
                 }
                 $file->chunks = $result;
+                ddd($file);
             } else {
                 foreach($file->chunks as $nr => $file_chunk){
                     $file->chunks[$nr] = implode('', $file_chunk);
