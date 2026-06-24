@@ -241,6 +241,7 @@ trait Source {
                 if($file->type === File::TYPE){
                     $file->extension = File::extension($file->url);
                     if(in_array($file->extension, $extension, true)){
+                        $file->size = File::size($file->url);
                         $list[] = $file;
                     }
                 }
