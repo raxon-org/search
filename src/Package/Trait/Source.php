@@ -45,18 +45,33 @@ trait Source {
         $url_domain = $object->config('project.dir.domain');
         $url_package = $object->config('project.dir.package');
         $url_shared = $object->config('project.dir.shared');
+
+        $dir = $object->config('project.dir.data') . 'Search/';
+        $target = $dir . 'Data.jsonl';
+        if(File::exist($target)){
+            if(property_exists($options, 'force')){
+                File::delete($target);
+            } else {
+                throw new Exception('File already exists');
+            }
+        }
         $list_root = $this->dir_read($url_root, $extension);
         $list_domain = $this->dir_read($url_domain, $extension);
         $list_package = $this->dir_read($url_package, $extension);
         $list_shared = $this->dir_read($url_shared, $extension);
 
-//        $list_root = $this->chunk_list($list_root);
-//        $list_domain = $this->chunk_list($list_domain);
-//        $list_package = $this->chunk_list($list_package);
+        $list_root = $this->chunk_list($list_root);
+        $list_root = $this->chunk_list_multiply($list_root);
+        $list_domain = $this->chunk_list($list_domain);
+        $list_domain = $this->chunk_list_multiply($list_domain);
+        $list_package = $this->chunk_list($list_package);
+        $list_package = $this->chunk_list_multiply($list_package);
         $list_shared = $this->chunk_list($list_shared);
         $list_shared = $this->chunk_list_multiply($list_shared);
+        $this->chunk_list_write($list_root);
+        $this->chunk_list_write($list_domain);
+        $this->chunk_list_write($list_package);
         $this->chunk_list_write($list_shared);
-        ddd($list_shared);
     }
 
     public function chunk_list_write(array $list): void
@@ -76,8 +91,17 @@ trait Source {
                 'file' => $target
             ]);
         }
+        $count = count($list);
+        $current = 0;
         foreach($list as $file){
             File::append($target, Core::object($file, Core::JSON_LINE));
+            $current++;
+            if($current % 4 === 0){
+                $percentage = round(($current / $count) * 100, 2);
+                echo Cli::tput('cursor.up', 1);
+                echo Cli::tput('erase.line');
+                echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $count .')' . PHP_EOL;
+            }
         }
     }
 
