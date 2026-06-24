@@ -88,8 +88,8 @@ trait Source {
                     foreach($chunk as $k => $collection){
                         $record[] = implode('', $collection);
                     }
-                    ddd($record);
-//                    $list[$key] = implode('', $chunk);
+                    $list[$key] = implode('', $record);
+                    $record = [];
                 }
                 ddd($list);
             }
