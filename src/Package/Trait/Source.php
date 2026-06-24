@@ -147,6 +147,7 @@ trait Source {
                     $result[$key] = implode('', $record);
                     $record = [];
                 }
+                ddd($result);
                 $file->chunks = $result;
             } else {
                 foreach($file->chunks as $nr => $file_chunk){
