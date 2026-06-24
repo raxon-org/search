@@ -13,6 +13,29 @@ use Raxon\Module\Sort;
 
 trait Source {
 
+    public function create_chunks(object $flags, object $options): void
+    {
+        $object = $this->object();
+        $url = $object->config('project.dir.root');
+        $dir = new Dir();
+        $files = $dir->read($url, true);
+        $list = [];
+        if($files){
+            foreach ($files as $file){
+                if($file->type === File::TYPE){
+                    $file->extension = File::extension($file->url);
+                    $list[] = $file;
+                }
+            }
+        }
+        breakpoint(count($list));
+        ddd($list);
+    }
+
+
+
+
+
     public function dictionary_create(object $flags, object $options): void
     {
         $object = $this->object();
