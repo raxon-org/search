@@ -155,7 +155,7 @@ trait Source {
                 $percentage = round(($current / $total) * 100, 2);
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
+                echo 'Preparing ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
             }
         }
         return $list;
@@ -210,7 +210,7 @@ trait Source {
                 $percentage = round(($current / $total) * 100, 2);
                 echo Cli::tput('cursor.up', 1);
                 echo Cli::tput('erase.line');
-                echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
+                echo 'Chunking ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
             }
         }
         return $list;
