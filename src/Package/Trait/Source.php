@@ -92,6 +92,7 @@ trait Source {
                 if($chunk_length >= 30){
                     $chunks[] = $chunk;
                     $chunk = [];
+                    $chunk_length = 0;
                 }
             }
             d($chunks);
