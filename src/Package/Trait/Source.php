@@ -131,7 +131,23 @@ trait Source {
                 }
                 $chunks_count = count($chunks);
                 $result = [];
-                dd($chunks);
+                $chunk_between = [];
+                foreach($chunks as $nr => $file_chunk){
+                    $chunk_next = $chunks[$nr + 1] ?? null;
+                    $result[] = $file_chunk;
+                    //0 = 1 = 2 = 3 = 4 = 5
+                    for($i = 4; $i < 10; $i++){
+                        $chunk_between[] = $file_chunk[$i] ?? null;
+                    }
+                    for($i = 0; $i < 5; $i++){
+                        $chunk_between[] = $chunk_next[$i] ?? null;
+                    }
+                    $result[] = $chunk_between;
+                    $chunk_between = [];
+                }
+                ddd($result);
+
+
                 for($i = 0; $i < $chunks_count; $i++){
                     $max = $i + 15;
                     for($j = $i; $j < $max; $j++){
