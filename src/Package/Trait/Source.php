@@ -50,14 +50,35 @@ trait Source {
         $list_package = $this->dir_read($url_package, $extension);
         $list_shared = $this->dir_read($url_shared, $extension);
 
-        $this->chunk_list($list_root);
+//        $list_root = $this->chunk_list($list_root);
+//        $list_domain = $this->chunk_list($list_domain);
+//        $list_package = $this->chunk_list($list_package);
+        $list_shared = $this->chunk_list($list_shared);
+        $list_shared = $this->chunk_list_multiply($list_shared);
+    }
 
-        /*
-        breakpoint(count($list_root));
-        breakpoint(count($list_domain));
-        breakpoint(count($list_package));
-        breakpoint(count($list_shared));
-        */
+    public function chunk_list_multiply(array $list): array
+    {
+        foreach($list as $file){
+            if(count($file->chunks) > 1){
+                $chunks = [];
+                $chunk = [];
+                $chunk_length = 0;
+                foreach($file->chunks as $file_chunk){
+                    foreach($file_chunk as $line){
+                        $chunk[] = $line;
+                        $chunk_length++;
+                        if($chunk_length >= 5){
+                            $chunks[] = $chunk;
+                            $chunk_length = 0;
+                            $chunk = [];
+                        }
+                    }
+                }
+                ddd($chunks);
+            }
+        }
+        return $list;
     }
 
     public function chunk_list(array $list): array
@@ -97,9 +118,6 @@ trait Source {
                 }
             }
             $file->chunks = $chunks;
-            if(count($chunks) > 1){
-                ddd($file);
-            }
         }
         return $list;
     }
