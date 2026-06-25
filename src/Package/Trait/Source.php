@@ -78,6 +78,9 @@ trait Source {
         $this->chunk_list_write($list_shared);
     }
 
+    /**
+     * @throws Exception
+     */
     public function chunk_list_write(array $list): void
     {
         $object = $this->object();
@@ -240,6 +243,7 @@ trait Source {
                     $curly_count--;
                 }
                 if($char === "\n"){
+                    /*
                     if(
                         property_exists($meta, 'in') &&
                         property_exists($meta->in, 'namespace') &&
@@ -247,32 +251,36 @@ trait Source {
                         property_exists($meta->in, 'function')
                     ){
                         $meta = (object) [
-                            'in' => (object) [
-                                'namespace' => $meta->in->namespace,
-                                'class' => $meta->in->class,
-                                'function' => $meta->in->function,
-                            ],
+//                            'in' => (object) [
+//                                'namespace' => $meta->in->namespace,
+//                                'class' => $meta->in->class,
+//                                'function' => $meta->in->function,
+//                            ],
                             'curly_count' => $curly_count,
                         ];
                     } else {
                         $meta = (object) [
-                            'in' => (object) [
-                                'namespace' => null,
-                                'class' => null,
-                                'function' => null,
-                            ],
+//                            'in' => (object) [
+//                                'namespace' => null,
+//                                'class' => null,
+//                                'function' => null,
+//                            ],
                             'curly_count' => $curly_count,
                         ];
                     }
+                    */
+                    $meta = (object) [
+                        'curly_count' => $curly_count,
+                    ];
                     $meta->line_number = $line_nr;
                     $meta->column_number = $column_nr;
                     $line = implode('', $line);
+                    /*
                     if($file->extension === 'php'){
                         $in_namespace = $this->in_namespace($line);
                         if($in_namespace){
                             $meta->in->namespace = $in_namespace;
                         }
-                        /*
                         $in_class = $this->in_class($line);
                         if($in_class){
                             $meta->in->class = $in_class;
@@ -281,8 +289,9 @@ trait Source {
                         if($in_function){
                             $meta->in->function = $in_function;
                         }
-                        */
+
                     }
+                    */
                     $chunk[] = $line .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
 
 //                    $class = $this->is_class($line);
@@ -305,6 +314,7 @@ trait Source {
                 $meta = (object) [];
                 $meta->line_number = $line_nr;
                 $meta->column_number = $column_nr;
+                /*
                 $meta->in = (object) [
                     'function' => null,     //js & php
                     'class' => null,        //php
@@ -312,6 +322,7 @@ trait Source {
                     "prototype" => null,    //js
                     "module" => null,       //js
                 ];
+                */
                 $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                 $chunk_length++;
                 $chunks[] = $chunk;
