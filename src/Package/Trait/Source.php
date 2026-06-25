@@ -145,17 +145,6 @@ trait Source {
                     $result[] = $chunk_between;
                     $chunk_between = [];
                 }
-                ddd($result);
-
-
-                for($i = 0; $i < $chunks_count; $i++){
-                    $max = $i + 15;
-                    for($j = $i; $j < $max; $j++){
-                        $result[$i][$j] = $chunks[$j] ?? null;
-                    }
-                }
-                d(count($result));
-                dd($result);
                 $record = [];
                 foreach($result as $key => $chunk){
                     foreach($chunk as $k => $collection){
