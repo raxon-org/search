@@ -157,11 +157,14 @@ trait Source {
                     $result[$key] = implode('', $record);
                     $record = [];
                 }
-                ddd($result);
                 $file->chunks = $result;
             } else {
                 foreach($file->chunks as $nr => $file_chunk){
-                    $file->chunks[$nr] = implode('', $file_chunk);
+                    if(is_array($file_chunk)){
+                        $file->chunks[$nr] = implode('', $file_chunk);
+                    } else {
+                        $file->chunks[$nr] = $file_chunk;
+                    }
                 }
             }
             $current++;
