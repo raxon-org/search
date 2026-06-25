@@ -198,6 +198,7 @@ trait Source {
                 for($i = 0; $i < 5; $i++){
                     $chunk_between[] = $chunk_next[$i] ?? null;
                 }
+                ddd($chunk_between);
                 $result[] = $chunk_between;
                 $chunk_between = [];
             }
