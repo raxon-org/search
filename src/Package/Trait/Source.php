@@ -78,7 +78,8 @@ trait Source {
         $this->chunk_list_write($list_shared);
     }
 
-    public function embedding_add(object $flags, object $options){
+    public function embedding_add(object $flags, object $options): void
+    {
         $object = $this->object();
         $dir = $object->config('project.dir.data') . 'Search/';
         $target = $dir . 'Data.jsonl';
@@ -87,8 +88,11 @@ trait Source {
             $count = 0;
             while(!feof($fopen)){
                 $line = fgets($fopen);
-                ddd($line);
+                d($line);
                 $count++;
+                if($count > 20){
+                    break;
+                }
             }
         }
     }
