@@ -148,9 +148,10 @@ trait Source {
                 $record = [];
                 foreach($result as $key => $chunk){
                     foreach($chunk as $k => $collection){
-                        dd($collection);
                         if(is_array($collection)){
                             $record[] = implode('', $collection);
+                        } else {
+                            $record[] = $collection;
                         }
                     }
                     $result[$key] = implode('', $record);
