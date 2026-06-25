@@ -174,6 +174,7 @@ trait Source {
             $chunks = [];
             $chunk = [];
             $chunk_length = 0;
+            ddd($file->chunks);
             foreach($file->chunks as $file_chunk){
                 foreach($file_chunk as $line){
                     $chunk[] = $line;
