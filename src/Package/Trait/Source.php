@@ -201,28 +201,7 @@ trait Source {
                 $result[] = $chunk_between;
                 $chunk_between = [];
             }
-            $record = [];
-            ddd($result);
-            foreach($result as $key => $chunk){
-                foreach($chunk as $k => $collection){
-                    if(is_array($collection)){
-                        $record[] = implode('', $collection);
-                    } else {
-                        $record[] = $collection;
-                    }
-                }
-                $result[$key] = implode('', $record);
-                $record = [];
-            }
             $file->chunks = $result;
-        } else {
-            foreach($file->chunks as $nr => $file_chunk){
-                if(is_array($file_chunk)){
-                    $file->chunks[$nr] = implode('', $file_chunk);
-                } else {
-                    $file->chunks[$nr] = $file_chunk;
-                }
-            }
         }
         return $file;
     }
