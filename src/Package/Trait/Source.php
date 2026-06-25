@@ -205,8 +205,16 @@ trait Source {
             $line_nr = 0;
             $line_length = 0;
             $column_nr = 0;
+            $is_comment = false;
+            $is_doc_comment = false;
+            $curly_count = 0;
+            $before = [];
             for($i = 0; $i < $count; $i++){
                 $char = $split[$i];
+                $previous = $split[$i - 1] ?? null;
+                if($previous !== null){
+                    $before[] = $previous;
+                }
                 $line[] = $char;
                 $column_nr++;
                 if($column_nr > 80){
@@ -218,6 +226,24 @@ trait Source {
                     $column_nr = 0;
                     $line_nr++;
                     $chunk_length++;
+                }
+                if(
+                    $char === '/' &&
+                    $previous === '/'
+                ){
+                    $is_comment = true;
+                }
+                if(
+                    $char === '/' &&
+                    $previous === '*'
+                ){
+                    $is_doc_comment = true;
+                }
+                if($char === '{'){
+                    $curly_count++;
+                }
+                if($char === '}'){
+                    $curly_count--;
                 }
                 if($char === "\n"){
                     if(
@@ -231,7 +257,8 @@ trait Source {
                                 'namespace' => $meta->in->namespace,
                                 'class' => $meta->in->class,
                                 'function' => $meta->in->function,
-                            ]
+                            ],
+                            'curly_count' => $curly_count,
                         ];
                     } else {
                         $meta = (object) [
@@ -239,7 +266,8 @@ trait Source {
                                 'namespace' => null,
                                 'class' => null,
                                 'function' => null,
-                            ]
+                            ],
+                            'curly_count' => $curly_count,
                         ];
                     }
                     $meta->line_number = $line_nr;
@@ -250,6 +278,7 @@ trait Source {
                         if($in_namespace){
                             $meta->in->namespace = $in_namespace;
                         }
+                        /*
                         $in_class = $this->in_class($line);
                         if($in_class){
                             $meta->in->class = $in_class;
@@ -258,6 +287,7 @@ trait Source {
                         if($in_function){
                             $meta->in->function = $in_function;
                         }
+                        */
                     }
                     $chunk[] = $line .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
 
@@ -269,6 +299,7 @@ trait Source {
                     $column_nr = 0;
                     $line_nr++;
                     $chunk_length++;
+                    $is_comment = false;
                 }
                 if($chunk_length >= 20){
                     $chunks[] = $chunk;
