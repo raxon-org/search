@@ -184,7 +184,7 @@ trait Source {
     {
         $current = 0;
         $total = count($list);
-        foreach($list as $file){
+        foreach($list as $file_nr => $file){
             $meta = (object) [
                 'url' => $file->url,
                 'name' => $file->name,
@@ -328,6 +328,7 @@ trait Source {
                 $chunks[] = $chunk;
             }
             $file->chunks = $chunks;
+            $list[$file_nr] = $file;
             $current++;
             $percentage = round(($current / $total) * 100, 2);
             echo Cli::tput('cursor.up', 1);
