@@ -176,7 +176,7 @@ trait Source {
             $chunk_length = 0;
             foreach($file->chunks as $chunk_nr => $file_chunk){
                 foreach($file_chunk as $nr => $line){
-                    if($nr < 10 && array_key_exists(0, $chunk, true)){
+                    if($nr < 10 && array_key_exists(0, $chunk)){
                         $chunk[] = $line;
                     }
                     elseif($nr === 10){
