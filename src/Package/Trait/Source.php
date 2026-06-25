@@ -328,7 +328,7 @@ trait Source {
                 $chunk_length++;
                 $chunks[] = $chunk;
             }
-            if(count($chunks) > 0){
+            if(count($chunks) === 0){
                 d($read);
                 dd($chunk);
 
