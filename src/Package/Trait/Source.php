@@ -223,6 +223,7 @@ trait Source {
                     $column_nr = 0;
                     $line_nr++;
                     $chunk_length++;
+                    $before = [];
                 }
                 if(
                     $char === '/' &&
@@ -326,6 +327,11 @@ trait Source {
                 $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                 $chunk_length++;
                 $chunks[] = $chunk;
+            }
+            if(count($chunks) > 0){
+                d($read);
+                dd($chunk);
+
             }
             $file->chunks = $chunks;
             $list[$file_nr] = $file;
