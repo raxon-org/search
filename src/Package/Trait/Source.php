@@ -310,7 +310,7 @@ trait Source {
                 $line[] = $char;
                 $column_nr++;
                 if($column_nr > 80){
-                    $chunk[] = [
+                    $chunk[] = (object) [
                         'content' => implode('',$line), //  .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                         'line_number' => $line_nr
                     ];
