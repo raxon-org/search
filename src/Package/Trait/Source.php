@@ -64,10 +64,10 @@ trait Source {
         $list_package = $this->dir_read($url_package, $extension);
         $list_shared = $this->dir_read($url_shared, $extension);
 
-        $list_root = $this->chunk_list($list_root);
-        $list_domain = $this->chunk_list($list_domain);
-        $list_package = $this->chunk_list($list_package);
-        $list_shared = $this->chunk_list($list_shared);
+        $this->chunk_list($list_root);
+        $this->chunk_list($list_domain);
+        $this->chunk_list($list_package);
+        $this->chunk_list($list_shared);
 
 //        $list_root = $this->chunk_list($list_root);
 //        $list_root = $this->chunk_list_multiply($list_root);
@@ -202,6 +202,7 @@ trait Source {
                 $chunk_between = [];
             }
             $record = [];
+            ddd($result);
             foreach($result as $key => $chunk){
                 foreach($chunk as $k => $collection){
                     if(is_array($collection)){
@@ -445,7 +446,7 @@ trait Source {
             $file->chunks = $chunks;
             $file->meta = $meta;
             $file = $this->chunk_record_multiply($file);
-            $file = $this->chunk_record_write($file);
+            $this->chunk_record_write($file);
             $current++;
             $percentage = round(($current / $total) * 100, 2);
             echo Cli::tput('cursor.up', 1);
