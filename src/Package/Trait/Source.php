@@ -65,17 +65,22 @@ trait Source {
         $list_shared = $this->dir_read($url_shared, $extension);
 
         $list_root = $this->chunk_list($list_root);
-        $list_root = $this->chunk_list_multiply($list_root);
         $list_domain = $this->chunk_list($list_domain);
-        $list_domain = $this->chunk_list_multiply($list_domain);
         $list_package = $this->chunk_list($list_package);
-        $list_package = $this->chunk_list_multiply($list_package);
         $list_shared = $this->chunk_list($list_shared);
-        $list_shared = $this->chunk_list_multiply($list_shared);
-        $this->chunk_list_write($list_root);
-        $this->chunk_list_write($list_domain);
-        $this->chunk_list_write($list_package);
-        $this->chunk_list_write($list_shared);
+
+//        $list_root = $this->chunk_list($list_root);
+//        $list_root = $this->chunk_list_multiply($list_root);
+//        $list_domain = $this->chunk_list($list_domain);
+//        $list_domain = $this->chunk_list_multiply($list_domain);
+//        $list_package = $this->chunk_list($list_package);
+//        $list_package = $this->chunk_list_multiply($list_package);
+//        $list_shared = $this->chunk_list($list_shared);
+//        $list_shared = $this->chunk_list_multiply($list_shared);
+//        $this->chunk_list_write($list_root);
+//        $this->chunk_list_write($list_domain);
+//        $this->chunk_list_write($list_package);
+//        $this->chunk_list_write($list_shared);
     }
 
     public function embedding_add(object $flags, object $options): void
@@ -129,6 +134,97 @@ trait Source {
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function chunk_record_write(object $file): void
+    {
+        $object = $this->object();
+        $dir = $object->config('project.dir.data') . 'Search/';
+        $target = $dir . 'Data.json';
+        if(!File::exist($dir)){
+            Dir::create($dir, Dir::CHMOD);
+            File::permission($object, [
+                'dir' => $dir
+            ]);
+        }
+        if(!File::exist($target)){
+            File::touch($target);
+            File::permission($object, [
+                'file' => $target
+            ]);
+        }
+        d($target);
+        ddd($file);
+        /*
+        foreach($list as $file){
+            File::append($target, Core::object($file, Core::JSON_LINE));
+            $current++;
+            $percentage = round(($current / $count) * 100, 2);
+            echo Cli::tput('cursor.up', 1);
+            echo Cli::tput('erase.line');
+            echo 'Write ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $count .')' . PHP_EOL;
+        }
+        */
+    }
+
+    public function chunk_record_multiply(object $file): object
+    {
+        if(count($file->chunks) > 1){
+            $chunks = [];
+            $chunk = [];
+            $chunk_length = 0;
+            foreach($file->chunks as $file_chunk){
+                foreach($file_chunk as $line){
+                    $chunk[] = $line;
+                    $chunk_length++;
+                    if($chunk_length >= 10){
+                        $chunks[] = $chunk;
+                        $chunk_length = 0;
+                        $chunk = [];
+                    }
+                }
+            }
+            $chunks_count = count($chunks);
+            $result = [];
+            $chunk_between = [];
+            foreach($chunks as $nr => $file_chunk){
+                $chunk_next = $chunks[$nr + 1] ?? null;
+                $result[] = $file_chunk;
+                //0 = 1 = 2 = 3 = 4 = 5
+                for($i = 5; $i < 10; $i++){
+                    $chunk_between[] = $file_chunk[$i] ?? null;
+                }
+                for($i = 0; $i < 5; $i++){
+                    $chunk_between[] = $chunk_next[$i] ?? null;
+                }
+                $result[] = $chunk_between;
+                $chunk_between = [];
+            }
+            $record = [];
+            foreach($result as $key => $chunk){
+                foreach($chunk as $k => $collection){
+                    if(is_array($collection)){
+                        $record[] = implode('', $collection);
+                    } else {
+                        $record[] = $collection;
+                    }
+                }
+                $result[$key] = implode('', $record);
+                $record = [];
+            }
+            $file->chunks = $result;
+        } else {
+            foreach($file->chunks as $nr => $file_chunk){
+                if(is_array($file_chunk)){
+                    $file->chunks[$nr] = implode('', $file_chunk);
+                } else {
+                    $file->chunks[$nr] = $file_chunk;
+                }
+            }
+        }
+        return $file;
+    }
 
     public function chunk_list_multiply(array $list): array
     {
@@ -199,7 +295,7 @@ trait Source {
         return $list;
     }
 
-    public function chunk_list(array $list): array
+    public function chunk_list(array $list): void
     {
         $current = 0;
         $total = count($list);
@@ -215,7 +311,7 @@ trait Source {
             $count = count($split);
             $chunks = [];
             $chunk = [];
-            $chunk[] = '{{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+//            $chunk[] = '{{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
             $chunk_length = 0;
             $line = [];
             $line_nr = 0;
@@ -234,10 +330,10 @@ trait Source {
                 $line[] = $char;
                 $column_nr++;
                 if($column_nr > 80){
-                    $meta = (object) [];
-                    $meta->line_number = $line_nr;
-                    $meta->column_number = $column_nr;
-                    $chunk[] = implode('',$line)  .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+                    $chunk[] = [
+                        'content' => implode('',$line), //  .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+                        'line_number' => $line_nr
+                    ];
                     $line = [];
                     $column_nr = 0;
                     $line_nr++;
@@ -289,11 +385,6 @@ trait Source {
                         ];
                     }
                     */
-                    $meta = (object) [
-                        'curly_count' => $curly_count,
-                    ];
-                    $meta->line_number = $line_nr;
-                    $meta->column_number = $column_nr;
                     $line = implode('', $line);
                     /*
                     if($file->extension === 'php'){
@@ -312,8 +403,10 @@ trait Source {
 
                     }
                     */
-                    $chunk[] = $line .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
-
+                    $chunk[] = (object) [
+                        'content' => $line, // .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+                        'line_number' => $line_nr,
+                    ];
 //                    $class = $this->is_class($line);
 //                    $function = $this->is_function($line);
 //                    $prototype = $this->is_prototype($line);
@@ -331,9 +424,6 @@ trait Source {
                 }
             }
             if($column_nr > 0){
-                $meta = (object) [];
-                $meta->line_number = $line_nr;
-                $meta->column_number = $column_nr;
                 /*
                 $meta->in = (object) [
                     'function' => null,     //js & php
@@ -343,21 +433,25 @@ trait Source {
                     "module" => null,       //js
                 ];
                 */
-                $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+                $chunk[] = (object) [
+                    'content' => implode('', $line), // .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
+                    'line_number' => $line_nr,
+                ];
                 $chunk_length++;
             }
             if($chunk_length > 0){
                 $chunks[] = $chunk;
             }
             $file->chunks = $chunks;
-            $list[$file_nr] = $file;
+            $file->meta = $meta;
+            $file = $this->chunk_record_multiply($file);
+            $file = $this->chunk_record_write($file);
             $current++;
             $percentage = round(($current / $total) * 100, 2);
             echo Cli::tput('cursor.up', 1);
             echo Cli::tput('erase.line');
             echo 'Chunking ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
         }
-        return $list;
     }
 
     public function in_namespace(string $line): ?string
