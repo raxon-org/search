@@ -326,12 +326,9 @@ trait Source {
                 */
                 $chunk[] = implode('', $line) .  ' {{meta("' . Core::object($meta, Core::JSON_LINE) . '")}}';
                 $chunk_length++;
-                $chunks[] = $chunk;
             }
-            if(count($chunks) === 0){
-                d($read);
-                dd($chunk);
-
+            if($chunk_length > 0){
+                $chunks[] = $chunk;
             }
             $file->chunks = $chunks;
             $list[$file_nr] = $file;
