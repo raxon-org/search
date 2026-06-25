@@ -136,7 +136,7 @@ trait Source {
                     $chunk_next = $chunks[$nr + 1] ?? null;
                     $result[] = $file_chunk;
                     //0 = 1 = 2 = 3 = 4 = 5
-                    for($i = 4; $i < 10; $i++){
+                    for($i = 5; $i < 10; $i++){
                         $chunk_between[] = $file_chunk[$i] ?? null;
                     }
                     for($i = 0; $i < 5; $i++){
