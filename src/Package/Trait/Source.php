@@ -174,18 +174,27 @@ trait Source {
             $chunks = [];
             $chunk = [];
             $chunk_length = 0;
-            ddd($file->chunks);
-            foreach($file->chunks as $file_chunk){
-                foreach($file_chunk as $line){
-                    $chunk[] = $line;
-                    $chunk_length++;
-                    if($chunk_length >= 10){
-                        $chunks[] = $chunk;
-                        $chunk_length = 0;
+            foreach($file->chunks as $chunk_nr => $file_chunk){
+                foreach($file_chunk as $nr => $line){
+                    if($nr < 10){
+                        $chunk[] = $line;
+                    }
+                    elseif($nr === 10){
+                        if(array_key_exists(0, $chunk)){
+                            $chunks[] = $chunk;
+                        }
                         $chunk = [];
+                        $chunk[] = $line;
+                    }
+                    elseif($nr > 10){
+                        $chunk[] = $line;
                     }
                 }
             }
+            if(array_key_exists(0, $chunk)){
+                $chunks[] = $chunk;
+            }
+            ddd($chunks);
             $chunks_count = count($chunks);
             $result = [];
             $chunk_between = [];
