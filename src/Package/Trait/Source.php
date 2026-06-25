@@ -16,7 +16,7 @@ trait Source {
     /**
      * @throws Exception
      */
-    public function create_chunks(object $flags, object $options): void
+    public function chunk_create(object $flags, object $options): void
     {
         /**
          * chunks of 30 lines with column 80
@@ -76,6 +76,21 @@ trait Source {
         $this->chunk_list_write($list_domain);
         $this->chunk_list_write($list_package);
         $this->chunk_list_write($list_shared);
+    }
+
+    public function embedding_add(object $flags, object $options){
+        $object = $this->object();
+        $dir = $object->config('project.dir.data') . 'Search/';
+        $target = $dir . 'Data.jsonl';
+        if(File::exist($target)){
+            $fopen = fopen($target, 'w+');
+            $count = 0;
+            while(!feof($fopen)){
+                $line = fgets($fopen);
+                ddd($line);
+                $count++;
+            }
+        }
     }
 
     /**
