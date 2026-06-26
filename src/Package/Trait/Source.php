@@ -185,7 +185,6 @@ trait Source {
                         }
                         $chunk = [];
                         $chunk[] = $line;
-                        $is_start = true;
                     }
                     elseif($nr > 10){
                         $chunk[] = $line;
@@ -195,25 +194,9 @@ trait Source {
             if(array_key_exists(0, $chunk)){
                 $chunks[] = $chunk;
             }
-            ddd($chunks);
-            $chunks_count = count($chunks);
-            $result = [];
-            $chunk_between = [];
-            foreach($chunks as $nr => $file_chunk){
-                $chunk_next = $chunks[$nr + 1] ?? null;
-                $result[] = $file_chunk;
-                //0 = 1 = 2 = 3 = 4 = 5
-                for($i = 5; $i < 10; $i++){
-                    $chunk_between[] = $file_chunk[$i] ?? null;
-                }
-                for($i = 0; $i < 5; $i++){
-                    $chunk_between[] = $chunk_next[$i] ?? null;
-                }
-                ddd($chunk_between);
-                $result[] = $chunk_between;
-                $chunk_between = [];
-            }
-            $file->chunks = $result;
+           foreach($chunks as $nr => $chunk){
+               $file->chunks[] = $chunk;
+           }            
         }
         return $file;
     }
@@ -312,6 +295,8 @@ trait Source {
             $is_comment = false;
             $is_doc_comment = false;
             $curly_count = 0;
+            $is_single_quote = false;
+            $is_double_quote = false;
             $before = [];
             for($i = 0; $i < $count; $i++){
                 $char = $split[$i];
@@ -332,25 +317,46 @@ trait Source {
                     $chunk_length++;
                     $before = [];
                 }
-                if(
+                if($char === '\''){
+                    $is_single_quote = !$is_single_quote;
+                }
+                elseif($char === '"'){
+                    $is_double_quote = !$is_double_quote;
+                }
+                elseif(
                     $char === '/' &&
                     $previous === '/'
                 ){
                     $is_comment = true;
                 }
-                if(
+                elseif(
                     $char === '/' &&
                     $previous === '*'
                 ){
                     $is_doc_comment = true;
                 }
-                if($char === '{'){
+                elseif(
+                    $char === '{' &&
+                    $is_single_quote === false &&
+                    $is_double_quote === false &&
+                    $is_doc_comment === false &&
+                    $is_comment === false
+
+                ){
                     $curly_count++;
                 }
-                if($char === '}'){
+                elseif(
+                    $char === '}' &&
+                    $is_single_quote === false &&
+                    $is_double_quote === false &&
+                    $is_doc_comment === false &&
+                    $is_comment === false
+                ){
                     $curly_count--;
                 }
-                if($char === "\n"){
+                elseif(
+                    $char === "\n"
+                ){
                     /*
                     if(
                         property_exists($meta, 'in') &&
@@ -434,6 +440,7 @@ trait Source {
             if($chunk_length > 0){
                 $chunks[] = $chunk;
             }
+            $file->content = File::read($file->url, ['return' => 'array']);
             $file->chunks = $chunks;
             $file->meta = $meta;
             $file = $this->chunk_record_multiply($file);
