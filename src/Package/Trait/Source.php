@@ -196,7 +196,7 @@ trait Source {
             }
            foreach($chunks as $nr => $chunk){
                $file->chunks[] = $chunk;
-           }            
+           }
         }
         return $file;
     }
@@ -275,12 +275,6 @@ trait Source {
         $current = 0;
         $total = count($list);
         foreach($list as $file_nr => $file){
-            $meta = (object) [
-                'url' => $file->url,
-                'name' => $file->name,
-                'extension' => $file->extension,
-                'size' => $file->size,
-            ];
             $read = File::read($file->url);
             $split = mb_str_split($read);
             $count = count($split);
@@ -441,8 +435,7 @@ trait Source {
                 $chunks[] = $chunk;
             }
             $file->content = File::read($file->url, ['return' => 'array']);
-            $file->chunks = $chunks;
-            $file->meta = $meta;
+            $file->chunks = $chunks;    
             $file = $this->chunk_record_multiply($file);
             $this->chunk_record_write($file);
             $current++;
