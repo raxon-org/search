@@ -479,8 +479,9 @@ trait Source {
                         }
                         $function_name .= $split[$i];
                     }
+                    ddd($function_name);
                 }
-                ddd($function_name);
+
             }
         }
         return $file;
