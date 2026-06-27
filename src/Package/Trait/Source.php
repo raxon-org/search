@@ -435,7 +435,8 @@ trait Source {
                 $chunks[] = $chunk;
             }
             $file->content = File::read($file->url, ['return' => 'array']);
-            $file->chunks = $chunks;    
+            $file = $this->function_list_create($file, $split);
+            $file->chunks = $chunks;
             $file = $this->chunk_record_multiply($file);
             $this->chunk_record_write($file);
             $current++;
@@ -444,6 +445,36 @@ trait Source {
             echo Cli::tput('erase.line');
             echo 'Chunking ' .  round($percentage, 2) . '% (Files: '. $current . '/' . $total .')' . PHP_EOL;
         }
+    }
+
+    public function function_list_create(object $file, array $split=[]): object
+    {
+        $functions = [];
+        $curly_count = 0;
+        $before = [];
+        foreach($split as $nr => $char){
+            $previous = $split[$nr - 1] ?? null;
+            if($previous !== null){
+                $before[] = $previous;
+            }
+            if(
+                $char === '{' &&
+                $previous !== '{'
+            ){
+                $curly_count++;
+            }
+            elseif(
+                $char === '}' &&
+                $previous !== '}'
+            ){
+                $curly_count--;
+            }
+            elseif($char === ' '){
+                $is_function = array_slice($before, -8);
+                d($is_function);
+            }
+        }
+        return $file;
     }
 
     public function in_namespace(string $line): ?string
