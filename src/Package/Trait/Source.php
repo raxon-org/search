@@ -453,6 +453,8 @@ trait Source {
         $curly_count = 0;
         $before = [];
         $function_name = '';
+        $is_comment = false;
+        $is_doc_comment = false;
         foreach($split as $nr => $char){
             $previous = $split[$nr - 1] ?? null;
             if($previous !== null){
@@ -470,8 +472,36 @@ trait Source {
             ){
                 $curly_count--;
             }
-            elseif($char === ' '){
-                $is_function = implode('', array_slice($before, -8));
+            elseif(
+                $char === '/' &&
+                $previous === '/'
+            ){
+                $is_comment = true;
+            }
+            elseif(
+                $char === '*' &&
+                $previous === '/'
+            ){
+                $is_doc_comment = true;
+            }
+            elseif(
+                $char === '/' &&
+                $previous === '*'
+            ){
+                $is_doc_comment = false;
+            }
+            elseif(
+                $char === "\n" &&
+                $is_comment === true
+            ){
+                $is_comment = false;
+            }
+            elseif(
+                $char === ' ' &&
+                $is_comment === false &&
+                $is_doc_comment === false
+            ){
+                $is_function = implode('', array_slice($before, -8))    ;
                 if($is_function === 'function'){
                     for($i = $nr + 1; $i < count($split); $i++){
                         if($split[$i] === '('){
