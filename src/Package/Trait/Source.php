@@ -471,7 +471,7 @@ trait Source {
                 $curly_count--;
             }
             elseif($char === ' '){
-                $is_function = array_slice($before, -8);
+                $is_function = implode('', array_slice($before, -8));
                 if($is_function === 'function'){
                     for($i = $nr + 1; $i < count($split); $i++){
                         if($split[$i] === '('){
