@@ -452,6 +452,7 @@ trait Source {
         $functions = [];
         $curly_count = 0;
         $before = [];
+        $function_name = '';
         foreach($split as $nr => $char){
             $previous = $split[$nr - 1] ?? null;
             if($previous !== null){
@@ -471,7 +472,15 @@ trait Source {
             }
             elseif($char === ' '){
                 $is_function = array_slice($before, -8);
-                d($is_function);
+                if($is_function === 'function'){
+                    for($i = $nr + 1; $i < count($split); $i++){
+                        if($split[$i] === '('){
+                            break;
+                        }
+                        $function_name .= $split[$i];
+                    }
+                }
+                ddd($function_name);
             }
         }
         return $file;
