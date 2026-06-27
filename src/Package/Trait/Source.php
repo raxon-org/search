@@ -504,13 +504,16 @@ trait Source {
                 $is_function = implode('', array_slice($before, -8))    ;
                 if($is_function === 'function'){
                     for($i = $nr + 1; $i < count($split); $i++){
-                        d($split[$i]);
                         if($split[$i] === '('){
                             break;
                         }
                         $function_name .= $split[$i];
                     }
-                    ddd($function_name);
+                    if($function_name !== ''){
+                        d($function_name);
+                        $function_name = '';
+                    }
+
                 }
 
             }
