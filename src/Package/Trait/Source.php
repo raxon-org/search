@@ -510,14 +510,14 @@ trait Source {
                         $function_name .= $split[$i];
                     }
                     if($function_name !== ''){
-                        d($function_name);
+                        $functions[] = $function_name;
                         $function_name = '';
                     }
 
                 }
-
             }
         }
+        $file->functions = $functions;
         return $file;
     }
 
